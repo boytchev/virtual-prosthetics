@@ -1,7 +1,7 @@
 # Virtual prosthetics
-Modelling tool for virtual prosthetic body parts
+Modeling tool for virtual prosthetic body parts
 
-### Features
+### Brainstorming Session Features
 
 #### Topology
 * T1. Custom skeleton (e.g. model 1 individual finger, or a hand with 6 fingers)
