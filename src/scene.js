@@ -39,7 +39,7 @@ function createScene( loop )
 	light.shadow.mapSize.height = 1024;
 	light.shadow.blurSamples = 10;
 	light.shadow.radius = 2;
-	light.shadow.bias = -0.00005;
+	light.shadow.bias = -0.001;
 	light.castShadow = true;
 	
 	light.shadow.camera.left = -10;
