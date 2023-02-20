@@ -47,3 +47,9 @@
 * D3. Educational content
 * D4. Academic papers
 * D5. Social network disseminations (e.g. videos)
+
+#### Initially needed information
+* Close-up images of hand prototype
+* Details about input signals and communication
+* Mapping between input signals and angles
+* Mapping between collision and feedback signals

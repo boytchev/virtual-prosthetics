@@ -1,2 +1,4 @@
 
 *.bak
+*.bkp
+src/mannequin-leftovers.js
