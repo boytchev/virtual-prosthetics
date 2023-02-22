@@ -4,36 +4,54 @@
 //
 
 import * as THREE from "three";
-import { createScene } from "./scene.js";
+import { scene, createScene } from "./scene.js";
 import { Phalange, EndPhalange } from "./shapes.js";
-import { RobotPart, DOFZ } from "./robots.js";
+import * as Virtual from "./robots.js";
 
 
 const PI = Math.PI;
 
 
-var scene = createScene( animate );
+createScene( animate );
 
 
 
 // robot A
 
-var a1 = new RobotPart( new Phalange(), new DOFZ(0,-PI/2,0) ),
-	a2 = new RobotPart( new Phalange(1.3,0.2,0.1), new DOFZ(0,-PI/2,-PI/4) ),
-	a3 = new RobotPart( new Phalange(0.3,0.1,0.1), new DOFZ(0,-PI/2,-PI/4) ),
-	a4 = new RobotPart( new EndPhalange(0.3,0.1,0.1), new DOFZ(0,-PI/2,-PI/4) );
+class RobotA extends Virtual.Robot
+{
+	constructor( )
+	{
+		super( );
+		
+		var RootDOF = new Virtual.DOFZ(0,-PI/2,0),
+			DOF = new Virtual.DOFZ(0,-PI/2,-PI/4);
+		
+		this.node0 = new Phalange( 1, 0.3, 0.3, RootDOF ),
+		this.node1 = new Phalange( 1.3, 0.2, 0.1, DOF ),
+		this.node2 = new Phalange( 0.3, 0.1, 0.1, DOF ),
+		this.node3 = new EndPhalange( 0.3, 0.1, 0.1, DOF );
 
-a1.attachTo( scene, new THREE.Vector3(0,0,-1) );
-a2.attachTo( a1 );
-a3.attachTo( a2 );
-a4.attachTo( a3 );
+		this.node0.attachTo( this );
+		this.node1.attachTo( this.node0 );
+		this.node2.attachTo( this.node1 );
+		this.node3.attachTo( this.node2 );
+		
+		this.speed = Math.random()+1;
+		this.offset = Math.random()*2*PI;
+	}
+}
 
 
+var A = new RobotA;
+	A.attachTo( scene, new THREE.Vector3(0,0,-1) );
+
+	
 // robot B
 
-var b1 = new RobotPart( new Phalange(), new DOFZ(0,-PI/2,0) ),
-	b2 = new RobotPart( new Phalange(), new DOFZ(0,-PI/2,-PI/4) ),
-	b3 = new RobotPart( new EndPhalange(0.3,1,0.1), new DOFZ(0,-PI/2,-PI/4) );
+var b1 = new Phalange( 1, 0.3, 0.3, new Virtual.DOFZ(0,-PI/2,0) ),
+	b2 = new Phalange( 1, 0.3, 0.3, new Virtual.DOFZ(0,-PI/2,-PI/4) ),
+	b3 = new EndPhalange( 0.3, 1, 0.1, new Virtual.DOFZ(0,-PI/2,-PI/4) );
 
 b1.attachTo( scene, new THREE.Vector3(0,0,1) );
 b2.attachTo( b1 );
@@ -42,28 +60,28 @@ b3.attachTo( b2 );
 
 // robot C
 
-var c1 = new RobotPart( new Phalange(1,1), new DOFZ(0,-PI/2,0) );
+var c1 = new Phalange( 1, 1, 0.3, new Virtual.DOFZ(0,-PI/2,0) );
 	c1.attachTo( scene );
 	
-var c1_left = new RobotPart( new Phalange(0.5,0.3), new DOFZ(0,-PI/2,-PI/4) );
+var c1_left = new Phalange( 0.5, 0.3, 0.3, new Virtual.DOFZ(0,-PI/2,-PI/4) );
 	c1_left.attachTo( c1, new THREE.Vector3(0,1,-0.3) );
 	
-var c1_right = new RobotPart( new Phalange(0.5,0.3), new DOFZ(0,-PI/2,-PI/4) );
+var c1_right = new Phalange( 0.5, 0.3, 0.3, new Virtual.DOFZ(0,-PI/2,-PI/4) );
 	c1_right.attachTo( c1, new THREE.Vector3(0,1,0.3) );
 	
-var c1_left2 = new RobotPart( new EndPhalange(0.5,0.3), new DOFZ(0,-PI/2,-PI/4) );
+var c1_left2 = new EndPhalange( 0.5, 0.3, 0.3, new Virtual.DOFZ(0,-PI/2,-PI/4) );
 	c1_left2.attachTo( c1_left );
 	
-var c1_right2 = new RobotPart( new EndPhalange(0.5,0.3), new DOFZ(0,-PI/2,-PI/4) );
+var c1_right2 = new EndPhalange( 0.5, 0.3, 0.3, new Virtual.DOFZ(0,-PI/2,-PI/4) );
 	c1_right2.attachTo( c1_right );
 
 
 
 function animate( t )
 {
-	a2.angles( -PI/2*(0.5+1.5*Math.sin(t)) );
-	a3.angles( -PI/2*(0.5+0.5*Math.sin(t)) );
-	a4.angles( -PI/2*(0.5+0.5*Math.sin(2*t)) );
+	A.node1.angles( -PI/2*(0.5+1.5*Math.sin(t)) );
+	A.node2.angles( -PI/2*(0.5+0.5*Math.sin(t)) );
+	A.node3.angles( -PI/2*(0.5+0.5*Math.sin(2*t)) );
 	
 	b2.angles( -PI/2*(0.5+0.5*Math.sin(3*t)) );
 	b3.angles( -PI/2*(0.5+0.5*Math.sin(3*t-200)) );

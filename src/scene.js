@@ -92,4 +92,4 @@ function drawFrame()
 }
 
 
-export { createScene };
+export { scene, createScene };
