@@ -1,31 +1,34 @@
 
 //
-//	Sceen environment for virtual prosthetics
+//	Robot parts shapes for Virtual prosthetics
 //
-//	scene
-//	createScene( loop )
+//	Phalange( length=1.0, width=0.3, thickness=0.3 )
+//	EndPhalange( length=1.0, width=0.3, thickness=0.3 )
 //
 
-import * as THREE from "three";
-import { OrbitControls } from "libs/controls/OrbitControls.js";
 
 
-var renderer, scene, camera, light, clock, controls;
+import * as THREE from "../libs/three.module.js";
+import { OrbitControls } from "../libs/controls/OrbitControls.js";
 
-var userLoop = null;
 
-function createScene( loop )
+var FPS = 30;
+
+var renderer, scene, camera, light, controls;
+
+var animate,
+	oldTime = 0;
+
+function createScene( )
 {
 	renderer = new THREE.WebGLRenderer({antialias: true});
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	renderer.domElement.style = 'width:100%; height:100%; position:fixed; top:0; left:0;';
 	renderer.shadowMap.enabled = true;
 	renderer.shadowMap.type = THREE.VSMShadowMap;
-	renderer.setAnimationLoop(drawFrame);
+	renderer.setAnimationLoop( drawFrame );
 	document.body.appendChild(renderer.domElement);
 
-	userLoop = loop;
-	
 	scene = new THREE.Scene();
 	scene.background = new THREE.Color('gainsboro');
 	scene.fog = new THREE.Fog('gainsboro', 20, 50);
@@ -73,23 +76,49 @@ function createScene( loop )
 	ground.rotation.x = -Math.PI / 2;
 	scene.add(ground);
 
-	clock = new THREE.Clock();
-	
+
 	controls = new OrbitControls( camera, renderer.domElement );
 	controls.target = new THREE.Vector3( 0, 1, 0 );
-	
-	return scene;
 } // createScene
 
+createScene( );
 
-function drawFrame()
+function setCameraPosition( x, y, z )
 {
-	clock.getElapsedTime();
-	
-	if( userLoop ) userLoop( clock.elapsedTime, clock.elapsedTime-clock.oldTime );
-	controls.update( );
-	renderer.render(scene, camera);
+	camera.position.set( x, y, z );
+	camera.lookAt( controls.target );
+}
+
+function setAnimation( func, fps=30 )
+{
+	animate = func;
+	FPS = fps;
 }
 
 
-export { scene, createScene };
+function drawFrame( time )
+{
+	time /= 1000; // convert to seconds
+	
+	var dTime = time-oldTime;
+	
+	if( dTime > 1/FPS )
+	{
+		
+		if( animate ) animate( time, dTime );
+		
+		oldTime = time;
+		
+		controls.update( );
+		renderer.render(scene, camera);
+	}
+}
+
+
+function getScene( )
+{
+	return scene;
+}
+
+
+export { scene, setAnimation, getScene, setCameraPosition };
