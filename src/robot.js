@@ -35,7 +35,7 @@ class Robot extends THREE.Group
 
 	setPosition( x, y, z )
 	{
-		if( isNaN(x) || isNaN(y) || isNaN(z) )
+		if( x === undefined )
 		{
 			scene.remove( this );
 		}
@@ -46,13 +46,13 @@ class Robot extends THREE.Group
 		}
 	}
 
-	chain( ...parts )
+	addChain( ...parts )
 	{
 		for( var i=1; i<parts.length; i++ )
 			parts[i].attachTo( parts[i-1] );
 	}
 	
-	prepare( )
+	#prepare( )
 	{
 		if( this.parts === null )
 		{
@@ -74,28 +74,28 @@ class Robot extends THREE.Group
 	
 	getParts( )
 	{
-		this.prepare( );
+		this.#prepare( );
 		
 		return this.parts;
 	}
 	
 	getMotors( )
 	{
-		this.prepare( );
+		this.#prepare( );
 		
 		return this.motors;
 	}
 	
 	getDOF( )
 	{
-		this.prepare( );
+		this.#prepare( );
 		
 		return this.motors.length;
 	}
 	
 	setAngles( ...angles )
 	{
-		this.prepare( );
+		this.#prepare( );
 		
 		var n = Math.min( this.motors.length, angles.length );
 		
@@ -105,7 +105,7 @@ class Robot extends THREE.Group
 	
 	getAngles( )
 	{
-		this.prepare( );
+		this.#prepare( );
 		
 		var angles = [];
 		
@@ -117,7 +117,7 @@ class Robot extends THREE.Group
 	
 	setAngle( index, angle )
 	{
-		this.prepare( );
+		this.#prepare( );
 		
 		if( typeof this.motors[index] === 'undefined' )
 			return;
@@ -130,7 +130,7 @@ class Robot extends THREE.Group
 
 	getAngle( index )
 	{
-		this.prepare( );
+		this.#prepare( );
 		
 		if( typeof this.motors[index] === 'undefined' )
 			return 0;

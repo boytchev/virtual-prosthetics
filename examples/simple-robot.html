@@ -34,7 +34,7 @@
 		{
 			super( );
 			
-			this.chain(
+			this.addChain(
 				this,
 				new Prosthetic.MotorY( -Infinity, Infinity, 0, 0.3, 0.2 ),
 				new Prosthetic.MotorZ( 0, -PI/2, 0, 0.15, 0.03 ),
@@ -49,7 +49,6 @@
 
 
 	var robot = new SimpleRobot;
-	
 
 	Prosthetic.setAnimation( loop );
 

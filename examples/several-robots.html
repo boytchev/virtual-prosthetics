@@ -36,7 +36,7 @@
 		{
 			super( );
 			
-			this.chain(
+			this.addChain(
 				this,
 				new Prosthetic.MotorY( -Infinity, Infinity, 0, 0.2 ),
 				new Prosthetic.Phalange( 1, 0.3, 0.3 ),
@@ -70,7 +70,7 @@
 		{
 			super( );
 			
-			this.chain(
+			this.addChain(
 				this,
 				new Prosthetic.Phalange( 1, 0.3, 0.3 ),
 				new Prosthetic.MotorZ( 0, -PI/2, 0, 0.2, 0.04 ),
@@ -94,7 +94,7 @@
 
 			var root = new Prosthetic.Phalange( 1, 1, 0.3);
 			
-			this.chain(
+			this.addChain(
 				this,
 				root
 			);
@@ -102,7 +102,7 @@
 			var left = new Prosthetic.MotorZ( 0, -PI/2, 0, 0.2, 0.04 );
 				left.attachToPosition( root, 0, 1, -0.3 );
 		
-			this.chain(
+			this.addChain(
 				left,
 				new Prosthetic.Phalange( 0.5, 0.3, 0.3 ),
 				new Prosthetic.MotorZ( 0, -PI/2, 0, 0.2, 0.04 ),
@@ -112,7 +112,7 @@
 			var right = new Prosthetic.MotorZ( 0, -PI/2, 0, 0.2, 0.04 );
 				right.attachToPosition( root, 0, 1, 0.3 );
 		
-			this.chain(
+			this.addChain(
 				right,
 				new Prosthetic.Phalange( 0.5, 0.3, 0.3 ),
 				new Prosthetic.MotorZ( 0, -PI/2, 0, 0.2, 0.04 ),
