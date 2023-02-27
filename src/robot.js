@@ -1,11 +1,21 @@
 
 //
-//	Robot parts shapes for Virtual prosthetics
+//	Robot for Virtual prosthetics
 //
-//	Phalange( length=1.0, width=0.3, thickness=0.3 )
-//	EndPhalange( length=1.0, width=0.3, thickness=0.3 )
+//	class Robot extends THREE.Group
+//		constructor( )
+//		#prepare( )
+//		getPosition( )
+//		setPosition( x, y, z )
+//		addChain( ...parts )
+//		getParts( )
+//		getMotors( )
+//		getDOF( )
+//		setAngles( ...angles )
+//		getAngles( )
+//		setAngle( index, angle )
+//		getAngle( index )
 //
-
 
 
 import * as THREE from "../libs/three.module.js";
@@ -49,7 +59,7 @@ class Robot extends THREE.Group
 	addChain( ...parts )
 	{
 		for( var i=1; i<parts.length; i++ )
-			parts[i].attachTo( parts[i-1] );
+			parts[i].attachToSlot( parts[i-1] );
 	}
 	
 	#prepare( )

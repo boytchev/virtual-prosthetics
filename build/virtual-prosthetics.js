@@ -2357,9 +2357,20 @@ return this;}
 isEmpty(){return this.head===null;}}
 class ConvexGeometry extends BufferGeometry{constructor(points=[]){super();const vertices=[];const normals=[];const convexHull=new ConvexHull().setFromPoints(points);const faces=convexHull.faces;for(let i=0;i<faces.length;i++){const face=faces[i];let edge=face.edge;do{const point=edge.head().point;vertices.push(point.x,point.y,point.z);normals.push(face.normal.x,face.normal.y,face.normal.z);edge=edge.next;}while(edge!==face.edge);}
 this.setAttribute('position',new Float32BufferAttribute(vertices,3));this.setAttribute('normal',new Float32BufferAttribute(normals,3));}}
-const MATERIAL=new MeshLambertMaterial({color:'White',polygonOffset:true,polygonOffsetUnits:1,polygonOffsetFactor:1,});const EDGE_MATERIAL=new LineBasicMaterial({color:'Black',transparent:true,opacity:0.3,});const JOINT_MATERIAL=new MeshPhongMaterial({color:0x404040,shininess:100,});const JOINT_GEOMETRY=new CylinderGeometry(1,1,1,30);const JOINT_GEOMETRY_Y=new CylinderGeometry(1,1,1).translate(0,0.5,0);class Part extends Group
+class Part extends Group
 {constructor()
-{super();this.name=`part${this.id}`;this.receiveShadow=true;this.castShadow=true;this.slots=[];this.axis=null;this.min=null;this.max=null;this.def=null;}
+{super();this.receiveShadow=true;this.castShadow=true;this.slots=[];this.axis=null;this.min=null;this.max=null;this.def=null;}
+setMotor(axis,min=-Infinity,max=Infinity,def=0)
+{this.axis=axis;this.min=Math.min(min,max);this.max=Math.max(min,max);this.def=MathUtils.clamp(def,this.min,this.max);this.setAngle(def);}
+addSlot(x,y,z)
+{this.slots.push(new Vector3(x,y,z));}
+attachToSlot(parentPart,slot=0)
+{if(parentPart.slots instanceof Array)
+{if(slot>=parentPart.slots.length)
+throw'Error: invalid slot';this.position.copy(parentPart.slots[slot]);}
+parentPart.add(this);}
+attachToPosition(parentPart,x=0,y=0,z=0)
+{this.position.set(x,y,z);parentPart.add(this);}
 getAngle()
 {if(this.axis)
 return this.rotation[this.axis];else
@@ -2368,36 +2379,7 @@ setAngle(x)
 {if(x===null)
 return;if(this.axis)
 this.rotation[this.axis]=MathUtils.clamp(x,this.min,this.max);else
-throw`Error: body part '${this.name}' cannot rotate`;}
-reset()
-{if(this.axis&&this.def)
-this.rotation[this.axis]=this.def;}
-attachTo(parentPart,slot=0)
-{if(parentPart.slots instanceof Array)
-{if(slot>=parentPart.slots.length)
-throw'Error: invalid slot';this.position.copy(parentPart.slots[slot]);}
-parentPart.add(this);}
-attachToPosition(parentPart,x=0,y=0,z=0)
-{this.position.set(x,y,z);parentPart.add(this);}}
-function extrudeShape(shape,width)
-{var vertices=[];for(var i=0;i<shape.length;i+=2)
-{vertices.push(new Vector3(shape[i],shape[i+1],width/2));vertices.push(new Vector3(shape[i],shape[i+1],-width/2));}
-var image=new Mesh(new ConvexGeometry(vertices),MATERIAL);image.receiveShadow=true;image.castShadow=true;image.add(new LineSegments(new EdgesGeometry(image.geometry),EDGE_MATERIAL));return image;}
-class MotorX extends Part
-{constructor(min,max,def,width=0.1,radius=0.02)
-{super();this.axis='x';this.min=Math.min(min,max);this.max=Math.max(min,max);this.def=MathUtils.clamp(def,this.min,this.max);var image=new Mesh(JOINT_GEOMETRY,JOINT_MATERIAL);image.rotation.z=Math.PI/2;image.scale.set(radius,width,radius);this.add(image);this.slots=[new Vector3(0,radius/2,0)];this.reset();}}
-class MotorY extends Part
-{constructor(min,max,def,radius=0.1,length=0.02)
-{super();this.axis='y';this.min=Math.min(min,max);this.max=Math.max(min,max);this.def=MathUtils.clamp(def,this.min,this.max);var image=new Mesh(JOINT_GEOMETRY_Y,JOINT_MATERIAL);image.scale.set(radius,length,radius);this.add(image);this.slots=[new Vector3(0,length,0)];this.reset();}}
-class MotorZ extends Part
-{constructor(min,max,def,width=0.1,radius=0.02)
-{super();this.axis='z';this.min=Math.min(min,max);this.max=Math.max(min,max);this.def=MathUtils.clamp(def,this.min,this.max);var image=new Mesh(JOINT_GEOMETRY,JOINT_MATERIAL);image.rotation.x=Math.PI/2;image.scale.set(radius,width,radius);this.add(image);this.slots=[new Vector3(0,radius/2,0)];this.reset();}}
-class Phalange extends Part
-{constructor(length=1.0,width=0.3,thickness=0.3)
-{super();var L=length,T=thickness/2,I=Math.min(length,thickness)/8,E=0.003;var shape=[-T,I,-T+I,E,0,E,T,T,T,L-T-E,0,L-E,-T+I,L-E,-T,L-I];this.add(extrudeShape(shape,width));this.slots=[new Vector3(0,length,0)];}}
-class EndPhalange extends Part
-{constructor(length=1.0,width=0.3,thickness=0.3)
-{super();var L=length,T=thickness/2,I=Math.min(length,thickness)/8,E=0.003;var shape=[-T,I,-T+I,E,0,E,T,T,T,L-I-E,T-I,L-E,-T+I,L-E,-T,L-I];this.add(extrudeShape(shape,width));this.slots=[];}}
+throw`Error: body part '${this.name}' cannot rotate`;}}
 class Robot extends Group
 {constructor()
 {super();this.receiveShadow=true;this.castShadow=true;scene.add(this);this.parts=null;this.motors=null;}
@@ -2410,7 +2392,7 @@ else
 {this.position.set(x,y,z);if(this.parent!==scene)scene.add(this);}}
 addChain(...parts)
 {for(var i=1;i<parts.length;i++)
-parts[i].attachTo(parts[i-1]);}#prepare()
+parts[i].attachToSlot(parts[i-1]);}#prepare()
 {if(this.parts===null)
 {this.parts=[];this.motors=[];this.traverse(x=>{if(x instanceof Part)
 {this.parts.push(x);}
@@ -2435,4 +2417,23 @@ return;this.motors[index][1].setAngle(angle);}
 getAngle(index)
 {this.#prepare();if(typeof this.motors[index]==='undefined')
 return 0;return this.motors[index][1].getAngle();}}
+const MATERIAL$1=new MeshPhongMaterial({color:0x404040,shininess:100,});const GEOMETRY_16=new CylinderGeometry(1,1,1,16);const GEOMETRY_48=new CylinderGeometry(1,1,1,48);class MotorX extends Part
+{constructor(min,max,def,width=0.1,height=0.05)
+{super();this.setMotor('x',min,max,def);this.addSlot(0,0,0);var image=new Mesh(GEOMETRY_16,MATERIAL$1);image.rotation.z=Math.PI/2;image.scale.set(height/2,width,height/2);image.receiveShadow=true;image.castShadow=true;this.add(image);}}
+class MotorY extends Part
+{constructor(min,max,def,width=0.3,height=0.05)
+{super();this.setMotor('y',min,max,def);this.addSlot(0,height,0);var image=new Mesh(GEOMETRY_48,MATERIAL$1);image.position.y=height/2;image.scale.set(width/2,height,width/2);image.castShadow=true;image.receiveShadow=true;this.add(image);}}
+class MotorZ extends Part
+{constructor(min,max,def,width=0.1,height=0.05)
+{super();this.setMotor('z',min,max,def);this.addSlot(0,0,0);var image=new Mesh(GEOMETRY_16,MATERIAL$1);image.rotation.x=Math.PI/2;image.scale.set(height/2,width,height/2);image.receiveShadow=true;image.castShadow=true;this.add(image);}}
+const MATERIAL=new MeshLambertMaterial({color:'White',polygonOffset:true,polygonOffsetUnits:1,polygonOffsetFactor:1,});const EDGE_MATERIAL=new LineBasicMaterial({color:'Black',transparent:true,opacity:0.3,});function extrudeShape(shape,width)
+{var vertices=[];for(var i=0;i<shape.length;i+=2)
+{vertices.push(new Vector3(shape[i],shape[i+1],width/2));vertices.push(new Vector3(shape[i],shape[i+1],-width/2));}
+var image=new Mesh(new ConvexGeometry(vertices),MATERIAL);image.receiveShadow=true;image.castShadow=true;image.add(new LineSegments(new EdgesGeometry(image.geometry),EDGE_MATERIAL));return image;}
+class Phalange extends Part
+{constructor(length=1.0,width=0.3,thickness=0.3)
+{super();var L=length,T=thickness/2,I=Math.min(length,thickness)/8,E=0.003;var shape=[-T,I,-T+I,E,0,E,T,T,T,L-T-E,0,L-E,-T+I,L-E,-T,L-I];this.add(extrudeShape(shape,width));this.slots=[new Vector3(0,length,0)];}}
+class EndPhalange extends Part
+{constructor(length=1.0,width=0.3,thickness=0.3)
+{super();var L=length,T=thickness/2,I=Math.min(length,thickness)/8,E=0.003;var shape=[-T,I,-T+I,E,0,E,T,T,T,L-I-E,T-I,L-E,-T+I,L-E,-T,L-I];this.add(extrudeShape(shape,width));this.slots=[];}}
 export{EndPhalange,MotorX,MotorY,MotorZ,Part,Phalange,Robot,getScene,scene,setAnimation,setCameraPosition};

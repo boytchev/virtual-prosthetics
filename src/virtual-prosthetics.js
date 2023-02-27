@@ -11,3 +11,5 @@
 export * from "./scene.js";
 export * from "./robot.js";
 export * from "./part.js";
+export * from "./part-motors.js";
+export * from "./part-hand.js";

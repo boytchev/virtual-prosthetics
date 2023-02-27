@@ -21,6 +21,7 @@
 
 
 	import * as Prosthetic from "../build/virtual-prosthetics.js";
+	//import * as Prosthetic from "../src/virtual-prosthetics.js";
 
 
 	const PI = Math.PI;
@@ -36,12 +37,12 @@
 			
 			this.addChain(
 				this,
-				new Prosthetic.MotorY( -Infinity, Infinity, 0, 0.3, 0.2 ),
-				new Prosthetic.MotorZ( 0, -PI/2, 0, 0.15, 0.03 ),
+				new Prosthetic.MotorY( -Infinity, Infinity, 0, 0.6, 0.1 ),
+				new Prosthetic.MotorZ( 0, -PI/2, 0, 0.34, 0.25 ),
 				new Prosthetic.Phalange( ),
-				new Prosthetic.MotorZ( 0, -PI/2, 0, 0.15, 0.03 ),
+				new Prosthetic.MotorZ( 0, -PI/2, 0, 0.2 ),
 				new Prosthetic.Phalange( 0.5 ),
-				new Prosthetic.MotorZ( 0, -PI/2, 0, 0.1, 0.03 ),
+				new Prosthetic.MotorZ( 0, -PI/2, 0, 0.2 ),
 				new Prosthetic.EndPhalange( 0.5 ),
 			);
 		}
@@ -49,8 +50,10 @@
 
 
 	var robot = new SimpleRobot;
+	
 
 	Prosthetic.setAnimation( loop );
+	Prosthetic.setCameraPosition( 0, 2, 5 );
 
 	function loop( t )
 	{

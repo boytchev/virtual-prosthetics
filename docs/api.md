@@ -18,6 +18,12 @@ All indices start from 0.
 * **[Robot control](#robot-control)**
 	* [getAngle](#getangle), [setAngle](#setangle), [getAngles](#getangles), [setAngles](#setangles)
 	* [getParts](#getparts), [getMotors](#getmotors), [getDOF](#getdof)
+* **[Part contruction](#part-construction)**
+	* [Part](#part)
+	* [setMotor](#setmotor)
+	* [addSlot](#addslot), [attachToSlot](#attachtoslot), [attachToPosition](#attachtoposition)
+* **[Part control](#part-control)**
+	* [getAngle](#getangle-1), [setAngle](#setangle-1)	
 
 # Scene
 
@@ -68,7 +74,10 @@ setCameraPosition( 10, 2, 0 );
 
 
 
-# Robot Construction
+# Robot construction
+
+A robot is a device made of various robot parts. Some parts
+are static elements, others are motors or sensors.
 
 ### Robot
 
@@ -284,3 +293,124 @@ dof = robot.getDOF( );
 
 
 
+# Part contruction
+
+### Part
+
+Base class. Defines the core functionality of a robot part.
+Parts used in robots are extensions of this base class. Each
+part may have slots -- these are positions on the part where
+other parts can be attached.
+
+
+
+### setMotor
+
+```js
+setMotor( axis, min, max, def );
+```
+
+Method. Sets the motor behaviour to a robot part -- `axis`
+of rotation, `min` angle, `max` angle and default angle
+`def`. The motor cannot be set to an angle outside the
+[`min`, `max`] interval. By default the angle is not
+restricted (i.e. `min` is `-Infinity`, `max` is `Infinity`],
+and `def` is 0.
+
+Example:
+
+```js
+part.setMotor( 'x', 0, Math.PI, Math.PI/2 );
+```
+
+
+
+### addSlot
+
+```js
+addSlot( x, y, z );
+```
+
+Method. Adds a new slot to a robot part. The slot is at 
+coordinates (`x`, `y`, `z`) relative to the part. 
+
+Example:
+
+```js
+part.addSlot( 2, 0, 1 );
+```
+
+
+
+### attachToSlot
+
+```js
+attachToSlot( parentPart, slot=0 );
+```
+
+Method. Attaches the part to another `parentPart` at its
+`slot` number. If `slot` is not provided, the first slot is
+used. A part must be attached to only one other part or the
+robot itself.
+
+Example:
+
+```js
+partB.attachToSlot( partA );
+partC.attachToSlot( partB, 2 );
+```
+
+
+
+### attachToPosition
+
+```js
+attachToPosition( parentPart, x=0, y=0, z=0 );
+```
+
+Method. Attaches the part to another `parentPart` at given
+coordinates (`x`, `y`, `z`) relative to the parent part.
+
+Example:
+
+```js
+partA.attachToPosition( robot );
+partB.attachToPosition( partB, 0, 5, 0 );
+```
+
+
+
+# Part control
+
+
+### getAngle
+
+```js
+getAngle( );
+```
+
+Method. Gets the angle of the part if it has a motor set,
+otherwise return 0.
+
+Example:
+
+```js
+a = part.getAngle( );
+```
+
+
+
+### setAngle
+
+```js
+setAngle( angle );
+```
+
+Method. Sets the motor's `angle` if the part has a motor.
+If `angle` is `null`, the operation is ignored.
+
+Example:
+
+```js
+part.setAngle( Math.PI );
+```
