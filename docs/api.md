@@ -24,6 +24,10 @@ All indices start from 0.
 	* [addSlot](#addslot), [attachToSlot](#attachtoslot), [attachToPosition](#attachtoposition)
 * **[Part control](#part-control)**
 	* [getAngle](#getangle-1), [setAngle](#setangle-1)	
+* **[Motor parts](#motor-parts)**
+	* [MotorX](#motorx), [MotorY](#motory), [MotorZ](#motorz)
+* **[Static parts](#static-parts)**
+	* [Phalange](#phalange), [EndPhalange](#endphalange)
 
 # Scene
 
@@ -414,3 +418,127 @@ Example:
 ```js
 part.setAngle( Math.PI );
 ```
+
+
+
+# Motor parts
+
+Motor parts are robot parts that can rotate around one of the axes. Thus, each
+motor has DOF=1. Higher DOF is achieved by connecting several motors.
+
+
+
+
+### MotorX
+
+```js
+new MotorX( min, max, def, width, height );
+```
+
+Class. Defines a simple motor that rotates around the X axis. The available
+range for the rotation is from `min` to `max`. The initial value is `def`.
+The size of the motor is defined by the optional parameters `width` and `height`.
+There is one slot at position (0,0,0).
+
+<img src="images/motorx.png">
+
+Example:
+
+```js
+new MotorX( 0, Math.PI, Math.PI/2 );
+```
+
+
+
+### MotorY
+
+```js
+new MotorY( min, max, def, width, height );
+```
+
+Class. Defines a simple motor that rotates around the Y axis. The available
+range for the rotation is from `min` to `max`. The initial value is `def`.
+The size of the motor is defined by the optional parameters `width` and `height`.
+There is one slot at position (0,`height`,0).
+
+<img src="images/motory.png">
+
+Example:
+
+```js
+new MotorY( 0, Math.PI, Math.PI/2 );
+```
+
+
+
+### MotorZ
+
+```js
+new MotorZ( min, max, def, width, height );
+```
+
+Class. Defines a simple motor that rotates around the Z axis. The available
+range for the rotation is from `min` to `max`. The initial value is `def`.
+The size of the motor is defined by the optional parameters `width` and `height`.
+There is one slot at position (0,0,0).
+
+<img src="images/motorz.png">
+
+Example:
+
+```js
+new MotorZ( 0, Math.PI, Math.PI/2 );
+```
+
+
+
+
+# Static parts
+
+Static part are robot parts without motors. They cannot be rotated, unless they
+are attached to a motor.
+
+
+
+
+### Phalange
+
+```js
+new Phalange( length, width, thickness );
+```
+
+Class. Defines a static part designed for attachment to Z-motor. The parameters
+`length`, `width` and `thickness` define the size of the part. There is one slot
+at the top of the part at position (0,`length`,0).
+
+<img src="images/phalange.png">
+
+Example:
+
+```js
+new Phalange( 1, 0.2, 0.2 );
+```
+
+
+
+### EndPhalange
+
+```js
+new EndPhalange( length, width, thickness );
+```
+
+Class. Defines a static part designed for attachment to Z-motor. The parameters
+`length`, `width` and `thickness` define the size of the part. There are no
+slots. The `EndPhalange` looks like `Phalange`, but is intended to be the last
+part of a chain of phalanges.
+
+<img src="images/endphalange.png">
+
+Example:
+
+```js
+new EndPhalange( 1, 0.2, 0.2 );
+```
+
+
+
