@@ -1,38 +1,55 @@
 # Virtual prosthetics API
 
-The Virtual Prosthetics library provides an API for all its
-functionalily.
+The Virtual Prosthetics library provides an API for all its functionalily. In
+this document all times are in seconds, all sizes are in meters, all angles are
+in radians and all indices start from 0.
 
-All times are in seconds.
-All sizes are in meters.
-All angles are in radians.
-All indices start from 0.
-
+* **[Introduction](#introduction)**
 * **[Scene](#scene)**
-	* [setAnimation](#setanimation)
-	* [setCameraPosition](#setcameraposition)
-* **[Robot construction](#robot-construction)**
-	* [Robot](#robot)
-	* [addChain](#addchain)
+	* [setAnimation](#setanimation), [setCameraPosition](#setcameraposition), [setCameraTarget](#setcameratarget)
+* **[Robots](#robots)**
+	* [Robot](#robot), [addChain](#addchain)
 	* [getPosition](#getposition), [setPosition](#setposition)
-* **[Robot control](#robot-control)**
 	* [getAngle](#getangle), [setAngle](#setangle), [getAngles](#getangles), [setAngles](#setangles)
 	* [getParts](#getparts), [getMotors](#getmotors), [getDOF](#getdof)
-* **[Part contruction](#part-construction)**
-	* [Part](#part)
-	* [setMotor](#setmotor)
+* **[Robot parts](#parts)**
+	* [Part](#part), [setMotor](#setmotor)
 	* [addSlot](#addslot), [attachToSlot](#attachtoslot), [attachToPosition](#attachtoposition)
-* **[Part control](#part-control)**
 	* [getAngle](#getangle-1), [setAngle](#setangle-1)	
-* **[Motor parts](#motor-parts)**
-	* [MotorX](#motorx), [MotorY](#motory), [MotorZ](#motorz)
-* **[Static parts](#static-parts)**
-	* [Phalange](#phalange), [EndPhalange](#endphalange)
+* **[Stock parts](#stock-parts)**
+	* Motors: [MotorX](#motorx), [MotorY](#motory), [MotorZ](#motorz)
+	* Shapes: [Phalange](#phalange), [EndPhalange](#endphalange), [LeftPalm](#leftpalm), [RightPalm](#rightpalm)
+
+
+
+
+# Introduction
+
+The Virtual Prosthetics library allows construction of virtual robots from above
+JavaScript program. The robots can be views and manipulated on desktop and
+mobile platforms. The main concepts are:
+
+* **Scene** – a virtual environment. It contains a ground where robots are
+		placed and controlled. It also has a camera that define the viewing
+		position.
+* **Robot** – a virtual device constructed programmatically. It is made of one
+		or more connected robot parts. The parts are connected in a tree
+		hierarchy.
+* **Robot part** – a building block of a robot. Some parts are just 3D shapes,
+		other parts can be rotated.
+* **Motor** – a robot part that can be rotated around a predefined axis. 
+		Complex rotations are achieved by attaching several motors.
+* **Slot** – a place on a robot part to which another body part can be attached.
+
+<center><img src="images/architecture.png"></center>
+
+
+
 
 # Scene
 
-The Virtual Prosthetics library automatically creates a 3D
-scene that will hold all created prosthetic devices.
+The Virtual Prosthetics library automatically creates a 3D scene that holds all
+created prosthetic devices.
 
 ### setAnimation
 
@@ -40,22 +57,21 @@ scene that will hold all created prosthetic devices.
 setAnimation( func, fps )
 ```
 
-Function. Defines a custom function `func` that is called
-`fps` times per second. The function has two parameters:
-* `time` elapsed time since the start of the library
-* `dTime` elapsed time since the previous frame
+Function. Defines what custom function `func` is called `fps` times per second.
+The function has two parameters:
+* `time` – elapsed time since the start of the library
+* `dTime` – elapsed time since the previous frame
 
-By default `fps` (frame per seconds) is set to 30. Higher
-`fps` produces smoother motion, but consumes more power. The
-maximal value for `fps` is controlled by the browser and is
-usually 60 or above.
+By default `fps` (frame per seconds) is set to 30. Higher `fps` produces
+smoother motion, but consumes more power. The maximal value for `fps` is
+controlled by the browser and is usually 60 or above.
 
 Example:
 
 ```js
 Prosthetic.setAnimation( loop, 60 );
 
-function loop( t, dT )
+function loop( time, dTime )
 {
 	// changing devices postures
 };
@@ -68,25 +84,44 @@ function loop( t, dT )
 setCameraPosition( x, y, z );
 ```
 
-Method. Moves the camera to coordinates (`x`,`y`,`z`).
+Method. Moves the camera to coordinates (`x`,`y`,`z`). By default the camera
+position is (4,4,7).
 
-Example:
+Examples:
 
 ```js
 setCameraPosition( 10, 2, 0 );
 ```
 
 
+### setCameraTarget
 
-# Robot construction
+```js
+setCameraTarget( x, y, z );
+```
 
-A robot is a device made of various robot parts. Some parts
-are static elements, others are motors or sensors.
+Method. Turns the camera towards coordinates (`x`,`y`,`z`). By default the
+camera target is (0,0,0).
+
+Examples:
+
+```js
+setCameraTarget( 0, 2, 0 );
+```
+
+
+
+
+# Robots 
+
+A robot is a device made of various robot parts. Some parts are just 3D shapes,
+others are motors or sensors.
+
 
 ### Robot
 
-Base class. Defines the overall functionality of a robot. A
-custom robot is a class that extends this base class.
+Base class. Defines the overall functionality of a robot. A custom robot is a
+class that extends this base class.
 
 Example:
 
@@ -110,13 +145,11 @@ class MyRobot extends Prosthetic.Robot
 addChain( part1, part2, ... );
 ```
 
-Method. Used in the constructor of a custom robot to
-automatically connect parts `part1`, `part2` and so on in
-a chain. The variable `this` can be used to mark the robot
-itself. If `this` is used in `addChain` it must be the first
-parameter. At least one of the chains in a robot mst start
-with `this`, otherwise robot parts will stay invisible.
-
+Method. Used in the constructor of a custom robot to automatically connect parts
+`part1`, `part2` and so on in a chain. The variable `this` can be used to mark
+the robot itself. If `this` is used in `addChain` it must be the first parameter.
+At least one of the chains in a robot must start with `this`, otherwise the
+robot parts will stay invisible.
 
 Example:
 
@@ -135,9 +168,9 @@ class MyRobot extends Prosthetic.Robot
 }
 ```
 
-Adding a chain always attaches parts to slot 0. If another
-slot or a custom position is needed, use [`attachTo`](#attachto) and [`attachToPosition`](#attachtoposition) methods of the
-robot parts. 
+Adding a chain always attaches parts to slot 0. If another slot or a custom
+slot position is needed, use [`attachToSlot`](#attachtoslot) or
+[`attachToPosition`](#attachtoposition) methods of the robot parts. 
 
 
 ### getPosition
@@ -146,8 +179,7 @@ robot parts.
 getPosition( );
 ```
 
-Method. Gets the position of a robot as an array of [x, y, z]
-coordinates.
+Method. Gets the position of a robot as an array of [x, y, z] coordinates.
 
 Example:
 
@@ -163,10 +195,9 @@ pos = robot.getPosition( );
 setPosition( x, y, z );
 ```
 
-Method. Sets the position of a robot to `[x,y,z]`. If the
-coordinates are not provided, the robot is removed from the
-scene, but it is not deleted. The default position of a
-robot is [0,0,0].
+Method. Sets the position of a robot to `[x,y,z]`. If the coordinates are not
+provided, the robot is removed from the scene, but it is not deleted. The
+default position of a robot is (0,0,0).
 
 Example:
 
@@ -175,18 +206,14 @@ robot.setPosition( 0, 10, 5 );
 ```
 
 
-
-# Robot control
-
-
 ### getAngle
 
 ```js
 getAngle( index );
 ```
 
-Method. Gets the angle of the `index`-th motor. If such
-motor does not exist, the result is 0.
+Method. Gets the angle of the `index`-th motor. If such motor does not exist,
+the result is 0. Use [`getAngles`](#getangles) to get all angles at once.
 
 Example:
 
@@ -202,9 +229,9 @@ a = robot.getAngle( 1 );
 setAngle( index, angle );
 ```
 
-Method. Sets the `angle` of the `index`-th motor. If such
-motor does not exist or if the `angle` is `null`, the
-operation is ignored.
+Method. Sets the `angle` of the `index`-th motor. If such motor does not exist
+or if the `angle` is `null`, the operation is ignored. Use [`setAngles`](#setangles)
+to set all angles at once.
 
 Example:
 
@@ -220,7 +247,8 @@ robot.setAngle( 1, Math.PI );
 getAngles( );
 ```
 
-Method. Gets an array with angles of all motors.
+Method. Gets an array with angles of all motors. Use [`getAngle`](#getangle) to
+get an individual angle.
 
 Example:
 
@@ -236,9 +264,9 @@ a = robot.getAngles( );
 setAngles( angle1, angle2, ... );
 ```
 
-Method. Sets the angles of all motors. `angles` is an array
-of the angles. If a value of some angle is `null`, then the
-corresponding motor's angle is unchanged.
+Method. Sets the angles `angle1`, `angle2`, ... of all motors. If a value of
+some angle is `null`, then the corresponding motor's angle is unchanged. Use
+[`setAngle`](#setangle) to set an individual angle.
 
 Example:
 
@@ -286,8 +314,8 @@ motors = robot.getMotors( );
 getDOF( );
 ```
 
-Method. Gets the overall degree of freedom (DOF) in a robot.
-The DOF is effectively equal to the number of motors.
+Method. Gets the overall degree of freedom (DOF) of a robot. The DOF is
+effectively equal to the number of motors.
 
 Example:
 

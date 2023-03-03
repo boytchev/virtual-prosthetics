@@ -89,6 +89,12 @@ function setCameraPosition( x, y, z )
 	camera.lookAt( controls.target );
 }
 
+function setCameraTarget( x, y, z )
+{
+	controls.target.set( x, y, z );
+	camera.lookAt( controls.target );
+}
+
 function setAnimation( func, fps=30 )
 {
 	animate = func;
