@@ -73,9 +73,7 @@ class Part extends THREE.Group
 	
 	attachToPosition( parentPart, x=0, y=0, z=0, ...rotParams )
 	{
-		var pseudoSlot = new THREE.Group( );
-			pseudoSlot.position.set( x, y, z );
-			pseudoSlot.rotation.set( ...rotParams );
+		var pseudoSlot = new Slot( x, y, z, ...rotParams );
 			pseudoSlot.add( this );
 			
 		parentPart.add( pseudoSlot );

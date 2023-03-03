@@ -2388,7 +2388,7 @@ else
 {parentPart.add(this);}
 return this;}
 attachToPosition(parentPart,x=0,y=0,z=0,...rotParams)
-{var pseudoSlot=new Group();pseudoSlot.position.set(x,y,z);pseudoSlot.rotation.set(...rotParams);pseudoSlot.add(this);parentPart.add(pseudoSlot);return this;}
+{var pseudoSlot=new Slot(x,y,z,...rotParams);pseudoSlot.add(this);parentPart.add(pseudoSlot);return this;}
 getAngle()
 {if(this.axis)
 return this.rotation[this.axis];else
