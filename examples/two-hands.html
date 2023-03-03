@@ -58,7 +58,7 @@
 						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
 						new Prosthetic.EndPhalange( 0.5 )
 				);
-
+			
 			motor = new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 2 );
 			this.addChain( motor,
 						new Prosthetic.Phalange( 1.1 ),
@@ -101,6 +101,7 @@
 			var motor;
 
 			motor = new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 0 );
+
 			this.addChain( motor,
 						new Prosthetic.Phalange(),
 						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
@@ -149,19 +150,16 @@
 
 
 	var A = new LeftHand( );
-		A.position.x = -2;
-		A.position.y = 0.2;
-		A.rotation.set( -0.3, -0.5, 0.2 );
+		A.setPosition( -2, 0.2, 0);
+		A.setRotation( -0.3, -0.5, 0.2 );
 
 	var B = new RightHand( );
-		B.position.x = 2;
-		B.position.y = 0.2;
-		B.rotation.set( -0.3, 0.5, -0.2 );
+		B.setPosition( 2, 0.2, 0 );
+		B.setRotation( -0.3, 0.5, -0.2 );
 
-	Prosthetic.setCameraPosition(4, 5, -7);
-
+	Prosthetic.setCameraPosition( 4, 2, -10 );
+	Prosthetic.setCameraTarget( 0, 1.5, 0 );
 	Prosthetic.setAnimation( loop );
-
 
 	function loop( t )
 	{

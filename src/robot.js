@@ -1,13 +1,15 @@
 
 //
-//	Robot for Virtual prosthetics
+//	Virtual Prosthetics 1.0
+//	Robot
 //
 //	class Robot extends THREE.Group
 //		constructor( )
-//		#prepare( )
+//		addChain( ...parts )
+//		showSlots( )
 //		getPosition( )
 //		setPosition( x, y, z )
-//		addChain( ...parts )
+//		setRotation( x, y, z, order='XYZ' )
 //		getParts( )
 //		getMotors( )
 //		getDOF( )
@@ -19,7 +21,7 @@
 
 
 import * as THREE from "../libs/three.module.js";
-import {scene} from "./scene.js";
+import {getScene} from "./scene.js";
 import {Part} from "./part.js";
 
 
@@ -34,7 +36,7 @@ class Robot extends THREE.Group
 		this.receiveShadow = true;
 		this.castShadow = true;
 		
-		scene.add( this );
+		getScene().add( this );
 		
 		this.parts = null;
 		this.motors = null;
@@ -47,6 +49,8 @@ class Robot extends THREE.Group
 
 	setPosition( x, y, z )
 	{
+		var scene = getScene();
+		
 		if( x === undefined )
 		{
 			scene.remove( this );
@@ -56,6 +60,11 @@ class Robot extends THREE.Group
 			this.position.set( x, y, z );
 			if( this.parent !== scene ) scene.add( this );
 		}
+	}
+
+	setRotation( x, y, z, order='XYZ' )
+	{
+		this.rotation.set( x, y, z, order );
 	}
 
 	addChain( ...parts )

@@ -3,8 +3,9 @@
 //	Slot for Virtual prosthetics
 //
 //	class Slot extends THREE.Group
-//		constructor( )
-//		draw( )
+//		constructor( x, y, z )
+//		setRotation( x, y, z, order='XYZ' )
+//		show( )
 //
 
 import * as THREE from "../libs/three.module.js";
@@ -32,14 +33,18 @@ var PLANE_GEOMETRY = new THREE.CircleGeometry( 0.1 ).rotateX( Math.PI/2 ),
 
 class Slot extends THREE.Group
 {
-	constructor( x=0, y=0, z=0, rotX=0, rotY=0, rotZ=0, rotOrder='XYZ' )
+	constructor( x, y, z )
 	{
 		super( );
 
 		this.position.set( x, y, z );
-		this.rotation.set( rotX, rotY, rotZ, rotOrder );
 	}
 
+	setRotation( x, y, z, order='XYZ' )
+	{
+		this.rotation.set( x, y, z, order );
+	}
+	
 	show( )
 	{
 		var ring = new THREE.Mesh( RING_GEOMETRY, RING_MATERIAL ),

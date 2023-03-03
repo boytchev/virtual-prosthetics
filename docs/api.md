@@ -6,19 +6,21 @@ in radians and all indices start from 0.
 
 * **[Introduction](#introduction)**
 * **[Scene](#scene)**
-	* [setAnimation](#setanimation), [setCameraPosition](#setcameraposition), [setCameraTarget](#setcameratarget), [setScene](#getscene)
+	* [setAnimation](#setanimation), [setCameraPosition](#setcameraposition), [setCameraTarget](#setcameratarget), [getScene](#getscene)
 * **[Robots](#robots)**
-	* [Robot](#robot), [addChain](#addchain)
-	* [getPosition](#getposition), [setPosition](#setposition)
+	* [Robot](#robot), [addChain](#addchain), [showSlots](#showslots)
+	* [getPosition](#getposition), [setPosition](#setposition), [setRotation](#setrotation)
 	* [getAngle](#getangle), [setAngle](#setangle), [getAngles](#getangles), [setAngles](#setangles)
 	* [getParts](#getparts), [getMotors](#getmotors), [getDOF](#getdof)
-* **[Robot parts](#parts)**
+* **[Parts](#parts)**
 	* [Part](#part), [setMotor](#setmotor)
-	* [addSlot](#addslot), [attachToSlot](#attachtoslot), [attachToPosition](#attachtoposition)
+	* [addSlot](#addslot), [attachToSlot](#attachtoslot)
 	* [getAngle](#getangle-1), [setAngle](#setangle-1)	
-* **[Stock parts](#stock-parts)**
-	* Motors: [MotorX](#motorx), [MotorY](#motory), [MotorZ](#motorz)
-	* Shapes: [Phalange](#phalange), [EndPhalange](#endphalange), [LeftPalm](#leftpalm), [RightPalm](#rightpalm)
+* **[Slots](#slots)**
+	* [Slot](#slot), [setRotation](#setrotation-1), [show](#show)
+* **[Predefined parts](#predefined-parts)**
+	* **[Motors](#motors)**: [MotorX](#motorx), [MotorY](#motory), [MotorZ](#motorz)
+	* **[Shapes](#shapes)**: [Phalange](#phalange), [EndPhalange](#endphalange), [LeftPalm](#leftpalm), [RightPalm](#rightpalm)
 
 
 
@@ -54,7 +56,7 @@ created prosthetic devices.
 ### setAnimation
 
 ```js
-setAnimation( func, fps )
+setAnimation( func, fps=30 )
 ```
 
 Function. Defines what custom function `func` is called `fps` times per second.
@@ -62,9 +64,8 @@ The function has two parameters:
 * `time` – elapsed time since the start of the library
 * `dTime` – elapsed time since the previous frame
 
-By default `fps` (frame per seconds) is set to 30. Higher `fps` produces
-smoother motion, but consumes more power. The maximal value for `fps` is
-controlled by the browser and is usually 60 or above.
+Higher `fps` produces smoother motion, but consumes more power. The maximal
+value for `fps` is controlled by the browser and is usually 60 or above.
 
 Example:
 
@@ -189,6 +190,22 @@ slot position is needed, use [`attachToSlot`](#attachtoslot) or
 [`attachToPosition`](#attachtoposition) methods of the robot parts. 
 
 
+### showSlots
+
+```js
+showSlots( );
+```
+
+Method. Shows the positions and orientations of all slots in a robot. This is
+used during the robot construction. By default slots are not shown.
+
+Example:
+
+```js
+robot.showSlots();
+```
+
+
 ### getPosition
 
 ```js
@@ -211,7 +228,7 @@ pos = robot.getPosition( );
 setPosition( x, y, z );
 ```
 
-Method. Sets the position of a robot to `[x,y,z]`. If the coordinates are not
+Method. Sets the position of a robot to (`x`,`y`,`z`). If the coordinates are not
 provided, the robot is removed from the scene, but it is not deleted. The
 default position of a robot is (0,0,0).
 
@@ -219,6 +236,22 @@ Example:
 
 ```js
 robot.setPosition( 0, 10, 5 );
+```
+
+
+### setRotation
+
+```js
+setRotation( x, y, z, order='XYZ' );
+```
+
+Method. Sets the orientation of a robot to [Euler angles](https://threejs.org/docs/#api/en/math/Euler)
+(`x`,`y`,`z`) and `order` of rotations.
+
+Example:
+
+```js
+robot.setRotation( 0, Math.PI/2, 0 );
 ```
 
 
@@ -341,29 +374,38 @@ dof = robot.getDOF( );
 
 
 
-# Part contruction
+# Parts
 
 ### Part
 
-Base class. Defines the core functionality of a robot part.
-Parts used in robots are extensions of this base class. Each
-part may have slots -- these are positions on the part where
-other parts can be attached.
+Base class. Defines the core functionality of a robot part. Parts used in robots
+are extensions of this base class. Each part may have slots where other parts
+can be attached.
 
+Example:
+```js
+class MyPart extends Part
+{
+	constructor ( ... )
+	{
+		super( );
+		
+		// defining part shape
+		// added part slots
+	}
+}
+```
 
 
 ### setMotor
 
 ```js
-setMotor( axis, min, max, def );
+setMotor( axis, min=-Infinity, max=Infinity, def=0 )
 ```
 
-Method. Sets the motor behaviour to a robot part -- `axis`
-of rotation, `min` angle, `max` angle and default angle
-`def`. The motor cannot be set to an angle outside the
-[`min`, `max`] interval. By default the angle is not
-restricted (i.e. `min` is `-Infinity`, `max` is `Infinity`],
-and `def` is 0.
+Method. Sets that a robot part is a motor. A motor implements rotation around
+an `axis` defined by the character `'x'`, `'y'` or `'z'`. The rotation is
+restricted to interval [`min`, `max`] and the initial angle is `def`. 
 
 Example:
 
@@ -379,8 +421,8 @@ part.setMotor( 'x', 0, Math.PI, Math.PI/2 );
 addSlot( x, y, z );
 ```
 
-Method. Adds a new slot to a robot part. The slot is at 
-coordinates (`x`, `y`, `z`) relative to the part. 
+Method. Adds a new slot to a robot part. The slot is at coordinates (`x`, `y`, `z`)
+relative to the part. To rotate a slot use its method [`setRotation`](#setrotation).
 
 Example:
 
@@ -396,39 +438,19 @@ part.addSlot( 2, 0, 1 );
 attachToSlot( parentPart, slot=0 );
 ```
 
-Method. Attaches the part to another `parentPart` at its
-`slot` number. If `slot` is not provided, the first slot is
-used. A part must be attached to only one other part or the
-robot itself.
+Method. Attaches the part to a `parentPart` at its `slot`. If `slot` is not
+provided, the first slot of the parent is used. If `slot` is a number, it is the
+slot index within all parent's slots. If `slot` is a [`Slot`](#slot), then the
+part is attached to this temporary slot.
 
 Example:
 
 ```js
 partB.attachToSlot( partA );
 partC.attachToSlot( partB, 2 );
+partC.attachToSlot( partB, new Slot(0,3,0) );
 ```
 
-
-
-### attachToPosition
-
-```js
-attachToPosition( parentPart, x=0, y=0, z=0 );
-```
-
-Method. Attaches the part to another `parentPart` at given
-coordinates (`x`, `y`, `z`) relative to the parent part.
-
-Example:
-
-```js
-partA.attachToPosition( robot );
-partB.attachToPosition( partB, 0, 5, 0 );
-```
-
-
-
-# Part control
 
 
 ### getAngle
@@ -437,8 +459,7 @@ partB.attachToPosition( partB, 0, 5, 0 );
 getAngle( );
 ```
 
-Method. Gets the angle of the part if it has a motor set,
-otherwise return 0.
+Method. Gets the angle of the part if it has a motor set, otherwise return 0.
 
 Example:
 
@@ -454,8 +475,8 @@ a = part.getAngle( );
 setAngle( angle );
 ```
 
-Method. Sets the motor's `angle` if the part has a motor.
-If `angle` is `null`, the operation is ignored.
+Method. Sets the motor's `angle` if the part has a motor. If `angle` is `null`,
+the operation is ignored.
 
 Example:
 
@@ -465,7 +486,69 @@ part.setAngle( Math.PI );
 
 
 
-# Motor parts
+
+# Slots 
+
+A slot is a position on a robot part where another part can be attach. The
+orientation of the slot affects the orientation of the attached part. Several
+parts can be attached to one slot.
+
+
+### Slot
+
+```js
+Slot( x, y, z )
+```
+
+Class. Defines a slot at coordinates (`x`, `y`, `z`). These coordinates are
+relative to the robot part of the slot.
+
+Example:
+
+```js
+slot = new Slot( 0, 0, Math.PI/4 );
+```
+
+
+### setRotation
+
+```js
+setRotation( x, y, z, order='XYZ' );
+```
+
+Method. Sets the orientation of a slot to [Euler angles](https://threejs.org/docs/#api/en/math/Euler)
+(`x`,`y`,`z`) and `order` of rotations. The orientation is relative to the
+robot part of the slot.
+
+
+Example:
+
+```js
+slot.setRotation( 0, Math.PI/2, 0 );
+```
+
+
+### show
+
+```js
+slot.show( );
+```
+
+Method. Shows the slot. This is used during the robot construction. Shown and
+hidden slots are functionally equivalent.
+
+Example:
+
+```js
+robot.show();
+```
+
+
+
+
+# Predefined parts
+
+## Motors
 
 Motor parts are robot parts that can rotate around one of the axes. Thus, each
 motor has DOF=1. Higher DOF is achieved by connecting several motors.
@@ -476,7 +559,7 @@ motor has DOF=1. Higher DOF is achieved by connecting several motors.
 ### MotorX
 
 ```js
-new MotorX( min, max, def, width, height );
+MotorX( min, max, def, width=0.1, height=0.05 )
 ```
 
 Class. Defines a simple motor that rotates around the X axis. The available
@@ -497,7 +580,7 @@ new MotorX( 0, Math.PI, Math.PI/2 );
 ### MotorY
 
 ```js
-new MotorY( min, max, def, width, height );
+MotorY( min, max, def, width=0.3, height=0.05 )
 ```
 
 Class. Defines a simple motor that rotates around the Y axis. The available
@@ -518,7 +601,7 @@ new MotorY( 0, Math.PI, Math.PI/2 );
 ### MotorZ
 
 ```js
-new MotorZ( min, max, def, width, height );
+MotorZ( min, max, def, width=0.1, height=0.05 )
 ```
 
 Class. Defines a simple motor that rotates around the Z axis. The available
@@ -537,10 +620,10 @@ new MotorZ( 0, Math.PI, Math.PI/2 );
 
 
 
-# Static parts
+## Shapes
 
-Static part are robot parts without motors. They cannot be rotated, unless they
-are attached to a motor.
+Shapes are robot parts without motors. They cannot be rotated, unless they
+are attached to a motor or are set as a motor with [`setMotor`](#setmotor).
 
 
 
@@ -548,12 +631,12 @@ are attached to a motor.
 ### Phalange
 
 ```js
-new Phalange( length, width, thickness );
+Phalange( length=1.0, width=0.3, thickness=0.3 )
 ```
 
-Class. Defines a static part designed for attachment to Z-motor. The parameters
+Class. Defines a phalange-like shape for attachment to Z-motor. The parameters
 `length`, `width` and `thickness` define the size of the part. There is one slot
-at the top of the part at position (0,`length`,0).
+at the top at position (0,`length`,0).
 
 <img src="images/phalange.png">
 
@@ -568,13 +651,13 @@ new Phalange( 1, 0.2, 0.2 );
 ### EndPhalange
 
 ```js
-new EndPhalange( length, width, thickness );
+EndPhalange( length=1.0, width=0.3, thickness=0.3 )
 ```
 
-Class. Defines a static part designed for attachment to Z-motor. The parameters
+Class. Defines a phalange-like shape for attachment to Z-motor. The parameters
 `length`, `width` and `thickness` define the size of the part. There are no
-slots. The `EndPhalange` looks like `Phalange`, but is intended to be the last
-part of a chain of phalanges.
+slots. The `EndPhalange` looks almost like `Phalange`, but is intended to be the
+last part of a chain of phalanges. It has no slots.
 
 <img src="images/endphalange.png">
 
@@ -584,5 +667,46 @@ Example:
 new EndPhalange( 1, 0.2, 0.2 );
 ```
 
+
+
+
+### LeftPalm
+
+```js
+LeftPalm( length=1.4, width=1.4, thickness=0.3 )
+```
+
+Class. Defines a shape for palm of left hand. The parameters `length`, `width`
+and `thickness` define the size of the palm. There are five slots for attaching
+each finger.
+
+<img src="images/leftpalm.png">
+
+Example:
+
+```js
+new LeftPalm( 1.5, 0.9, 0.3 );
+```
+
+
+
+
+### RightPalm
+
+```js
+RightPalm( length=1.4, width=1.4, thickness=0.3 )
+```
+
+Class. Defines a shape for palm of right hand. The parameters `length`, `width`
+and `thickness` define the size of the palm. There are five slots for attaching
+each finger.
+
+<img src="images/rightpalm.png">
+
+Example:
+
+```js
+new RightPalm( 1.5, 0.9, 0.3 );
+```
 
 

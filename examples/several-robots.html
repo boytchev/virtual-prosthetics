@@ -101,7 +101,7 @@
 			);
 			
 			var left = new Prosthetic.MotorZ( 0, -PI/2, 0, 0.2, 0.04 );
-				left.attachToPosition( root, 0, 1, -0.3 );
+				left.attachToSlot( root, new Prosthetic.Slot(0,1,-0.3) );
 		
 			this.addChain(
 				left,
@@ -111,7 +111,7 @@
 			);
 			
 			var right = new Prosthetic.MotorZ( 0, -PI/2, 0, 0.2, 0.04 );
-				right.attachToPosition( root, 0, 1, 0.3 );
+				right.attachToSlot( root, new Prosthetic.Slot(0,1,0.3) );
 		
 			this.addChain(
 				right,

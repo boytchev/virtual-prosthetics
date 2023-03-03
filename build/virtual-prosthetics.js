@@ -2267,6 +2267,8 @@ var FPS=30;var renderer,scene,camera,light,controls;var animate,oldTime=0;functi
 window.addEventListener('resize',onWindowResize,false);onWindowResize();var ground=new Mesh(new PlaneGeometry(1000,1000),new MeshLambertMaterial({color:'lightgray',}));ground.receiveShadow=true;ground.rotation.x=-Math.PI/2;scene.add(ground);controls=new OrbitControls(camera,renderer.domElement);controls.target=new Vector3(0,1,0);}
 createScene();function setCameraPosition(x,y,z)
 {camera.position.set(x,y,z);camera.lookAt(controls.target);}
+function setCameraTarget(x,y,z)
+{controls.target.set(x,y,z);camera.lookAt(controls.target);}
 function setAnimation(func,fps=30)
 {animate=func;FPS=fps;}
 function drawFrame(time)
@@ -2369,8 +2371,10 @@ isEmpty(){return this.head===null;}}
 class ConvexGeometry extends BufferGeometry{constructor(points=[]){super();const vertices=[];const normals=[];const convexHull=new ConvexHull().setFromPoints(points);const faces=convexHull.faces;for(let i=0;i<faces.length;i++){const face=faces[i];let edge=face.edge;do{const point=edge.head().point;vertices.push(point.x,point.y,point.z);normals.push(face.normal.x,face.normal.y,face.normal.z);edge=edge.next;}while(edge!==face.edge);}
 this.setAttribute('position',new Float32BufferAttribute(vertices,3));this.setAttribute('normal',new Float32BufferAttribute(normals,3));}}
 var RING_GEOMETRY=new TorusGeometry(0.1,0.01).rotateX(Math.PI/2),RING_MATERIAL=new MeshLambertMaterial({color:'crimson'});var PLANE_GEOMETRY=new CircleGeometry(0.1).rotateX(Math.PI/2),PLANE_MATERIAL=new MeshLambertMaterial({color:'crimson',side:DoubleSide,transparent:true,opacity:0.3,});class Slot extends Group
-{constructor(x=0,y=0,z=0,rotX=0,rotY=0,rotZ=0,rotOrder='XYZ')
-{super();this.position.set(x,y,z);this.rotation.set(rotX,rotY,rotZ,rotOrder);}
+{constructor(x,y,z)
+{super();this.position.set(x,y,z);}
+setRotation(x,y,z,order='XYZ')
+{this.rotation.set(x,y,z,order);}
 show()
 {var ring=new Mesh(RING_GEOMETRY,RING_MATERIAL),plane=new Mesh(PLANE_GEOMETRY,PLANE_MATERIAL),axes=new AxesHelper(0.2);axes.scale.set(1,1,0.5);axes.setColors('crimson','crimson','crimson');this.add(ring,plane,axes);}}
 class Part extends Group
@@ -2378,17 +2382,15 @@ class Part extends Group
 {super();this.receiveShadow=true;this.castShadow=true;this.slots=[];this.axis=null;this.min=null;this.max=null;this.def=null;}
 setMotor(axis,min=-Infinity,max=Infinity,def=0)
 {this.axis=axis;this.min=Math.min(min,max);this.max=Math.max(min,max);this.def=MathUtils.clamp(def,this.min,this.max);this.setAngle(def);}
-addSlot(...params)
-{var slot=new Slot(...params);this.slots.push(slot);this.add(slot);return slot;}
+addSlot(x,y,z)
+{var slot=new Slot(x,y,z);this.slots.push(slot);this.add(slot);return slot;}
 attachToSlot(parentPart,slot=0)
-{if(parentPart.slots instanceof Array)
+{if(slot instanceof Slot)
+{slot.add(this);return this;}
+if(parentPart.slots instanceof Array)
 {if(slot>=parentPart.slots.length)
-throw'Error: invalid slot';parentPart.slots[slot].add(this);}
-else
-{parentPart.add(this);}
-return this;}
-attachToPosition(parentPart,x=0,y=0,z=0,...rotParams)
-{var pseudoSlot=new Slot(x,y,z,...rotParams);pseudoSlot.add(this);parentPart.add(pseudoSlot);return this;}
+throw'Error: invalid slot';parentPart.slots[slot].add(this);return this;}
+parentPart.add(this);return this;}
 getAngle()
 {if(this.axis)
 return this.rotation[this.axis];else
@@ -2400,14 +2402,16 @@ this.rotation[this.axis]=MathUtils.clamp(x,this.min,this.max);else
 throw`Error: body part '${this.name}' cannot rotate`;}}
 class Robot extends Group
 {constructor()
-{super();this.receiveShadow=true;this.castShadow=true;scene.add(this);this.parts=null;this.motors=null;}
+{super();this.receiveShadow=true;this.castShadow=true;getScene().add(this);this.parts=null;this.motors=null;}
 getPosition()
 {return[this.position.x,this.position.y,this.position.z];}
 setPosition(x,y,z)
-{if(x===undefined)
+{var scene=getScene();if(x===undefined)
 {scene.remove(this);}
 else
 {this.position.set(x,y,z);if(this.parent!==scene)scene.add(this);}}
+setRotation(x,y,z,order='XYZ')
+{this.rotation.set(x,y,z,order);}
 addChain(...parts)
 {for(var i=1;i<parts.length;i++)
 parts[i].attachToSlot(parts[i-1]);}#prepare()
@@ -2460,12 +2464,12 @@ class EndPhalange extends Part
 {super();var L=length,T=thickness/2,I=Math.min(length,thickness)/8,E=0.003;var shape=[-T,I,-T+I,E,0,E,T,T,T,L-I-E,T-I,L-E,-T+I,L-E,-T,L-I];this.add(extrudeShape(shape,width));}}
 class LeftPalm extends Part
 {constructor(length=1.4,width=1.4,thickness=0.3)
-{super();var L=length,W=width/2,I=width/8;var shape=[-W+I,0,W-2*I,0,W,2*I,W,L,-W,L,-W,L/2,];this.add(extrudeShape(shape,thickness));var that=this;function addSlot(pointA,pointB,k,...rotParams)
-{var xA=shape[2*pointA],xB=shape[2*pointB],yA=shape[2*pointA+1],yB=shape[2*pointB+1];that.addSlot(xA*(1-k)+k*xB,yA*(1-k)+k*yB,0,0,Math.PI/2,Math.PI+Math.atan2(yB-yA,xB-xA),'ZXY');}
+{super();var L=length,W=width/2,I=width/8;var shape=[-W+I,0,W-2*I,0,W,2*I,W,L,-W,L,-W,L/2,];this.add(extrudeShape(shape,thickness));var that=this;function addSlot(pointA,pointB,k)
+{var xA=shape[2*pointA],xB=shape[2*pointB],yA=shape[2*pointA+1],yB=shape[2*pointB+1];var slot=that.addSlot(xA*(1-k)+k*xB,yA*(1-k)+k*yB,0);slot.setRotation(0,Math.PI/2,Math.PI+Math.atan2(yB-yA,xB-xA),'ZXY');}
 addSlot(2,3,1/4);addSlot(3,4,1/8);addSlot(3,4,3/8);addSlot(3,4,5/8);addSlot(3,4,7/8);}}
 class RightPalm extends Part
 {constructor(length=1.4,width=1.4,thickness=0.3)
-{super();var L=length,W=width/2,I=width/8;var shape=[W-I,0,-W+2*I,0,-W,2*I,-W,L,W,L,W,L/2,];this.add(extrudeShape(shape,thickness));var that=this;function addSlot(pointA,pointB,k,...rotParams)
-{var xA=shape[2*pointA],xB=shape[2*pointB],yA=shape[2*pointA+1],yB=shape[2*pointB+1];that.addSlot(xA*(1-k)+k*xB,yA*(1-k)+k*yB,0,0,Math.PI/2,0*Math.PI+Math.atan2(yB-yA,xB-xA),'ZXY');}
+{super();var L=length,W=width/2,I=width/8;var shape=[W-I,0,-W+2*I,0,-W,2*I,-W,L,W,L,W,L/2,];this.add(extrudeShape(shape,thickness));var that=this;function addSlot(pointA,pointB,k)
+{var xA=shape[2*pointA],xB=shape[2*pointB],yA=shape[2*pointA+1],yB=shape[2*pointB+1];var slot=that.addSlot(xA*(1-k)+k*xB,yA*(1-k)+k*yB,0);slot.setRotation(0,Math.PI/2,Math.atan2(yB-yA,xB-xA),'ZXY');}
 addSlot(2,3,1/4);addSlot(3,4,1/8);addSlot(3,4,3/8);addSlot(3,4,5/8);addSlot(3,4,7/8);}}
-export{EndPhalange,LeftPalm,MotorX,MotorY,MotorZ,Part,Phalange,RightPalm,Robot,getScene,scene,setAnimation,setCameraPosition};
+export{EndPhalange,LeftPalm,MotorX,MotorY,MotorZ,Part,Phalange,RightPalm,Robot,Slot,getScene,setAnimation,setCameraPosition,setCameraTarget};

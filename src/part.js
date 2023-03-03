@@ -7,7 +7,6 @@
 //		setMotor( axis, min=-Infinity, max=Infinity, def=0 )
 //		addSlot( x, y, z )
 //		attachToSlot( parentPart, slot=0 )
-//		attachToPosition( parentPart, x=0, y=0, z=0 )
 //		getAngle( )
 //		setAngle( x )
 //
@@ -47,9 +46,9 @@ class Part extends THREE.Group
 		this.setAngle( def );
 	}
 	
-	addSlot( ...params )
+	addSlot( x, y, z )
 	{
-		var slot = new Slot( ...params );
+		var slot = new Slot( x, y, z );
 		this.slots.push( slot );
 		this.add( slot );
 		return slot;
@@ -57,26 +56,26 @@ class Part extends THREE.Group
 	
 	attachToSlot( parentPart, slot=0 )
 	{
+		// attachToSlot( Part, Slot )
+		if( slot instanceof Slot )
+		{
+			slot.add( this );
+			return this;
+		}
+		
+		// attachToSlot( Part, index )
 		if( parentPart.slots instanceof Array )
 		{
 			if( slot >= parentPart.slots.length )
 				throw 'Error: invalid slot';
 			
 			parentPart.slots[slot].add( this );
+			return this;
 		}
-		else
-		{
-			parentPart.add( this );
-		}
-		return this;
-	}
-	
-	attachToPosition( parentPart, x=0, y=0, z=0, ...rotParams )
-	{
-		var pseudoSlot = new Slot( x, y, z, ...rotParams );
-			pseudoSlot.add( this );
-			
-		parentPart.add( pseudoSlot );
+		
+		// attachToSlot( Part )
+		// attachToSlot( Scene )
+		parentPart.add( this );
 		return this;
 	}
 	

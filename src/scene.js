@@ -7,6 +7,7 @@
 //		setCameraPosition( x, y, z )
 //		setCameraTarget( x, y, z )
 //		setAnimation( func, fps=30 )
+//		getScene( )
 //
 
 

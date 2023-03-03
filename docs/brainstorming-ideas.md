@@ -1,10 +1,10 @@
 ## Brainstorming Ideas
 
 #### Topology
-* T1. [**DONE**] Custom skeleton (e.g. model 1 individual finger, or a hand with 6 fingers)
+* T1. [**IN PROCESS**] Custom skeleton (e.g. model 1 individual finger, or a hand with 6 fingers)
 * T2. [**IN PROCESS**] Custom shapes (e.g. different 3D shapes of body parts)
-* T3. [**DONE**] Custom degrees of freedom in joints
-* T4. [**DONE**] Custom ranges of joint rotations
+* T3. [**IN PROCESS**] Custom degrees of freedom in joints
+* T4. [**IN PROCESS**] Custom ranges of joint rotations
 * T5. Inverse kinematics
 * T6. Soft tissue and deformations
 
@@ -35,14 +35,14 @@
 * P1. Mapping between input data and posture
 * P2. Predefined collection of postures
 * P3. Predefined animations
-* P4. [**DONE**] Scenes with several models
+* P4. [**IN PROCESS**] Scenes with several models
 * P5. Self-balancing of pressure
-* P6. Predefined models (e.g. hands)
+* P6. [**IN PROCESS**]Predefined models (e.g. hands)
 * P7. Self-learning mode
 * P8. Macros mode (e.g. grip for rod, ball, cup; handshake, ...)
 
 #### Documents
-* D1. [**DONE**] GitHub project
+* D1. [**IN PROCESS**] GitHub project
 * D2. [**IN PROCESS**] User documentation
 * D3. Educational content
 * D4. Academic papers

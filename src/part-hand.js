@@ -1,7 +1,11 @@
 
 //
+//	Shapes for Virtual prosthetics
 //
-
+//	class Phalange( length=1.0, width=0.3, thickness=0.3 )
+//	class EndPhalange( length=1.0, width=0.3, thickness=0.3 )
+//	class LeftPalm( length=1.4, width=1.4, thickness=0.3 )
+//
 
 
 import * as THREE from "../libs/three.module.js";
@@ -144,22 +148,15 @@ class LeftPalm extends Part
 		this.add( extrudeShape(shape,thickness) );
 		
 		var that = this;
-		function addSlot( pointA, pointB, k, ...rotParams )
+		function addSlot( pointA, pointB, k )
 		{
 			var xA = shape[2*pointA],
 				xB = shape[2*pointB],
 				yA = shape[2*pointA+1],
 				yB = shape[2*pointB+1];
 				
-			that.addSlot(
-				xA*(1-k) + k*xB,	// x
-				yA*(1-k) + k*yB,	// y
-				0,					// z
-				0,
-				Math.PI/2,
-				Math.PI+Math.atan2( yB-yA, xB-xA ),
-				'ZXY'
-			);
+			var slot = that.addSlot( xA*(1-k) + k*xB, yA*(1-k) + k*yB, 0 );
+				slot.setRotation( 0, Math.PI/2, Math.PI+Math.atan2( yB-yA, xB-xA ), 'ZXY' );
 		}
 		
 		addSlot( 2, 3, 1/4 ); // slot 0
@@ -183,7 +180,7 @@ class RightPalm extends Part
 		// profile shape (2D)
 		var L = length,
 			W = width/2,
-			I = width / 8;
+			I = width/8;
 			
 		var shape = [
 				 W-I,   0,			// 0
@@ -198,22 +195,15 @@ class RightPalm extends Part
 		this.add( extrudeShape(shape,thickness) );
 		
 		var that = this;
-		function addSlot( pointA, pointB, k, ...rotParams )
+		function addSlot( pointA, pointB, k )
 		{
 			var xA = shape[2*pointA],
 				xB = shape[2*pointB],
 				yA = shape[2*pointA+1],
 				yB = shape[2*pointB+1];
 				
-			that.addSlot(
-				xA*(1-k) + k*xB,	// x
-				yA*(1-k) + k*yB,	// y
-				0,					// z
-				0,
-				Math.PI/2,
-				0*Math.PI+Math.atan2( yB-yA, xB-xA ),
-				'ZXY'
-			);
+			var slot = that.addSlot( xA*(1-k) + k*xB, yA*(1-k) + k*yB, 0 );
+				slot.setRotation( 0, Math.PI/2, Math.atan2( yB-yA, xB-xA ), 'ZXY' );
 		}
 		
 		addSlot( 2, 3, 1/4 ); // slot 0

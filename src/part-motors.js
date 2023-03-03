@@ -1,10 +1,10 @@
 
 //
-//	Motors for for Virtual prosthetics
+//	Motors for Virtual prosthetics
 //
-//	class MotorX( min, max, def, width=0.1, radius=0.02 )
-//	class MotorY( min, max, def, radius=0.1, length=0.02 )
-//	class MotorZ( min, max, def, width=0.1, radius=0.02 )
+//	class MotorX( min, max, def, width=0.1, height=0.05 )
+//	class MotorY( min, max, def, width=0.3, height=0.05 )
+//	class MotorZ( min, max, def, width=0.1, height=0.05 )
 //
 
 
