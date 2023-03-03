@@ -6,7 +6,7 @@ in radians and all indices start from 0.
 
 * **[Introduction](#introduction)**
 * **[Scene](#scene)**
-	* [setAnimation](#setanimation), [setCameraPosition](#setcameraposition), [setCameraTarget](#setcameratarget)
+	* [setAnimation](#setanimation), [setCameraPosition](#setcameraposition), [setCameraTarget](#setcameratarget), [setScene](#getscene)
 * **[Robots](#robots)**
 	* [Robot](#robot), [addChain](#addchain)
 	* [getPosition](#getposition), [setPosition](#setposition)
@@ -84,7 +84,7 @@ function loop( time, dTime )
 setCameraPosition( x, y, z );
 ```
 
-Method. Moves the camera to coordinates (`x`,`y`,`z`). By default the camera
+Function. Moves the camera to coordinates (`x`,`y`,`z`). By default the camera
 position is (4,4,7).
 
 Examples:
@@ -100,13 +100,29 @@ setCameraPosition( 10, 2, 0 );
 setCameraTarget( x, y, z );
 ```
 
-Method. Turns the camera towards coordinates (`x`,`y`,`z`). By default the
+Function. Turns the camera towards coordinates (`x`,`y`,`z`). By default the
 camera target is (0,0,0).
 
 Examples:
 
 ```js
 setCameraTarget( 0, 2, 0 );
+```
+
+
+### getScene
+
+```js
+getScene( );
+```
+
+Function. Gets the scene as a [`THREE.Scene`](https://threejs.org/docs/#api/en/scenes/Scene)
+object that can be manipulated by [Three.js](https://threejs.org/).
+
+Examples:
+
+```js
+scene = getScene( );
 ```
 
 

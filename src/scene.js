@@ -1,10 +1,14 @@
 
 //
-//	Robot parts shapes for Virtual prosthetics
+//	Virtual Prosthetics 1.0
+//	Scene
 //
-//	Phalange( length=1.0, width=0.3, thickness=0.3 )
-//	EndPhalange( length=1.0, width=0.3, thickness=0.3 )
+//	Public:
+//		setCameraPosition( x, y, z )
+//		setCameraTarget( x, y, z )
+//		setAnimation( func, fps=30 )
 //
+
 
 
 
@@ -127,4 +131,4 @@ function getScene( )
 }
 
 
-export { scene, setAnimation, getScene, setCameraPosition };
+export { setAnimation, getScene, setCameraPosition, setCameraTarget };
