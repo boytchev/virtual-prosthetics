@@ -14,7 +14,7 @@
 
 import * as THREE from "../libs/three.module.js";
 import { ConvexGeometry } from "../libs/geometries/ConvexGeometry.js";
-
+import {Slot} from "./slot.js";
 
 
 // base class for robot parts
@@ -47,9 +47,12 @@ class Part extends THREE.Group
 		this.setAngle( def );
 	}
 	
-	addSlot( x, y, z )
+	addSlot( ...params )
 	{
-		this.slots.push( new THREE.Vector3(x,y,z) );
+		var slot = new Slot( ...params );
+		this.slots.push( slot );
+		this.add( slot );
+		return slot;
 	}
 	
 	attachToSlot( parentPart, slot=0 )
@@ -59,16 +62,24 @@ class Part extends THREE.Group
 			if( slot >= parentPart.slots.length )
 				throw 'Error: invalid slot';
 			
-			this.position.copy( parentPart.slots[slot] );
+			parentPart.slots[slot].add( this );
 		}
-
-		parentPart.add( this );
+		else
+		{
+			parentPart.add( this );
+		}
+		return this;
 	}
 	
-	attachToPosition( parentPart, x=0, y=0, z=0 )
+	attachToPosition( parentPart, x=0, y=0, z=0, ...rotParams )
 	{
-		this.position.set( x, y, z );
-		parentPart.add( this );
+		var pseudoSlot = new THREE.Group( );
+			pseudoSlot.position.set( x, y, z );
+			pseudoSlot.rotation.set( ...rotParams );
+			pseudoSlot.add( this );
+			
+		parentPart.add( pseudoSlot );
+		return this;
 	}
 	
 	getAngle( )

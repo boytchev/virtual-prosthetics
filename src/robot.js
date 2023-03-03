@@ -23,6 +23,8 @@ import {scene} from "./scene.js";
 import {Part} from "./part.js";
 
 
+	
+	
 class Robot extends THREE.Group
 {
 	constructor( )
@@ -82,6 +84,14 @@ class Robot extends THREE.Group
 		}
 	}
 	
+	showSlots( )
+	{
+		this.#prepare( );
+		for( var part of this.parts )
+			for( var slot of part.slots )
+				slot.show( );
+	}
+	
 	getParts( )
 	{
 		this.#prepare( );
@@ -128,14 +138,13 @@ class Robot extends THREE.Group
 	setAngle( index, angle )
 	{
 		this.#prepare( );
-		
+
 		if( typeof this.motors[index] === 'undefined' )
 			return;
 		
-		if( !Number.isNaN(angle) )
+		if( Number.isNaN(angle) )
 			return;
-		
-		this.motors[index][1].setAngle( angle );
+		this.motors[index].setAngle( angle );
 	}
 
 	getAngle( index )
@@ -145,7 +154,7 @@ class Robot extends THREE.Group
 		if( typeof this.motors[index] === 'undefined' )
 			return 0;
 		
-		return this.motors[index][1].getAngle( );
+		return this.motors[index].getAngle( );
 	}
 }
 

@@ -1,0 +1,185 @@
+﻿<!DOCTYPE html>
+
+
+<head>
+	<title>Two hands</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<link rel="shortcut icon" type="image/png" href="logo.png"/>
+	<link rel="stylesheet" href="examples.css">
+</head>
+
+
+<body>
+	<header>
+		<h1>Two hands</h1>
+		<h2>Prototype models of prosthetic hands</h2>
+		<h3><a href="https://boytchev.github.io/virtual-prosthetics/">Virtual Prosthetics Examples</a></h3>
+	</header>
+	
+	<script type="module">
+
+
+	import * as Prosthetic from "../build/virtual-prosthetics.js";
+	//import * as Prosthetic from "../src/virtual-prosthetics.js";
+
+
+	const PI = Math.PI;
+	const sin = Math.sin;
+	const cos = Math.cos;
+
+
+
+	class LeftHand extends Prosthetic.Robot
+	{
+		constructor( )
+		{
+			super( );
+			
+			var palm = new Prosthetic.LeftPalm( );
+				palm.attachToSlot( this );
+			
+			var motor;
+
+			motor = new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 0 );
+			this.addChain( motor,
+						new Prosthetic.Phalange(),
+						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+						new Prosthetic.Phalange( 0.5 ),
+						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+						new Prosthetic.EndPhalange( 0.5 )
+				);
+			
+			motor = new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 1 );
+			this.addChain( motor,
+						new Prosthetic.Phalange(),
+						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+						new Prosthetic.Phalange( 0.5 ),
+						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+						new Prosthetic.EndPhalange( 0.5 )
+				);
+
+			motor = new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 2 );
+			this.addChain( motor,
+						new Prosthetic.Phalange( 1.1 ),
+						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+						new Prosthetic.Phalange( 0.5 ),
+						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+						new Prosthetic.EndPhalange( 0.5 )
+				);
+			
+			motor = new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 3 );
+			this.addChain( motor,
+						new Prosthetic.Phalange( ),
+						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+						new Prosthetic.Phalange( 0.5 ),
+						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+						new Prosthetic.EndPhalange( 0.5 ) );
+			
+			motor = new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 4 );
+			this.addChain( motor,
+						new Prosthetic.Phalange( 0.8 ),
+						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+						new Prosthetic.Phalange( 0.5 ),
+						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+						new Prosthetic.EndPhalange( 0.5 ) );
+		}
+		
+	}
+
+
+
+	class RightHand extends Prosthetic.Robot
+	{
+		constructor( )
+		{
+			super( );
+			
+			var palm = new Prosthetic.RightPalm( );
+				palm.attachToSlot( this );
+			
+			var motor;
+
+			motor = new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 0 );
+			this.addChain( motor,
+						new Prosthetic.Phalange(),
+						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+						new Prosthetic.Phalange( 0.5 ),
+						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+						new Prosthetic.EndPhalange( 0.5 )
+				);
+			
+			motor = new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 1 );
+			this.addChain( motor,
+						new Prosthetic.Phalange(),
+						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+						new Prosthetic.Phalange( 0.5 ),
+						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+						new Prosthetic.EndPhalange( 0.5 )
+				);
+
+			motor = new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 2 );
+			this.addChain( motor,
+						new Prosthetic.Phalange( 1.1 ),
+						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+						new Prosthetic.Phalange( 0.5 ),
+						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+						new Prosthetic.EndPhalange( 0.5 )
+				);
+			
+			motor = new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 3 );
+			this.addChain( motor,
+						new Prosthetic.Phalange( ),
+						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+						new Prosthetic.Phalange( 0.5 ),
+						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+						new Prosthetic.EndPhalange( 0.5 ) );
+			
+			motor = new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 4 );
+			this.addChain( motor,
+						new Prosthetic.Phalange( 0.8 ),
+						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+						new Prosthetic.Phalange( 0.5 ),
+						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+						new Prosthetic.EndPhalange( 0.5 ) );
+		}
+		
+	}
+
+
+
+	var A = new LeftHand( );
+		A.position.x = -2;
+		A.position.y = 0.2;
+		A.rotation.set( -0.3, -0.5, 0.2 );
+
+	var B = new RightHand( );
+		B.position.x = 2;
+		B.position.y = 0.2;
+		B.rotation.set( -0.3, 0.5, -0.2 );
+
+	Prosthetic.setCameraPosition(4, 5, -7);
+
+	Prosthetic.setAnimation( loop );
+
+
+	function loop( t )
+	{
+		for( var i=0; i<2; i++ )
+		{
+			var sin = -PI/4-PI/4*(1+Math.sin(2*t-i/3));
+			A.setAngle( i, sin );
+			B.setAngle( i, sin );
+		}
+
+		for( var i=3; i<A.getDOF(); i++ )
+		{
+			var sin = -PI/4*(1+Math.sin(3*t-i/3));
+			A.setAngle( i, sin );
+			B.setAngle( i, sin );
+		}
+	}
+
+
+	</script>
+</body>

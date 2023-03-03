@@ -82,7 +82,7 @@ class Phalange extends Part
 		// create main mesh
 		this.add( extrudeShape(shape,width) );
 		
-		this.slots = [new THREE.Vector3(0,length,0)];
+		this.addSlot( 0, length, 0 );
 	} // Phalange.constructor
 
 	
@@ -114,11 +114,117 @@ class EndPhalange extends Part
 		
 		// create main mesh
 		this.add( extrudeShape(shape,width) );
-		
-		this.slots = [];
 	} // EndPhalange.constructor
 	
 } // EndPhalange
 
 
-export { Phalange, EndPhalange };
+
+class LeftPalm extends Part
+{
+	constructor ( length=1.4, width=1.4, thickness=0.3 )
+	{
+		super( );
+		
+		// profile shape (2D)
+		var L = length,
+			W = width/2,
+			I = width / 8;
+			
+		var shape = [
+				-W+I,   0,			// 0
+				 W-2*I, 0,			// 1
+				 W,     2*I,		// 2
+				 W,     L,			// 3
+				-W,     L,			// 4
+				-W  ,   L/2,		// 5
+			];
+		
+		// create main mesh
+		this.add( extrudeShape(shape,thickness) );
+		
+		var that = this;
+		function addSlot( pointA, pointB, k, ...rotParams )
+		{
+			var xA = shape[2*pointA],
+				xB = shape[2*pointB],
+				yA = shape[2*pointA+1],
+				yB = shape[2*pointB+1];
+				
+			that.addSlot(
+				xA*(1-k) + k*xB,	// x
+				yA*(1-k) + k*yB,	// y
+				0,					// z
+				0,
+				Math.PI/2,
+				Math.PI+Math.atan2( yB-yA, xB-xA ),
+				'ZXY'
+			);
+		}
+		
+		addSlot( 2, 3, 1/4 ); // slot 0
+		addSlot( 3, 4, 1/8 ); // slot 1  
+		addSlot( 3, 4, 3/8 ); // slot 2
+		addSlot( 3, 4, 5/8 ); // slot 3
+		addSlot( 3, 4, 7/8 ); // slot 4
+		
+	} // LeftPalm.constructor
+	
+} // LeftPalm
+
+
+
+class RightPalm extends Part
+{
+	constructor ( length=1.4, width=1.4, thickness=0.3 )
+	{
+		super( );
+		
+		// profile shape (2D)
+		var L = length,
+			W = width/2,
+			I = width / 8;
+			
+		var shape = [
+				 W-I,   0,			// 0
+				-W+2*I, 0,			// 1
+				-W,     2*I,		// 2
+				-W,     L,			// 3
+				 W,     L,			// 4
+				 W  ,   L/2,		// 5
+			];
+		
+		// create main mesh
+		this.add( extrudeShape(shape,thickness) );
+		
+		var that = this;
+		function addSlot( pointA, pointB, k, ...rotParams )
+		{
+			var xA = shape[2*pointA],
+				xB = shape[2*pointB],
+				yA = shape[2*pointA+1],
+				yB = shape[2*pointB+1];
+				
+			that.addSlot(
+				xA*(1-k) + k*xB,	// x
+				yA*(1-k) + k*yB,	// y
+				0,					// z
+				0,
+				Math.PI/2,
+				0*Math.PI+Math.atan2( yB-yA, xB-xA ),
+				'ZXY'
+			);
+		}
+		
+		addSlot( 2, 3, 1/4 ); // slot 0
+		addSlot( 3, 4, 1/8 ); // slot 1  
+		addSlot( 3, 4, 3/8 ); // slot 2
+		addSlot( 3, 4, 5/8 ); // slot 3
+		addSlot( 3, 4, 7/8 ); // slot 4
+		
+	} // RightPalm.constructor
+	
+} // RightPalm
+
+
+export { Phalange, EndPhalange, LeftPalm, RightPalm };

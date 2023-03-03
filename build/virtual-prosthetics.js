@@ -2118,6 +2118,10 @@ const _start=new Vector3();const _end=new Vector3();class LineSegments extends L
 computeLineDistances(){const geometry=this.geometry;if(geometry.index===null){const positionAttribute=geometry.attributes.position;const lineDistances=[];for(let i=0,l=positionAttribute.count;i<l;i+=2){_start.fromBufferAttribute(positionAttribute,i);_end.fromBufferAttribute(positionAttribute,i+1);lineDistances[i]=(i===0)?0:lineDistances[i-1];lineDistances[i+1]=lineDistances[i]+_start.distanceTo(_end);}
 geometry.setAttribute('lineDistance',new Float32BufferAttribute(lineDistances,1));}else{console.warn('THREE.LineSegments.computeLineDistances(): Computation only possible with non-indexed BufferGeometry.');}
 return this;}}
+class CircleGeometry extends BufferGeometry{constructor(radius=1,segments=32,thetaStart=0,thetaLength=Math.PI*2){super();this.type='CircleGeometry';this.parameters={radius:radius,segments:segments,thetaStart:thetaStart,thetaLength:thetaLength};segments=Math.max(3,segments);const indices=[];const vertices=[];const normals=[];const uvs=[];const vertex=new Vector3();const uv=new Vector2();vertices.push(0,0,0);normals.push(0,0,1);uvs.push(0.5,0.5);for(let s=0,i=3;s<=segments;s++,i+=3){const segment=thetaStart+s/segments*thetaLength;vertex.x=radius*Math.cos(segment);vertex.y=radius*Math.sin(segment);vertices.push(vertex.x,vertex.y,vertex.z);normals.push(0,0,1);uv.x=(vertices[i]/radius+1)/2;uv.y=(vertices[i+1]/radius+1)/2;uvs.push(uv.x,uv.y);}
+for(let i=1;i<=segments;i++){indices.push(i,i+1,0);}
+this.setIndex(indices);this.setAttribute('position',new Float32BufferAttribute(vertices,3));this.setAttribute('normal',new Float32BufferAttribute(normals,3));this.setAttribute('uv',new Float32BufferAttribute(uvs,2));}
+static fromJSON(data){return new CircleGeometry(data.radius,data.segments,data.thetaStart,data.thetaLength);}}
 class CylinderGeometry extends BufferGeometry{constructor(radiusTop=1,radiusBottom=1,height=1,radialSegments=32,heightSegments=1,openEnded=false,thetaStart=0,thetaLength=Math.PI*2){super();this.type='CylinderGeometry';this.parameters={radiusTop:radiusTop,radiusBottom:radiusBottom,height:height,radialSegments:radialSegments,heightSegments:heightSegments,openEnded:openEnded,thetaStart:thetaStart,thetaLength:thetaLength};const scope=this;radialSegments=Math.floor(radialSegments);heightSegments=Math.floor(heightSegments);const indices=[];const vertices=[];const normals=[];const uvs=[];let index=0;const indexArray=[];const halfHeight=height/2;let groupStart=0;generateTorso();if(openEnded===false){if(radiusTop>0)generateCap(true);if(radiusBottom>0)generateCap(false);}
 this.setIndex(indices);this.setAttribute('position',new Float32BufferAttribute(vertices,3));this.setAttribute('normal',new Float32BufferAttribute(normals,3));this.setAttribute('uv',new Float32BufferAttribute(uvs,2));function generateTorso(){const normal=new Vector3();const vertex=new Vector3();let groupCount=0;const slope=(radiusBottom-radiusTop)/height;for(let y=0;y<=heightSegments;y++){const indexRow=[];const v=y/heightSegments;const radius=v*(radiusBottom-radiusTop)+radiusTop;for(let x=0;x<=radialSegments;x++){const u=x/radialSegments;const theta=u*thetaLength+thetaStart;const sinTheta=Math.sin(theta);const cosTheta=Math.cos(theta);vertex.x=radius*sinTheta;vertex.y=-v*height+halfHeight;vertex.z=radius*cosTheta;vertices.push(vertex.x,vertex.y,vertex.z);normal.set(sinTheta,slope,cosTheta).normalize();normals.push(normal.x,normal.y,normal.z);uvs.push(u,1-v);indexRow.push(index++);}
 indexArray.push(indexRow);}
@@ -2135,6 +2139,10 @@ for(let j=0;j<3;j++){const jNext=(j+1)%3;const vecHash0=hashes[j];const vecHash1
 edgeData[reverseHash]=null;}else if(!(hash in edgeData)){edgeData[hash]={index0:indexArr[j],index1:indexArr[jNext],normal:_normal.clone(),};}}}
 for(const key in edgeData){if(edgeData[key]){const{index0,index1}=edgeData[key];_v0.fromBufferAttribute(positionAttr,index0);_v1$1.fromBufferAttribute(positionAttr,index1);vertices.push(_v0.x,_v0.y,_v0.z);vertices.push(_v1$1.x,_v1$1.y,_v1$1.z);}}
 this.setAttribute('position',new Float32BufferAttribute(vertices,3));}}}
+class TorusGeometry extends BufferGeometry{constructor(radius=1,tube=0.4,radialSegments=12,tubularSegments=48,arc=Math.PI*2){super();this.type='TorusGeometry';this.parameters={radius:radius,tube:tube,radialSegments:radialSegments,tubularSegments:tubularSegments,arc:arc};radialSegments=Math.floor(radialSegments);tubularSegments=Math.floor(tubularSegments);const indices=[];const vertices=[];const normals=[];const uvs=[];const center=new Vector3();const vertex=new Vector3();const normal=new Vector3();for(let j=0;j<=radialSegments;j++){for(let i=0;i<=tubularSegments;i++){const u=i/tubularSegments*arc;const v=j/radialSegments*Math.PI*2;vertex.x=(radius+tube*Math.cos(v))*Math.cos(u);vertex.y=(radius+tube*Math.cos(v))*Math.sin(u);vertex.z=tube*Math.sin(v);vertices.push(vertex.x,vertex.y,vertex.z);center.x=radius*Math.cos(u);center.y=radius*Math.sin(u);normal.subVectors(vertex,center).normalize();normals.push(normal.x,normal.y,normal.z);uvs.push(i/tubularSegments);uvs.push(j/radialSegments);}}
+for(let j=1;j<=radialSegments;j++){for(let i=1;i<=tubularSegments;i++){const a=(tubularSegments+1)*j+i-1;const b=(tubularSegments+1)*(j-1)+i-1;const c=(tubularSegments+1)*(j-1)+i;const d=(tubularSegments+1)*j+i;indices.push(a,b,d);indices.push(b,c,d);}}
+this.setIndex(indices);this.setAttribute('position',new Float32BufferAttribute(vertices,3));this.setAttribute('normal',new Float32BufferAttribute(normals,3));this.setAttribute('uv',new Float32BufferAttribute(uvs,2));}
+static fromJSON(data){return new TorusGeometry(data.radius,data.tube,data.radialSegments,data.tubularSegments,data.arc);}}
 class MeshPhongMaterial extends Material{constructor(parameters){super();this.isMeshPhongMaterial=true;this.type='MeshPhongMaterial';this.color=new Color(0xffffff);this.specular=new Color(0x111111);this.shininess=30;this.map=null;this.lightMap=null;this.lightMapIntensity=1.0;this.aoMap=null;this.aoMapIntensity=1.0;this.emissive=new Color(0x000000);this.emissiveIntensity=1.0;this.emissiveMap=null;this.bumpMap=null;this.bumpScale=1;this.normalMap=null;this.normalMapType=TangentSpaceNormalMap;this.normalScale=new Vector2(1,1);this.displacementMap=null;this.displacementScale=1;this.displacementBias=0;this.specularMap=null;this.alphaMap=null;this.envMap=null;this.combine=MultiplyOperation;this.reflectivity=1;this.refractionRatio=0.98;this.wireframe=false;this.wireframeLinewidth=1;this.wireframeLinecap='round';this.wireframeLinejoin='round';this.flatShading=false;this.fog=true;this.setValues(parameters);}
 copy(source){super.copy(source);this.color.copy(source.color);this.specular.copy(source.specular);this.shininess=source.shininess;this.map=source.map;this.lightMap=source.lightMap;this.lightMapIntensity=source.lightMapIntensity;this.aoMap=source.aoMap;this.aoMapIntensity=source.aoMapIntensity;this.emissive.copy(source.emissive);this.emissiveMap=source.emissiveMap;this.emissiveIntensity=source.emissiveIntensity;this.bumpMap=source.bumpMap;this.bumpScale=source.bumpScale;this.normalMap=source.normalMap;this.normalMapType=source.normalMapType;this.normalScale.copy(source.normalScale);this.displacementMap=source.displacementMap;this.displacementScale=source.displacementScale;this.displacementBias=source.displacementBias;this.specularMap=source.specularMap;this.alphaMap=source.alphaMap;this.envMap=source.envMap;this.combine=source.combine;this.reflectivity=source.reflectivity;this.refractionRatio=source.refractionRatio;this.wireframe=source.wireframe;this.wireframeLinewidth=source.wireframeLinewidth;this.wireframeLinecap=source.wireframeLinecap;this.wireframeLinejoin=source.wireframeLinejoin;this.flatShading=source.flatShading;this.fog=source.fog;return this;}}
 class MeshLambertMaterial extends Material{constructor(parameters){super();this.isMeshLambertMaterial=true;this.type='MeshLambertMaterial';this.color=new Color(0xffffff);this.map=null;this.lightMap=null;this.lightMapIntensity=1.0;this.aoMap=null;this.aoMapIntensity=1.0;this.emissive=new Color(0x000000);this.emissiveIntensity=1.0;this.emissiveMap=null;this.bumpMap=null;this.bumpScale=1;this.normalMap=null;this.normalMapType=TangentSpaceNormalMap;this.normalScale=new Vector2(1,1);this.displacementMap=null;this.displacementScale=1;this.displacementBias=0;this.specularMap=null;this.alphaMap=null;this.envMap=null;this.combine=MultiplyOperation;this.reflectivity=1;this.refractionRatio=0.98;this.wireframe=false;this.wireframeLinewidth=1;this.wireframeLinecap='round';this.wireframeLinejoin='round';this.flatShading=false;this.fog=true;this.setValues(parameters);}
@@ -2182,6 +2190,9 @@ closestPointToPoint(point,clampToLine,target){const t=this.closestPointToPointPa
 applyMatrix4(matrix){this.start.applyMatrix4(matrix);this.end.applyMatrix4(matrix);return this;}
 equals(line){return line.start.equals(this.start)&&line.end.equals(this.end);}
 clone(){return new this.constructor().copy(this);}}
+class AxesHelper extends LineSegments{constructor(size=1){const vertices=[0,0,0,size,0,0,0,0,0,0,size,0,0,0,0,0,0,size];const colors=[1,0,0,1,0.6,0,0,1,0,0.6,1,0,0,0,1,0,0.6,1];const geometry=new BufferGeometry();geometry.setAttribute('position',new Float32BufferAttribute(vertices,3));geometry.setAttribute('color',new Float32BufferAttribute(colors,3));const material=new LineBasicMaterial({vertexColors:true,toneMapped:false});super(geometry,material);this.type='AxesHelper';}
+setColors(xAxisColor,yAxisColor,zAxisColor){const color=new Color();const array=this.geometry.attributes.color.array;color.set(xAxisColor);color.toArray(array,0);color.toArray(array,3);color.set(yAxisColor);color.toArray(array,6);color.toArray(array,9);color.set(zAxisColor);color.toArray(array,12);color.toArray(array,15);this.geometry.attributes.color.needsUpdate=true;return this;}
+dispose(){this.geometry.dispose();this.material.dispose();}}
 if(typeof __THREE_DEVTOOLS__!=='undefined'){__THREE_DEVTOOLS__.dispatchEvent(new CustomEvent('register',{detail:{revision:REVISION,}}));}
 if(typeof window!=='undefined'){if(window.__THREE__){console.warn('WARNING: Multiple instances of Three.js being imported.');}else{window.__THREE__=REVISION;}}
 const _changeEvent={type:'change'};const _startEvent={type:'start'};const _endEvent={type:'end'};class OrbitControls extends EventDispatcher{constructor(object,domElement){super();this.object=object;this.domElement=domElement;this.domElement.style.touchAction='none';this.enabled=true;this.target=new Vector3();this.minDistance=0;this.maxDistance=Infinity;this.minZoom=0;this.maxZoom=Infinity;this.minPolarAngle=0;this.maxPolarAngle=Math.PI;this.minAzimuthAngle=-Infinity;this.maxAzimuthAngle=Infinity;this.enableDamping=false;this.dampingFactor=0.05;this.enableZoom=true;this.zoomSpeed=1.0;this.enableRotate=true;this.rotateSpeed=1.0;this.enablePan=true;this.panSpeed=1.0;this.screenSpacePanning=true;this.keyPanSpeed=7.0;this.autoRotate=false;this.autoRotateSpeed=2.0;this.keys={LEFT:'ArrowLeft',UP:'ArrowUp',RIGHT:'ArrowRight',BOTTOM:'ArrowDown'};this.mouseButtons={LEFT:MOUSE.ROTATE,MIDDLE:MOUSE.DOLLY,RIGHT:MOUSE.PAN};this.touches={ONE:TOUCH.ROTATE,TWO:TOUCH.DOLLY_PAN};this.target0=this.target.clone();this.position0=this.object.position.clone();this.zoom0=this.object.zoom;this._domElementKeyEvents=null;this.getPolarAngle=function(){return spherical.phi;};this.getAzimuthalAngle=function(){return spherical.theta;};this.getDistance=function(){return this.object.position.distanceTo(this.target);};this.listenToKeyEvents=function(domElement){domElement.addEventListener('keydown',onKeyDown);this._domElementKeyEvents=domElement;};this.saveState=function(){scope.target0.copy(scope.target);scope.position0.copy(scope.object.position);scope.zoom0=scope.object.zoom;};this.reset=function(){scope.target.copy(scope.target0);scope.object.position.copy(scope.position0);scope.object.zoom=scope.zoom0;scope.object.updateProjectionMatrix();scope.dispatchEvent(_changeEvent);scope.update();state=STATE.NONE;};this.update=function(){const offset=new Vector3();const quat=new Quaternion().setFromUnitVectors(object.up,new Vector3(0,1,0));const quatInverse=quat.clone().invert();const lastPosition=new Vector3();const lastQuaternion=new Quaternion();const twoPI=2*Math.PI;return function update(){const position=scope.object.position;offset.copy(position).sub(scope.target);offset.applyQuaternion(quat);spherical.setFromVector3(offset);if(scope.autoRotate&&state===STATE.NONE){rotateLeft(getAutoRotationAngle());}
@@ -2357,20 +2368,27 @@ return this;}
 isEmpty(){return this.head===null;}}
 class ConvexGeometry extends BufferGeometry{constructor(points=[]){super();const vertices=[];const normals=[];const convexHull=new ConvexHull().setFromPoints(points);const faces=convexHull.faces;for(let i=0;i<faces.length;i++){const face=faces[i];let edge=face.edge;do{const point=edge.head().point;vertices.push(point.x,point.y,point.z);normals.push(face.normal.x,face.normal.y,face.normal.z);edge=edge.next;}while(edge!==face.edge);}
 this.setAttribute('position',new Float32BufferAttribute(vertices,3));this.setAttribute('normal',new Float32BufferAttribute(normals,3));}}
+var RING_GEOMETRY=new TorusGeometry(0.1,0.01).rotateX(Math.PI/2),RING_MATERIAL=new MeshLambertMaterial({color:'crimson'});var PLANE_GEOMETRY=new CircleGeometry(0.1).rotateX(Math.PI/2),PLANE_MATERIAL=new MeshLambertMaterial({color:'crimson',side:DoubleSide,transparent:true,opacity:0.3,});class Slot extends Group
+{constructor(x=0,y=0,z=0,rotX=0,rotY=0,rotZ=0,rotOrder='XYZ')
+{super();this.position.set(x,y,z);this.rotation.set(rotX,rotY,rotZ,rotOrder);}
+show()
+{var ring=new Mesh(RING_GEOMETRY,RING_MATERIAL),plane=new Mesh(PLANE_GEOMETRY,PLANE_MATERIAL),axes=new AxesHelper(0.2);axes.scale.set(1,1,0.5);axes.setColors('crimson','crimson','crimson');this.add(ring,plane,axes);}}
 class Part extends Group
 {constructor()
 {super();this.receiveShadow=true;this.castShadow=true;this.slots=[];this.axis=null;this.min=null;this.max=null;this.def=null;}
 setMotor(axis,min=-Infinity,max=Infinity,def=0)
 {this.axis=axis;this.min=Math.min(min,max);this.max=Math.max(min,max);this.def=MathUtils.clamp(def,this.min,this.max);this.setAngle(def);}
-addSlot(x,y,z)
-{this.slots.push(new Vector3(x,y,z));}
+addSlot(...params)
+{var slot=new Slot(...params);this.slots.push(slot);this.add(slot);return slot;}
 attachToSlot(parentPart,slot=0)
 {if(parentPart.slots instanceof Array)
 {if(slot>=parentPart.slots.length)
-throw'Error: invalid slot';this.position.copy(parentPart.slots[slot]);}
-parentPart.add(this);}
-attachToPosition(parentPart,x=0,y=0,z=0)
-{this.position.set(x,y,z);parentPart.add(this);}
+throw'Error: invalid slot';parentPart.slots[slot].add(this);}
+else
+{parentPart.add(this);}
+return this;}
+attachToPosition(parentPart,x=0,y=0,z=0,...rotParams)
+{var pseudoSlot=new Group();pseudoSlot.position.set(x,y,z);pseudoSlot.rotation.set(...rotParams);pseudoSlot.add(this);parentPart.add(pseudoSlot);return this;}
 getAngle()
 {if(this.axis)
 return this.rotation[this.axis];else
@@ -2398,6 +2416,10 @@ parts[i].attachToSlot(parts[i-1]);}#prepare()
 {this.parts.push(x);}
 if(x.axis!=null)
 {this.motors.push(x);}});}}
+showSlots()
+{this.#prepare();for(var part of this.parts)
+for(var slot of part.slots)
+slot.show();}
 getParts()
 {this.#prepare();return this.parts;}
 getMotors()
@@ -2412,11 +2434,11 @@ getAngles()
 angles.push(motor.getAngle());return angles;}
 setAngle(index,angle)
 {this.#prepare();if(typeof this.motors[index]==='undefined')
-return;if(!Number.isNaN(angle))
-return;this.motors[index][1].setAngle(angle);}
+return;if(Number.isNaN(angle))
+return;this.motors[index].setAngle(angle);}
 getAngle(index)
 {this.#prepare();if(typeof this.motors[index]==='undefined')
-return 0;return this.motors[index][1].getAngle();}}
+return 0;return this.motors[index].getAngle();}}
 const MATERIAL$1=new MeshPhongMaterial({color:0x404040,shininess:100,});const GEOMETRY_16=new CylinderGeometry(1,1,1,16);const GEOMETRY_48=new CylinderGeometry(1,1,1,48);class MotorX extends Part
 {constructor(min,max,def,width=0.1,height=0.05)
 {super();this.setMotor('x',min,max,def);this.addSlot(0,0,0);var image=new Mesh(GEOMETRY_16,MATERIAL$1);image.rotation.z=Math.PI/2;image.scale.set(height/2,width,height/2);image.receiveShadow=true;image.castShadow=true;this.add(image);}}
@@ -2432,8 +2454,18 @@ const MATERIAL=new MeshLambertMaterial({color:'White',polygonOffset:true,polygon
 var image=new Mesh(new ConvexGeometry(vertices),MATERIAL);image.receiveShadow=true;image.castShadow=true;image.add(new LineSegments(new EdgesGeometry(image.geometry),EDGE_MATERIAL));return image;}
 class Phalange extends Part
 {constructor(length=1.0,width=0.3,thickness=0.3)
-{super();var L=length,T=thickness/2,I=Math.min(length,thickness)/8,E=0.003;var shape=[-T,I,-T+I,E,0,E,T,T,T,L-T-E,0,L-E,-T+I,L-E,-T,L-I];this.add(extrudeShape(shape,width));this.slots=[new Vector3(0,length,0)];}}
+{super();var L=length,T=thickness/2,I=Math.min(length,thickness)/8,E=0.003;var shape=[-T,I,-T+I,E,0,E,T,T,T,L-T-E,0,L-E,-T+I,L-E,-T,L-I];this.add(extrudeShape(shape,width));this.addSlot(0,length,0);}}
 class EndPhalange extends Part
 {constructor(length=1.0,width=0.3,thickness=0.3)
-{super();var L=length,T=thickness/2,I=Math.min(length,thickness)/8,E=0.003;var shape=[-T,I,-T+I,E,0,E,T,T,T,L-I-E,T-I,L-E,-T+I,L-E,-T,L-I];this.add(extrudeShape(shape,width));this.slots=[];}}
-export{EndPhalange,MotorX,MotorY,MotorZ,Part,Phalange,Robot,getScene,scene,setAnimation,setCameraPosition};
+{super();var L=length,T=thickness/2,I=Math.min(length,thickness)/8,E=0.003;var shape=[-T,I,-T+I,E,0,E,T,T,T,L-I-E,T-I,L-E,-T+I,L-E,-T,L-I];this.add(extrudeShape(shape,width));}}
+class LeftPalm extends Part
+{constructor(length=1.4,width=1.4,thickness=0.3)
+{super();var L=length,W=width/2,I=width/8;var shape=[-W+I,0,W-2*I,0,W,2*I,W,L,-W,L,-W,L/2,];this.add(extrudeShape(shape,thickness));var that=this;function addSlot(pointA,pointB,k,...rotParams)
+{var xA=shape[2*pointA],xB=shape[2*pointB],yA=shape[2*pointA+1],yB=shape[2*pointB+1];that.addSlot(xA*(1-k)+k*xB,yA*(1-k)+k*yB,0,0,Math.PI/2,Math.PI+Math.atan2(yB-yA,xB-xA),'ZXY');}
+addSlot(2,3,1/4);addSlot(3,4,1/8);addSlot(3,4,3/8);addSlot(3,4,5/8);addSlot(3,4,7/8);}}
+class RightPalm extends Part
+{constructor(length=1.4,width=1.4,thickness=0.3)
+{super();var L=length,W=width/2,I=width/8;var shape=[W-I,0,-W+2*I,0,-W,2*I,-W,L,W,L,W,L/2,];this.add(extrudeShape(shape,thickness));var that=this;function addSlot(pointA,pointB,k,...rotParams)
+{var xA=shape[2*pointA],xB=shape[2*pointB],yA=shape[2*pointA+1],yB=shape[2*pointB+1];that.addSlot(xA*(1-k)+k*xB,yA*(1-k)+k*yB,0,0,Math.PI/2,0*Math.PI+Math.atan2(yB-yA,xB-xA),'ZXY');}
+addSlot(2,3,1/4);addSlot(3,4,1/8);addSlot(3,4,3/8);addSlot(3,4,5/8);addSlot(3,4,7/8);}}
+export{EndPhalange,LeftPalm,MotorX,MotorY,MotorZ,Part,Phalange,RightPalm,Robot,getScene,scene,setAnimation,setCameraPosition};
