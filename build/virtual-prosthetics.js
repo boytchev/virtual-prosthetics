@@ -2386,7 +2386,7 @@ addSlot(x,y,z)
 {var slot=new Slot(x,y,z);this.slots.push(slot);this.add(slot);return slot;}
 attachToSlot(parentPart,slot=0)
 {if(slot instanceof Slot)
-{slot.add(this);return this;}
+{parentPart.add(slot);slot.add(this);return this;}
 if(parentPart.slots instanceof Array)
 {if(slot>=parentPart.slots.length)
 throw'Error: invalid slot';parentPart.slots[slot].add(this);return this;}

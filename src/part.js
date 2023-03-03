@@ -59,6 +59,7 @@ class Part extends THREE.Group
 		// attachToSlot( Part, Slot )
 		if( slot instanceof Slot )
 		{
+			parentPart.add( slot );
 			slot.add( this );
 			return this;
 		}
