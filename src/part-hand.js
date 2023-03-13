@@ -20,6 +20,10 @@ const MATERIAL = new THREE.MeshLambertMaterial({
 				polygonOffset: true,
 				polygonOffsetUnits: 1,
 				polygonOffsetFactor: 1,
+
+				// transparent: true,
+				// opacity: 0,
+				// depthTest: false,
 			});
 
 const EDGE_MATERIAL = new THREE.LineBasicMaterial({
@@ -118,6 +122,8 @@ class EndPhalange extends Part
 		
 		// create main mesh
 		this.add( extrudeShape(shape,width) );
+
+		this.addSlot( 0, length, 0 );
 	} // EndPhalange.constructor
 	
 } // EndPhalange

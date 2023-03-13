@@ -1,0 +1,112 @@
+﻿<!DOCTYPE html>
+
+
+<head>
+	<title>Touch sensor</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<link rel="shortcut icon" type="image/png" href="logo.png"/>
+	<link rel="stylesheet" href="examples.css">
+</head>
+
+
+<body>
+	<header>
+		<h1>Touch sensor</h1>
+		<h2>Touching a random ball</h2>
+		<h3><a href="https://boytchev.github.io/virtual-prosthetics/">Virtual Prosthetics Examples</a></h3>
+	</header>
+	
+	<script type="module">
+
+	//import * as Prosthetic from "../build/virtual-prosthetics.js";
+	import * as Prosthetic from "../src/virtual-prosthetics.js";
+
+
+	const PI = Math.PI;
+	const sin = Math.sin;
+	const cos = Math.cos;
+
+
+	class TouchRobot extends Prosthetic.Robot
+	{
+		constructor( )
+		{
+			super( );
+			
+			var lastPart = new Prosthetic.EndPhalange( 0.75 );
+			
+			this.addChain(
+				this,
+				new Prosthetic.MotorZ( PI/2, -PI/2, 0, 0.2, 0.3 ),
+				new Prosthetic.Phalange( 0.75 ),
+				new Prosthetic.MotorZ( 0.0, -PI/2, 0, 0.25, 0.08 ),
+				lastPart,
+			);
+			
+			var slot;
+
+			slot = new Prosthetic.Slot( 0.15, 0.55, 0 );
+			slot.setRotation( 0, 0, -Math.PI/2 );	
+			this.sensor1 = new Prosthetic.Sensor().attachToSlot( lastPart, slot );
+
+			slot = new Prosthetic.Slot( 0.15, 0.25, 0 );
+			slot.setRotation( 0, 0, -Math.PI/2 );	
+			this.sensor2 = new Prosthetic.Sensor().attachToSlot( lastPart, slot );
+
+		}
+	}
+
+	var n = 12;
+	var robots = [];
+	for( var i=0; i<n; i++ )
+	{
+		var a = 2*Math.PI * i/n;
+		robots[i] = new TouchRobot;
+		robots[i].setPosition( 1.5*cos(a), 0.1, 1.5*sin(a) );
+		robots[i].setRotation( 0, Math.PI-a, 0 );
+		robots[i].setAngles( PI/2, -PI/6 );
+	}
+
+	var ball = new Prosthetic.Mesh(
+			new Prosthetic.SphereGeometry( 1, 64, 32 ),
+			new Prosthetic.MeshLambertMaterial( {color: 'crimson'} )
+		);
+		ball.rotation.set( 3*Math.random(), 3*Math.random(), 3*Math.random() );
+	var pos = ball.geometry.getAttribute( 'position' );
+	for( var i=0; i<pos.count; i++ )
+	{
+		var x = pos.getX( i ),
+			y = pos.getY( i ),
+			z = pos.getZ( i );
+			
+		pos.setXYZ( i, x+0.4*cos(2*y), y+0.4*cos(2*z), z+0.4*cos(2*x) );
+	}
+	ball.geometry.computeVertexNormals();
+		
+		
+		ball.position.set( 0, 0.7, 0 );
+		ball.castShadow = true;
+		ball.receiveShadow = true;
+		Prosthetic.getScene().add( ball );
+
+	Prosthetic.setAnimation( loop );
+	Prosthetic.setCameraPosition( 0, 6, 10 );
+
+	function loop( t, dT )
+	{
+		for( var robot of robots )
+		{
+			var touch = Math.min(
+					robot.sensor1.senseTouch(),
+					robot.sensor2.senseTouch()
+				);
+			
+			if( touch < 0.1 )
+				robot.setAngleRelative( 0, -dT )
+		}
+	}
+
+
+	</script>
+</body>

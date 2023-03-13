@@ -6,18 +6,21 @@ in radians and all indices start from 0.
 
 * **[Introduction](#introduction)**
 * **[Scene](#scene)**
-	* [setAnimation](#setanimation), [setCameraPosition](#setcameraposition), [setCameraTarget](#setcameratarget), [getScene](#getscene)
+	* [setAnimation](#setanimation), [setCameraPosition](#setcameraposition), [setCameraTarget](#setcameratarget), [getScene](#getscene), [getTime](#gettime)
 * **[Robots](#robots)**
 	* [Robot](#robot), [addChain](#addchain), [showSlots](#showslots)
 	* [getPosition](#getposition), [setPosition](#setposition), [setRotation](#setrotation)
-	* [getAngle](#getangle), [setAngle](#setangle), [getAngles](#getangles), [setAngles](#setangles)
+	* [getAngle](#getangle), [setAngle](#setangle), [setAngleRelative](#setanglerelative), [getAngles](#getangles), [setAngles](#setangles), [setAnglesRelatve](#setanglesrelative)
 	* [getParts](#getparts), [getMotors](#getmotors), [getDOF](#getdof)
 * **[Parts](#parts)**
 	* [Part](#part), [setMotor](#setmotor)
 	* [addSlot](#addslot), [attachToSlot](#attachtoslot)
-	* [getAngle](#getangle-1), [setAngle](#setangle-1)	
+	* [getAngle](#getangle-1), [setAngle](#setangle-1), [setAngleRelative](#setanglerelative-1)	
 * **[Slots](#slots)**
 	* [Slot](#slot), [setRotation](#setrotation-1), [show](#show)
+* **[Sensors](#sensors)**
+	* [Sensor](#sensor), [setRotation](#setrotation-2), [addLaser](#addlaser), [getLaser](#getlaser)
+	* [senseDistance](#sensedistance), [senseTouch](#sensetouch), [sensePosition](#senseposition)
 * **[Predefined parts](#predefined-parts)**
 	* **[Motors](#motors)**: [MotorX](#motorx), [MotorY](#motory), [MotorZ](#motorz)
 	* **[Shapes](#shapes)**: [Phalange](#phalange), [EndPhalange](#endphalange), [LeftPalm](#leftpalm), [RightPalm](#rightpalm)
@@ -124,6 +127,21 @@ Examples:
 
 ```js
 scene = getScene( );
+```
+
+
+### getTime
+
+```js
+getSTime( );
+```
+
+Function. Gets the current time since the initialization of the library.
+
+Examples:
+
+```js
+t = getTime( );
 ```
 
 
@@ -290,6 +308,24 @@ robot.setAngle( 1, Math.PI );
 
 
 
+### setAngleRelative
+
+```js
+setAngleRelative( index, angle );
+```
+
+Method. Adds the `angle` to the current angle of the `index`-th motor. If such
+motor does not exist or if the `angle` is `null`, the operation is ignored. Use
+[`setAnglesRelative`](#setanglesrelative) to add to all angles at once.
+
+Example:
+
+```js
+robot.setAngleRelative( 1, Math.PI );
+```
+
+
+
 ### getAngles
 
 ```js
@@ -321,6 +357,25 @@ Example:
 
 ```js
 robot.setAngles( Math.PI, 0, -Math.PI/2 );
+```
+
+
+
+### setAnglesRelative
+
+```js
+setAnglesRelative( angle1, angle2, ... );
+```
+
+Method. Adds the `angle1`, `angle2`, ... to the current angles of all motors. If
+a value of some angle is `null`, then the corresponding motor's angle is
+unchanged. Use [`setAngleRelative`](#setanglerelative) to add to an individual
+angle.
+
+Example:
+
+```js
+robot.setAnglesRelative( Math.PI, 0, -Math.PI/2 );
 ```
 
 
@@ -486,6 +541,23 @@ part.setAngle( Math.PI );
 
 
 
+### setAngleRelative
+
+```js
+setAngleRelative( angle );
+```
+
+Method. Adds `angle` the motor's current angle if the part has a motor. If
+`angle` is `null`, the operation is ignored.
+
+Example:
+
+```js
+part.setAngleRelative( Math.PI );
+```
+
+
+
 
 # Slots 
 
@@ -546,6 +618,113 @@ robot.show();
 
 
 
+# Sensors 
+
+A sensor is a robot part that measure some property and returns feedback. 
+Sensors are attached to slots and use their orientation.
+
+
+### Sensor
+
+```js
+Sensor( x, y, z )
+```
+
+Class. Defines a sensor at coordinates (`x`, `y`, `z`). These coordinates are
+relative to the robot part of the slot.
+
+Example:
+
+```js
+sensor = new Sensor( 0, 0, Math.PI/4 );
+```
+
+
+### setRotation
+
+```js
+setRotation( x, y, z, order='XYZ' );
+```
+
+Method. Sets the orientation of a sensor to [Euler angles](https://threejs.org/docs/#api/en/math/Euler)
+(`x`,`y`,`z`) and `order` of rotations. The orientation is relative to the
+robot part of the slot.
+
+
+Example:
+
+```js
+sensor.setRotation( 0, Math.PI/2, 0 );
+```
+
+
+### addLaser
+
+```js
+sensor.addLaser( color='crimson' );
+```
+
+Method of `Sensor`. Creates a laser beam with optional `color` emitted by the sensor. This beam is for visual
+representation only. Its exitance or non-existance do not affect the functionality
+of a sensor. A sensor may have only one laser attached.
+
+Example:
+
+```js
+sensor.addLaset( );
+```
+
+
+### getLaser
+
+```js
+sensor.getLaser( );
+```
+
+Method. Gets the laser object of a sensor.
+
+Example:
+
+```js
+laser = sensor.getLaser( );
+```
+
+
+### senseDistance
+
+```js
+sensor.senseDistance( );
+```
+
+Method. Gets the distance to the nearest object (including the ground) looking
+toward the direction of the sensor. If there is no object, the result is `Infinity`.
+
+Example:
+
+```js
+dist = sensor.senseDistance( );
+```
+
+
+
+### sensePosition
+
+```js
+sensor.sensePosition( );
+```
+
+Method. Gets the 3D position of the sensor as an array of [`x`, `y`, `z`] coordinates.
+
+Example:
+
+```js
+pos = sensor.sensePosition( );
+```
+
+
+
+
+--------------
 # Predefined parts
 
 ## Motors

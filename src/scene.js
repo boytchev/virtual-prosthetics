@@ -8,6 +8,7 @@
 //		setCameraTarget( x, y, z )
 //		setAnimation( func, fps=30 )
 //		getScene( )
+//		getTime( )
 //
 
 
@@ -22,7 +23,8 @@ var FPS = 30;
 var renderer, scene, camera, light, controls;
 
 var animate,
-	oldTime = 0;
+	oldTime = 0,
+	currentTime = 0;
 
 function createScene( )
 {
@@ -36,9 +38,9 @@ function createScene( )
 
 	scene = new THREE.Scene();
 	scene.background = new THREE.Color('gainsboro');
-	scene.fog = new THREE.Fog('gainsboro', 20, 50);
+	scene.fog = new THREE.Fog('gainsboro', 200, 500);
 
-	camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.1, 2000);
+	camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.01, 1000);
 	camera.position.set(4, 4, 7);
 
 	light = new THREE.DirectionalLight('white', 0.4);
@@ -111,6 +113,8 @@ function drawFrame( time )
 {
 	time /= 1000; // convert to seconds
 	
+	currentTime = time;
+	
 	var dTime = time-oldTime;
 	
 	if( dTime > 1/FPS )
@@ -132,4 +136,9 @@ function getScene( )
 }
 
 
-export { setAnimation, getScene, setCameraPosition, setCameraTarget };
+function getTime( )
+{
+	return currentTime;
+}
+
+export { setAnimation, getScene, setCameraPosition, setCameraTarget, getTime };

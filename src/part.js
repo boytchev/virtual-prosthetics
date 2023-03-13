@@ -98,6 +98,17 @@ class Part extends THREE.Group
 		else
 			throw `Error: body part '${this.name}' cannot rotate`;
 	}
+	
+	setAngleRelative( x )
+	{
+		if( x === null )
+			return;
+		
+		if( this.axis )
+			this.rotation[this.axis] = THREE.MathUtils.clamp( this.rotation[this.axis]+x, this.min, this.max );
+		else
+			throw `Error: body part '${this.name}' cannot rotate`;
+	}
 
 	
 	

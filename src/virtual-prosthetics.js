@@ -12,5 +12,8 @@ export * from "./scene.js";
 export * from "./robot.js";
 export * from "./part.js";
 export * from "./slot.js";
+export * from "./sensor.js";
 export * from "./part-motors.js";
 export * from "./part-hand.js";
+
+export {Group, Mesh, BoxGeometry, SphereGeometry, MeshLambertMaterial} from "../libs/three.module.js";

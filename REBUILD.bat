@@ -15,6 +15,7 @@ REM			between these quotes:    "﻿"
 
 echo ﻿// Virtual Prosthetics >build\prefix.js
 copy /b build\prefix.js+build\bundle.min.js build\virtual-prosthetics.js
+
 del build\bundle.js
 del build\bundle.min.js
 del build\prefix.js

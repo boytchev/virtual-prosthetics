@@ -2118,6 +2118,14 @@ const _start=new Vector3();const _end=new Vector3();class LineSegments extends L
 computeLineDistances(){const geometry=this.geometry;if(geometry.index===null){const positionAttribute=geometry.attributes.position;const lineDistances=[];for(let i=0,l=positionAttribute.count;i<l;i+=2){_start.fromBufferAttribute(positionAttribute,i);_end.fromBufferAttribute(positionAttribute,i+1);lineDistances[i]=(i===0)?0:lineDistances[i-1];lineDistances[i+1]=lineDistances[i]+_start.distanceTo(_end);}
 geometry.setAttribute('lineDistance',new Float32BufferAttribute(lineDistances,1));}else{console.warn('THREE.LineSegments.computeLineDistances(): Computation only possible with non-indexed BufferGeometry.');}
 return this;}}
+class PointsMaterial extends Material{constructor(parameters){super();this.isPointsMaterial=true;this.type='PointsMaterial';this.color=new Color(0xffffff);this.map=null;this.alphaMap=null;this.size=1;this.sizeAttenuation=true;this.fog=true;this.setValues(parameters);}
+copy(source){super.copy(source);this.color.copy(source.color);this.map=source.map;this.alphaMap=source.alphaMap;this.size=source.size;this.sizeAttenuation=source.sizeAttenuation;this.fog=source.fog;return this;}}
+const _inverseMatrix=new Matrix4();const _ray=new Ray();const _sphere=new Sphere();const _position$2=new Vector3();class Points extends Object3D{constructor(geometry=new BufferGeometry(),material=new PointsMaterial()){super();this.isPoints=true;this.type='Points';this.geometry=geometry;this.material=material;this.updateMorphTargets();}
+copy(source,recursive){super.copy(source,recursive);this.material=source.material;this.geometry=source.geometry;return this;}
+raycast(raycaster,intersects){const geometry=this.geometry;const matrixWorld=this.matrixWorld;const threshold=raycaster.params.Points.threshold;const drawRange=geometry.drawRange;if(geometry.boundingSphere===null)geometry.computeBoundingSphere();_sphere.copy(geometry.boundingSphere);_sphere.applyMatrix4(matrixWorld);_sphere.radius+=threshold;if(raycaster.ray.intersectsSphere(_sphere)===false)return;_inverseMatrix.copy(matrixWorld).invert();_ray.copy(raycaster.ray).applyMatrix4(_inverseMatrix);const localThreshold=threshold/((this.scale.x+this.scale.y+this.scale.z)/3);const localThresholdSq=localThreshold*localThreshold;const index=geometry.index;const attributes=geometry.attributes;const positionAttribute=attributes.position;if(index!==null){const start=Math.max(0,drawRange.start);const end=Math.min(index.count,(drawRange.start+drawRange.count));for(let i=start,il=end;i<il;i++){const a=index.getX(i);_position$2.fromBufferAttribute(positionAttribute,a);testPoint(_position$2,a,localThresholdSq,matrixWorld,raycaster,intersects,this);}}else{const start=Math.max(0,drawRange.start);const end=Math.min(positionAttribute.count,(drawRange.start+drawRange.count));for(let i=start,l=end;i<l;i++){_position$2.fromBufferAttribute(positionAttribute,i);testPoint(_position$2,i,localThresholdSq,matrixWorld,raycaster,intersects,this);}}}
+updateMorphTargets(){const geometry=this.geometry;const morphAttributes=geometry.morphAttributes;const keys=Object.keys(morphAttributes);if(keys.length>0){const morphAttribute=morphAttributes[keys[0]];if(morphAttribute!==undefined){this.morphTargetInfluences=[];this.morphTargetDictionary={};for(let m=0,ml=morphAttribute.length;m<ml;m++){const name=morphAttribute[m].name||String(m);this.morphTargetInfluences.push(0);this.morphTargetDictionary[name]=m;}}}}}
+function testPoint(point,index,localThresholdSq,matrixWorld,raycaster,intersects,object){const rayPointDistanceSq=_ray.distanceSqToPoint(point);if(rayPointDistanceSq<localThresholdSq){const intersectPoint=new Vector3();_ray.closestPointToPoint(point,intersectPoint);intersectPoint.applyMatrix4(matrixWorld);const distance=raycaster.ray.origin.distanceTo(intersectPoint);if(distance<raycaster.near||distance>raycaster.far)return;intersects.push({distance:distance,distanceToRay:Math.sqrt(rayPointDistanceSq),point:intersectPoint,index:index,face:null,object:object});}}
+class CanvasTexture extends Texture{constructor(canvas,mapping,wrapS,wrapT,magFilter,minFilter,format,type,anisotropy){super(canvas,mapping,wrapS,wrapT,magFilter,minFilter,format,type,anisotropy);this.isCanvasTexture=true;this.needsUpdate=true;}}
 class CircleGeometry extends BufferGeometry{constructor(radius=1,segments=32,thetaStart=0,thetaLength=Math.PI*2){super();this.type='CircleGeometry';this.parameters={radius:radius,segments:segments,thetaStart:thetaStart,thetaLength:thetaLength};segments=Math.max(3,segments);const indices=[];const vertices=[];const normals=[];const uvs=[];const vertex=new Vector3();const uv=new Vector2();vertices.push(0,0,0);normals.push(0,0,1);uvs.push(0.5,0.5);for(let s=0,i=3;s<=segments;s++,i+=3){const segment=thetaStart+s/segments*thetaLength;vertex.x=radius*Math.cos(segment);vertex.y=radius*Math.sin(segment);vertices.push(vertex.x,vertex.y,vertex.z);normals.push(0,0,1);uv.x=(vertices[i]/radius+1)/2;uv.y=(vertices[i+1]/radius+1)/2;uvs.push(uv.x,uv.y);}
 for(let i=1;i<=segments;i++){indices.push(i,i+1,0);}
 this.setIndex(indices);this.setAttribute('position',new Float32BufferAttribute(vertices,3));this.setAttribute('normal',new Float32BufferAttribute(normals,3));this.setAttribute('uv',new Float32BufferAttribute(uvs,2));}
@@ -2139,6 +2147,12 @@ for(let j=0;j<3;j++){const jNext=(j+1)%3;const vecHash0=hashes[j];const vecHash1
 edgeData[reverseHash]=null;}else if(!(hash in edgeData)){edgeData[hash]={index0:indexArr[j],index1:indexArr[jNext],normal:_normal.clone(),};}}}
 for(const key in edgeData){if(edgeData[key]){const{index0,index1}=edgeData[key];_v0.fromBufferAttribute(positionAttr,index0);_v1$1.fromBufferAttribute(positionAttr,index1);vertices.push(_v0.x,_v0.y,_v0.z);vertices.push(_v1$1.x,_v1$1.y,_v1$1.z);}}
 this.setAttribute('position',new Float32BufferAttribute(vertices,3));}}}
+class SphereGeometry extends BufferGeometry{constructor(radius=1,widthSegments=32,heightSegments=16,phiStart=0,phiLength=Math.PI*2,thetaStart=0,thetaLength=Math.PI){super();this.type='SphereGeometry';this.parameters={radius:radius,widthSegments:widthSegments,heightSegments:heightSegments,phiStart:phiStart,phiLength:phiLength,thetaStart:thetaStart,thetaLength:thetaLength};widthSegments=Math.max(3,Math.floor(widthSegments));heightSegments=Math.max(2,Math.floor(heightSegments));const thetaEnd=Math.min(thetaStart+thetaLength,Math.PI);let index=0;const grid=[];const vertex=new Vector3();const normal=new Vector3();const indices=[];const vertices=[];const normals=[];const uvs=[];for(let iy=0;iy<=heightSegments;iy++){const verticesRow=[];const v=iy/heightSegments;let uOffset=0;if(iy==0&&thetaStart==0){uOffset=0.5/widthSegments;}else if(iy==heightSegments&&thetaEnd==Math.PI){uOffset=-0.5/widthSegments;}
+for(let ix=0;ix<=widthSegments;ix++){const u=ix/widthSegments;vertex.x=-radius*Math.cos(phiStart+u*phiLength)*Math.sin(thetaStart+v*thetaLength);vertex.y=radius*Math.cos(thetaStart+v*thetaLength);vertex.z=radius*Math.sin(phiStart+u*phiLength)*Math.sin(thetaStart+v*thetaLength);vertices.push(vertex.x,vertex.y,vertex.z);normal.copy(vertex).normalize();normals.push(normal.x,normal.y,normal.z);uvs.push(u+uOffset,1-v);verticesRow.push(index++);}
+grid.push(verticesRow);}
+for(let iy=0;iy<heightSegments;iy++){for(let ix=0;ix<widthSegments;ix++){const a=grid[iy][ix+1];const b=grid[iy][ix];const c=grid[iy+1][ix];const d=grid[iy+1][ix+1];if(iy!==0||thetaStart>0)indices.push(a,b,d);if(iy!==heightSegments-1||thetaEnd<Math.PI)indices.push(b,c,d);}}
+this.setIndex(indices);this.setAttribute('position',new Float32BufferAttribute(vertices,3));this.setAttribute('normal',new Float32BufferAttribute(normals,3));this.setAttribute('uv',new Float32BufferAttribute(uvs,2));}
+static fromJSON(data){return new SphereGeometry(data.radius,data.widthSegments,data.heightSegments,data.phiStart,data.phiLength,data.thetaStart,data.thetaLength);}}
 class TorusGeometry extends BufferGeometry{constructor(radius=1,tube=0.4,radialSegments=12,tubularSegments=48,arc=Math.PI*2){super();this.type='TorusGeometry';this.parameters={radius:radius,tube:tube,radialSegments:radialSegments,tubularSegments:tubularSegments,arc:arc};radialSegments=Math.floor(radialSegments);tubularSegments=Math.floor(tubularSegments);const indices=[];const vertices=[];const normals=[];const uvs=[];const center=new Vector3();const vertex=new Vector3();const normal=new Vector3();for(let j=0;j<=radialSegments;j++){for(let i=0;i<=tubularSegments;i++){const u=i/tubularSegments*arc;const v=j/radialSegments*Math.PI*2;vertex.x=(radius+tube*Math.cos(v))*Math.cos(u);vertex.y=(radius+tube*Math.cos(v))*Math.sin(u);vertex.z=tube*Math.sin(v);vertices.push(vertex.x,vertex.y,vertex.z);center.x=radius*Math.cos(u);center.y=radius*Math.sin(u);normal.subVectors(vertex,center).normalize();normals.push(normal.x,normal.y,normal.z);uvs.push(i/tubularSegments);uvs.push(j/radialSegments);}}
 for(let j=1;j<=radialSegments;j++){for(let i=1;i<=tubularSegments;i++){const a=(tubularSegments+1)*j+i-1;const b=(tubularSegments+1)*(j-1)+i-1;const c=(tubularSegments+1)*(j-1)+i;const d=(tubularSegments+1)*j+i;indices.push(a,b,d);indices.push(b,c,d);}}
 this.setIndex(indices);this.setAttribute('position',new Float32BufferAttribute(vertices,3));this.setAttribute('normal',new Float32BufferAttribute(normals,3));this.setAttribute('uv',new Float32BufferAttribute(uvs,2));}
@@ -2168,6 +2182,15 @@ class DirectionalLightShadow extends LightShadow{constructor(){super(new Orthogr
 class DirectionalLight extends Light{constructor(color,intensity){super(color,intensity);this.isDirectionalLight=true;this.type='DirectionalLight';this.position.copy(Object3D.DEFAULT_UP);this.updateMatrix();this.target=new Object3D();this.shadow=new DirectionalLightShadow();}
 dispose(){this.shadow.dispose();}
 copy(source){super.copy(source);this.target=source.target.clone();this.shadow=source.shadow.clone();return this;}}
+class Raycaster{constructor(origin,direction,near=0,far=Infinity){this.ray=new Ray(origin,direction);this.near=near;this.far=far;this.camera=null;this.layers=new Layers();this.params={Mesh:{},Line:{threshold:1},LOD:{},Points:{threshold:1},Sprite:{}};}
+set(origin,direction){this.ray.set(origin,direction);}
+setFromCamera(coords,camera){if(camera.isPerspectiveCamera){this.ray.origin.setFromMatrixPosition(camera.matrixWorld);this.ray.direction.set(coords.x,coords.y,0.5).unproject(camera).sub(this.ray.origin).normalize();this.camera=camera;}else if(camera.isOrthographicCamera){this.ray.origin.set(coords.x,coords.y,(camera.near+camera.far)/(camera.near-camera.far)).unproject(camera);this.ray.direction.set(0,0,-1).transformDirection(camera.matrixWorld);this.camera=camera;}else{console.error('THREE.Raycaster: Unsupported camera type: '+camera.type);}}
+intersectObject(object,recursive=true,intersects=[]){intersectObject(object,this,intersects,recursive);intersects.sort(ascSort);return intersects;}
+intersectObjects(objects,recursive=true,intersects=[]){for(let i=0,l=objects.length;i<l;i++){intersectObject(objects[i],this,intersects,recursive);}
+intersects.sort(ascSort);return intersects;}}
+function ascSort(a,b){return a.distance-b.distance;}
+function intersectObject(object,raycaster,intersects,recursive){if(object.layers.test(raycaster.layers)){object.raycast(raycaster,intersects);}
+if(recursive===true){const children=object.children;for(let i=0,l=children.length;i<l;i++){intersectObject(children[i],raycaster,intersects,true);}}}
 class Spherical{constructor(radius=1,phi=0,theta=0){this.radius=radius;this.phi=phi;this.theta=theta;return this;}
 set(radius,phi,theta){this.radius=radius;this.phi=phi;this.theta=theta;return this;}
 copy(other){this.radius=other.radius;this.phi=other.phi;this.theta=other.theta;return this;}
@@ -2261,8 +2284,8 @@ function trackPointer(event){let position=pointerPositions[event.pointerId];if(p
 position.set(event.pageX,event.pageY);}
 function getSecondPointerPosition(event){const pointer=(event.pointerId===pointers[0].pointerId)?pointers[1]:pointers[0];return pointerPositions[pointer.pointerId];}
 scope.domElement.addEventListener('contextmenu',onContextMenu);scope.domElement.addEventListener('pointerdown',onPointerDown);scope.domElement.addEventListener('pointercancel',onPointerCancel);scope.domElement.addEventListener('wheel',onMouseWheel,{passive:false});this.update();}}
-var FPS=30;var renderer,scene,camera,light,controls;var animate,oldTime=0;function createScene()
-{renderer=new WebGLRenderer({antialias:true});renderer.setSize(window.innerWidth,window.innerHeight);renderer.domElement.style='width:100%; height:100%; position:fixed; top:0; left:0;';renderer.shadowMap.enabled=true;renderer.shadowMap.type=VSMShadowMap;renderer.setAnimationLoop(drawFrame);document.body.appendChild(renderer.domElement);scene=new Scene();scene.background=new Color('gainsboro');scene.fog=new Fog('gainsboro',20,50);camera=new PerspectiveCamera(30,window.innerWidth/window.innerHeight,0.1,2000);camera.position.set(4,4,7);light=new DirectionalLight('white',0.4);light.position.set(5,18,3);light.shadow.mapSize.width=1024;light.shadow.mapSize.height=1024;light.shadow.blurSamples=10;light.shadow.radius=2;light.shadow.bias=-0.001;light.castShadow=true;light.shadow.camera.left=-10;light.shadow.camera.right=10;light.shadow.camera.top=10;light.shadow.camera.bottom=-10;scene.add(light,new HemisphereLight('white','cornsilk',0.6));function onWindowResize(event)
+var FPS=30;var renderer,scene,camera,light,controls;var animate,oldTime=0,currentTime=0;function createScene()
+{renderer=new WebGLRenderer({antialias:true});renderer.setSize(window.innerWidth,window.innerHeight);renderer.domElement.style='width:100%; height:100%; position:fixed; top:0; left:0;';renderer.shadowMap.enabled=true;renderer.shadowMap.type=VSMShadowMap;renderer.setAnimationLoop(drawFrame);document.body.appendChild(renderer.domElement);scene=new Scene();scene.background=new Color('gainsboro');scene.fog=new Fog('gainsboro',200,500);camera=new PerspectiveCamera(30,window.innerWidth/window.innerHeight,0.01,1000);camera.position.set(4,4,7);light=new DirectionalLight('white',0.4);light.position.set(5,18,3);light.shadow.mapSize.width=1024;light.shadow.mapSize.height=1024;light.shadow.blurSamples=10;light.shadow.radius=2;light.shadow.bias=-0.001;light.castShadow=true;light.shadow.camera.left=-10;light.shadow.camera.right=10;light.shadow.camera.top=10;light.shadow.camera.bottom=-10;scene.add(light,new HemisphereLight('white','cornsilk',0.6));function onWindowResize(event)
 {camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();renderer.setSize(window.innerWidth,window.innerHeight,true);}
 window.addEventListener('resize',onWindowResize,false);onWindowResize();var ground=new Mesh(new PlaneGeometry(1000,1000),new MeshLambertMaterial({color:'lightgray',}));ground.receiveShadow=true;ground.rotation.x=-Math.PI/2;scene.add(ground);controls=new OrbitControls(camera,renderer.domElement);controls.target=new Vector3(0,1,0);}
 createScene();function setCameraPosition(x,y,z)
@@ -2272,10 +2295,12 @@ function setCameraTarget(x,y,z)
 function setAnimation(func,fps=30)
 {animate=func;FPS=fps;}
 function drawFrame(time)
-{time/=1000;var dTime=time-oldTime;if(dTime>1/FPS)
+{time/=1000;currentTime=time;var dTime=time-oldTime;if(dTime>1/FPS)
 {if(animate)animate(time,dTime);oldTime=time;controls.update();renderer.render(scene,camera);}}
 function getScene()
 {return scene;}
+function getTime()
+{return currentTime;}
 const Visible=0;const Deleted=1;const _v1=new Vector3();const _line3=new Line3();const _plane=new Plane();const _closestPoint=new Vector3();const _triangle=new Triangle();class ConvexHull{constructor(){this.tolerance=-1;this.faces=[];this.newFaces=[];this.assigned=new VertexList();this.unassigned=new VertexList();this.vertices=[];}
 setFromPoints(points){if(points.length>=4){this.makeEmpty();for(let i=0,l=points.length;i<l;i++){this.vertices.push(new VertexNode(points[i]));}
 this.compute();}
@@ -2443,6 +2468,37 @@ return;this.motors[index].setAngle(angle);}
 getAngle(index)
 {this.#prepare();if(typeof this.motors[index]==='undefined')
 return 0;return this.motors[index].getAngle();}}
+var canvas,ctx;canvas=document.createElement('CANVAS');canvas.width=4;canvas.height=4;ctx=canvas.getContext('2d');ctx.fillStyle='white';ctx.fillRect(0,0,4,4);ctx.fillStyle='black';ctx.fillRect(1,1,1,1);ctx.fillRect(3,3,1,1);var sensorTexture=new CanvasTexture(canvas);sensorTexture.wrapS=RepeatWrapping;sensorTexture.wrapT=RepeatWrapping;sensorTexture.anisotropy=2;sensorTexture.repeat.set(32,8);canvas=document.createElement('CANVAS');canvas.width=64;canvas.height=64;ctx=canvas.getContext('2d');ctx.fillStyle='white';ctx.arc(31,31,30,0,2*Math.PI);ctx.fill();var laserDotTexture=new CanvasTexture(canvas);laserDotTexture.anisotropy=2;class Laser extends Group
+{constructor(color='crimson')
+{super();var laserPointer=new Line(new BufferGeometry().setFromPoints([new Vector3,new Vector3]),new LineBasicMaterial({color:color,transparent:true,opacity:0.5,}));this.attrPos=laserPointer.geometry.getAttribute('position');var laserPoint=new Points(laserPointer.geometry,new PointsMaterial({color:color,size:8,sizeAttenuation:false,transparent:true,map:laserDotTexture}));this.add(laserPointer,laserPoint);this.frustumCulled=false;laserPointer.frustumCulled=false;laserPoint.frustumCulled=false;}
+set(start,end)
+{this.attrPos.setXYZ(0,start.x,start.y,start.z);this.attrPos.setXYZ(1,end.x,end.y,end.z);this.attrPos.needsUpdate=true;}}
+var GEOMETRY=new SphereGeometry(1,32,8,0,2*Math.PI,0,Math.PI/2),MATERIAL$2=new MeshLambertMaterial({color:'lightgray',map:sensorTexture});var pos=new Vector3(),dir=new Vector3();var raycaster=new Raycaster();raycaster.params={Mesh:{},Line:{threshold:0},LOD:{},Points:{threshold:0},Sprite:{}};var v=new Vector3();class Sensor extends Part
+{constructor()
+{super();var pad=new Mesh(GEOMETRY,MATERIAL$2);pad.scale.set(0.1,0.05,0.1);this.laser=undefined;this.add(pad);}
+setRotation(x,y,z,order='XYZ')
+{this.rotation.set(x,y,z,order);}
+getWorldDirectionY(target)
+{this.updateWorldMatrix(true,false);var e=this.matrixWorld.elements;return target.set(e[4],e[5],e[6]).normalize();}
+addLaser(color='crimson')
+{if(this.laser)return;this.laser=new Laser(color);getScene().add(this.laser);return this;}
+getLaser()
+{return this.laser;}
+senseDistance()
+{raycaster.near=0.05;raycaster.far=Infinity;this.getWorldPosition(pos);this.getWorldDirectionY(dir);raycaster.set(pos,dir);var intersect=raycaster.intersectObject(getScene(),true);if(intersect.length>0)
+{if(this.laser)
+{this.laser.set(pos,intersect[0].point);}
+return intersect[0].distance;}
+else
+{if(this.laser)
+{v.set(0,0.055,0);this.laser.set(pos,this.localToWorld(v));}
+return null;}}
+senseTouch()
+{raycaster.near=0;raycaster.far=0.05;this.getWorldPosition(pos);this.getWorldDirectionY(dir);raycaster.set(pos,dir);var intersect=raycaster.intersectObject(getScene(),true);if(intersect.length>0)
+return intersect[0].distance;else
+return null;}
+sensePosition()
+{this.getWorldPosition(pos);return[pos.x,pos.y,pos.z];}}
 const MATERIAL$1=new MeshPhongMaterial({color:0x404040,shininess:100,});const GEOMETRY_16=new CylinderGeometry(1,1,1,16);const GEOMETRY_48=new CylinderGeometry(1,1,1,48);class MotorX extends Part
 {constructor(min,max,def,width=0.1,height=0.05)
 {super();this.setMotor('x',min,max,def);this.addSlot(0,0,0);var image=new Mesh(GEOMETRY_16,MATERIAL$1);image.rotation.z=Math.PI/2;image.scale.set(height/2,width,height/2);image.receiveShadow=true;image.castShadow=true;this.add(image);}}
@@ -2461,7 +2517,7 @@ class Phalange extends Part
 {super();var L=length,T=thickness/2,I=Math.min(length,thickness)/8,E=0.003;var shape=[-T,I,-T+I,E,0,E,T,T,T,L-T-E,0,L-E,-T+I,L-E,-T,L-I];this.add(extrudeShape(shape,width));this.addSlot(0,length,0);}}
 class EndPhalange extends Part
 {constructor(length=1.0,width=0.3,thickness=0.3)
-{super();var L=length,T=thickness/2,I=Math.min(length,thickness)/8,E=0.003;var shape=[-T,I,-T+I,E,0,E,T,T,T,L-I-E,T-I,L-E,-T+I,L-E,-T,L-I];this.add(extrudeShape(shape,width));}}
+{super();var L=length,T=thickness/2,I=Math.min(length,thickness)/8,E=0.003;var shape=[-T,I,-T+I,E,0,E,T,T,T,L-I-E,T-I,L-E,-T+I,L-E,-T,L-I];this.add(extrudeShape(shape,width));this.addSlot(0,length,0);}}
 class LeftPalm extends Part
 {constructor(length=1.4,width=1.4,thickness=0.3)
 {super();var L=length,W=width/2,I=width/8;var shape=[-W+I,0,W-2*I,0,W,2*I,W,L,-W,L,-W,L/2,];this.add(extrudeShape(shape,thickness));var that=this;function addSlot(pointA,pointB,k)
@@ -2472,4 +2528,4 @@ class RightPalm extends Part
 {super();var L=length,W=width/2,I=width/8;var shape=[W-I,0,-W+2*I,0,-W,2*I,-W,L,W,L,W,L/2,];this.add(extrudeShape(shape,thickness));var that=this;function addSlot(pointA,pointB,k)
 {var xA=shape[2*pointA],xB=shape[2*pointB],yA=shape[2*pointA+1],yB=shape[2*pointB+1];var slot=that.addSlot(xA*(1-k)+k*xB,yA*(1-k)+k*yB,0);slot.setRotation(0,Math.PI/2,Math.atan2(yB-yA,xB-xA),'ZXY');}
 addSlot(2,3,1/4);addSlot(3,4,1/8);addSlot(3,4,3/8);addSlot(3,4,5/8);addSlot(3,4,7/8);}}
-export{EndPhalange,LeftPalm,MotorX,MotorY,MotorZ,Part,Phalange,RightPalm,Robot,Slot,getScene,setAnimation,setCameraPosition,setCameraTarget};
+export{BoxGeometry,EndPhalange,Group,LeftPalm,Mesh,MeshLambertMaterial,MotorX,MotorY,MotorZ,Part,Phalange,RightPalm,Robot,Sensor,Slot,getScene,getTime,setAnimation,setCameraPosition,setCameraTarget};

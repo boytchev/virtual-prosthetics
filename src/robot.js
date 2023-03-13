@@ -14,8 +14,10 @@
 //		getMotors( )
 //		getDOF( )
 //		setAngles( ...angles )
+//		setAnglesRelative( ...angles )
 //		getAngles( )
 //		setAngle( index, angle )
+//		setAngleRelative( index, angle )
 //		getAngle( index )
 //
 
@@ -132,6 +134,16 @@ class Robot extends THREE.Group
 			this.motors[i].setAngle( angles[i] );
 	}
 	
+	setAnglesRelative( ...angles )
+	{
+		this.#prepare( );
+		
+		var n = Math.min( this.motors.length, angles.length );
+		
+		for( var i=0; i<n; i++ )
+			this.motors[i].setAngleRelative( angles[i] );
+	}
+	
 	getAngles( )
 	{
 		this.#prepare( );
@@ -154,6 +166,18 @@ class Robot extends THREE.Group
 		if( Number.isNaN(angle) )
 			return;
 		this.motors[index].setAngle( angle );
+	}
+
+	setAngleRelative( index, angle )
+	{
+		this.#prepare( );
+
+		if( typeof this.motors[index] === 'undefined' )
+			return;
+		
+		if( Number.isNaN(angle) )
+			return;
+		this.motors[index].setAngleRelative( angle );
 	}
 
 	getAngle( index )

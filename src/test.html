@@ -1,0 +1,152 @@
+﻿<!DOCTYPE html>
+
+
+<head>
+	<title>Distance sensor</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<link rel="shortcut icon" type="image/png" href="logo.png"/>
+	<link rel="stylesheet" href="examples.css">
+</head>
+
+
+<body>
+	<header>
+		<h1>Distance sensor</h1>
+		<h2>First test of distance sensors</h2>
+		<h3><a href="https://boytchev.github.io/virtual-prosthetics/">Virtual Prosthetics Examples</a></h3>
+	</header>
+	
+	<script type="module">
+
+
+	//import * as Prosthetic from "../build/virtual-prosthetics.js";
+	import * as Prosthetic from "../src/virtual-prosthetics.js";
+
+
+	const PI = Math.PI;
+	const sin = Math.sin;
+	const cos = Math.cos;
+
+
+	class TouchRobot extends Prosthetic.Robot
+	{
+		constructor( )
+		{
+			super( );
+			
+			var lastPart = new Prosthetic.EndPhalange( 0.75 );
+			
+			this.addChain(
+				this,
+				new Prosthetic.MotorY( -Infinity, Infinity, 0, 0.1, 0.5 ),
+				new Prosthetic.MotorZ( 0.0, -PI/2, 0, 0.2, 0.3 ),
+				new Prosthetic.Phalange( 0.75 ),
+				new Prosthetic.MotorZ( 0.0, -PI/2, 0, 0.25, 0.08 ),
+				new Prosthetic.MotorY( -Infinity, Infinity, 0, 0.08, 0.1 ),
+				lastPart,
+			);
+			
+			this.sensor = new Prosthetic.Sensor().attachToSlot( lastPart );
+			this.sensor.addLaser( 'blue' );
+			
+			var slot;
+
+			slot = new Prosthetic.Slot( 0.15, 0.75-0.2, 0 );
+			slot.setRotation( 0, 0, -Math.PI/2 );
+			this.sensorA = new Prosthetic.Sensor().attachToSlot( lastPart, slot );
+
+			slot = new Prosthetic.Slot( -0.15, 0.75-0.2, 0 );
+			slot.setRotation( 0, 0, Math.PI/2 );
+			this.sensorB = new Prosthetic.Sensor().attachToSlot( lastPart, slot );
+
+			slot = new Prosthetic.Slot( 0, 0.75-0.2, 0.15 );
+			slot.setRotation( Math.PI/2, 0, 0 );
+			this.sensorC = new Prosthetic.Sensor().attachToSlot( lastPart, slot );
+
+			slot = new Prosthetic.Slot( 0, 0.75-0.2, -0.15 );
+			slot.setRotation( -Math.PI/2, 0, 0 );
+			this.sensorD = new Prosthetic.Sensor().attachToSlot( lastPart, slot );
+		}
+	}
+
+
+	var robot = new TouchRobot;
+		robot.setPosition( -0.75, 0, 0 );
+
+	var n = 40; //blocks
+	for( var i=0; i<n; i++ )
+	{
+		var block = new Prosthetic.Mesh(
+			new Prosthetic.BoxGeometry( 3*Math.random(), 3*Math.random(), 3*Math.random() ),
+			new Prosthetic.MeshLambertMaterial( {color: 'gray'} )
+		);
+		block.rotation.set( 3*Math.random(), 3*Math.random(), 3*Math.random() );
+		block.position.setFromSphericalCoords( 4+3*Math.random(), 1.5, i/n * 2*Math.PI );
+		block.castShadow = true;
+		block.receiveShadow = true;
+		Prosthetic.getScene().add( block );
+	}
+
+
+	
+	Prosthetic.setAnimation( loop );
+	Prosthetic.setCameraPosition( 0, 6, 10 );
+
+
+function traverseGroups(group) {
+	let allObjects = [];
+	console.log('ent',group);
+	group.traverse(function(object) {
+		console.log(allObjects);
+		console.log('=>',object.type === 'Group',object);
+		if(object.type === 'Group') {
+			allObjects.push(...traverseGroups(object));
+		} else {
+			allObjects.push(object);
+		};
+	});
+	return(allObjects);
+};
+
+
+//console.log( 'result=',traverseGroups( Prosthetic.getScene() ) );
+
+console.log(Prosthetic.getScene())
+
+var aaa = [];
+Prosthetic.getScene().traverse( (obj)=>
+{
+	if( !(obj instanceof Prosthetic.Group) )
+	aaa.push(obj);
+}
+);
+console.log( 'aaa=',aaa );
+
+	var oldT = 0;
+	function loop( t )
+	{
+		var s = sin(t)+0.5*sin(2*t);
+		var s2 = sin(4.1*t);
+		
+		//if( Math.sign(cos(oldT)) < 0 && Math.sign(cos(t)) > 0 )
+		//	block.position.x = THREE.MathUtils.randFloat(0.5,1);
+		oldT = t;
+		
+		robot.setAngles( 
+			t/3,
+			-PI/2*(0.5+0.5*s),
+			-PI/2*(0.5-0.5*s)+0.5*s2,
+			3*sin(t)
+		);
+		
+		robot.sensor.senseDistance( );
+		robot.sensorA.senseDistance( );
+		robot.sensorB.senseDistance( );
+		robot.sensorC.senseDistance( );
+		robot.sensorD.senseDistance( );
+	}
+
+
+	</script>
+</body>
