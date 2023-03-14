@@ -25,6 +25,7 @@ class Laser extends THREE.Group
 					opacity: 0.5,
 				} )
 		);
+		laserPointer.name = 'Laser.Pointer';
 		this.attrPos = laserPointer.geometry.getAttribute( 'position' );
 
 		var laserPoint = new THREE.Points(
@@ -37,6 +38,7 @@ class Laser extends THREE.Group
 					map: laserDotTexture
 				} )
 		);
+		laserPoint.name = 'Laser.Point';
 
 		this.add( laserPointer, laserPoint );
 

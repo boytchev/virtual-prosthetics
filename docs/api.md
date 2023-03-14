@@ -621,22 +621,23 @@ robot.show();
 # Sensors 
 
 A sensor is a robot part that measure some property and returns feedback. 
-Sensors are attached to slots and use their orientation.
+Sensors are attached to slots (with [`attachToSlot`](#attachtoslot)) and use
+their position and orientation.
 
 
 ### Sensor
 
 ```js
-Sensor( x, y, z )
+Sensor( visible = true )
 ```
 
-Class. Defines a sensor at coordinates (`x`, `y`, `z`). These coordinates are
-relative to the robot part of the slot.
+Class. Defines a sensor. If `visible` is true, the sensor pad is drawn, otherwise
+the sensor is invisible, but functional.
 
 Example:
 
 ```js
-sensor = new Sensor( 0, 0, Math.PI/4 );
+sensor = new Sensor( );
 ```
 
 

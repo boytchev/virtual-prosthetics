@@ -37,24 +37,27 @@ var raycaster = new THREE.Raycaster();
 			Sprite: {}
 		};
 
-// dummy vector, can be reused at any time for any purpose
-var v = new THREE.Vector3();
+// dummy vectors, can be reused at any time for any purpose
+var v = new THREE.Vector3(),
+	u = new THREE.Vector3();
 
 	
 // class for sensors
 
 class Sensor extends Part
 {
-	constructor( )
+	constructor( visible = true )
 	{
 		super( );
 
-		var pad = new THREE.Mesh( GEOMETRY, MATERIAL );
-			pad.scale.set( 0.1, 0.05, 0.1 );
-		
+		if( visible )
+		{
+			var pad = new THREE.Mesh( GEOMETRY, MATERIAL );
+				pad.scale.set( 0.1, 0.05, 0.1 );
+			
+			this.add( pad );
+		}
 		this.laser = undefined;
-		
-		this.add( pad );
 	}
 
 	setRotation( x, y, z, order='XYZ' )
@@ -118,16 +121,30 @@ class Sensor extends Part
 	senseTouch( )
 	{
 		raycaster.near = 0;
-		raycaster.far = 0.15;
+		raycaster.far = 0.05;
 
 		this.getWorldPosition( pos );
 		this.getWorldDirectionY( dir );
 		
 		raycaster.set( pos, dir );
 		
+		if( this.laser )
+		{
+			// set the end point of laser
+			// the shift in X is to eliminate the chance
+			// of the raycaster to hit the laser
+			u.set( 0.01, raycaster.near, 0 );
+			v.set( 0.01, raycaster.far, 0 );
+			this.laser.set( this.localToWorld(u), this.localToWorld(v) );
+		}
+
 		var intersect = raycaster.intersectObject( getScene(), true );
+		
 		if( intersect.length > 0 )
-			return intersect[0].distance/raycaster.far;
+		{
+//			console.log( intersect );
+			return 1 - intersect[0].distance/(raycaster.far-raycaster.near);
+		}
 		else
 			return 0;
 	}

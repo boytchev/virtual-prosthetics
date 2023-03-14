@@ -2141,12 +2141,30 @@ for(let x=0;x<radialSegments;x++){const c=centerIndexStart+x;const i=centerIndex
 groupCount+=3;}
 scope.addGroup(groupStart,groupCount,top===true?1:2);groupStart+=groupCount;}}
 static fromJSON(data){return new CylinderGeometry(data.radiusTop,data.radiusBottom,data.height,data.radialSegments,data.heightSegments,data.openEnded,data.thetaStart,data.thetaLength);}}
+class PolyhedronGeometry extends BufferGeometry{constructor(vertices=[],indices=[],radius=1,detail=0){super();this.type='PolyhedronGeometry';this.parameters={vertices:vertices,indices:indices,radius:radius,detail:detail};const vertexBuffer=[];const uvBuffer=[];subdivide(detail);applyRadius(radius);generateUVs();this.setAttribute('position',new Float32BufferAttribute(vertexBuffer,3));this.setAttribute('normal',new Float32BufferAttribute(vertexBuffer.slice(),3));this.setAttribute('uv',new Float32BufferAttribute(uvBuffer,2));if(detail===0){this.computeVertexNormals();}else{this.normalizeNormals();}
+function subdivide(detail){const a=new Vector3();const b=new Vector3();const c=new Vector3();for(let i=0;i<indices.length;i+=3){getVertexByIndex(indices[i+0],a);getVertexByIndex(indices[i+1],b);getVertexByIndex(indices[i+2],c);subdivideFace(a,b,c,detail);}}
+function subdivideFace(a,b,c,detail){const cols=detail+1;const v=[];for(let i=0;i<=cols;i++){v[i]=[];const aj=a.clone().lerp(c,i/cols);const bj=b.clone().lerp(c,i/cols);const rows=cols-i;for(let j=0;j<=rows;j++){if(j===0&&i===cols){v[i][j]=aj;}else{v[i][j]=aj.clone().lerp(bj,j/rows);}}}
+for(let i=0;i<cols;i++){for(let j=0;j<2*(cols-i)-1;j++){const k=Math.floor(j/2);if(j%2===0){pushVertex(v[i][k+1]);pushVertex(v[i+1][k]);pushVertex(v[i][k]);}else{pushVertex(v[i][k+1]);pushVertex(v[i+1][k+1]);pushVertex(v[i+1][k]);}}}}
+function applyRadius(radius){const vertex=new Vector3();for(let i=0;i<vertexBuffer.length;i+=3){vertex.x=vertexBuffer[i+0];vertex.y=vertexBuffer[i+1];vertex.z=vertexBuffer[i+2];vertex.normalize().multiplyScalar(radius);vertexBuffer[i+0]=vertex.x;vertexBuffer[i+1]=vertex.y;vertexBuffer[i+2]=vertex.z;}}
+function generateUVs(){const vertex=new Vector3();for(let i=0;i<vertexBuffer.length;i+=3){vertex.x=vertexBuffer[i+0];vertex.y=vertexBuffer[i+1];vertex.z=vertexBuffer[i+2];const u=azimuth(vertex)/2/Math.PI+0.5;const v=inclination(vertex)/Math.PI+0.5;uvBuffer.push(u,1-v);}
+correctUVs();correctSeam();}
+function correctSeam(){for(let i=0;i<uvBuffer.length;i+=6){const x0=uvBuffer[i+0];const x1=uvBuffer[i+2];const x2=uvBuffer[i+4];const max=Math.max(x0,x1,x2);const min=Math.min(x0,x1,x2);if(max>0.9&&min<0.1){if(x0<0.2)uvBuffer[i+0]+=1;if(x1<0.2)uvBuffer[i+2]+=1;if(x2<0.2)uvBuffer[i+4]+=1;}}}
+function pushVertex(vertex){vertexBuffer.push(vertex.x,vertex.y,vertex.z);}
+function getVertexByIndex(index,vertex){const stride=index*3;vertex.x=vertices[stride+0];vertex.y=vertices[stride+1];vertex.z=vertices[stride+2];}
+function correctUVs(){const a=new Vector3();const b=new Vector3();const c=new Vector3();const centroid=new Vector3();const uvA=new Vector2();const uvB=new Vector2();const uvC=new Vector2();for(let i=0,j=0;i<vertexBuffer.length;i+=9,j+=6){a.set(vertexBuffer[i+0],vertexBuffer[i+1],vertexBuffer[i+2]);b.set(vertexBuffer[i+3],vertexBuffer[i+4],vertexBuffer[i+5]);c.set(vertexBuffer[i+6],vertexBuffer[i+7],vertexBuffer[i+8]);uvA.set(uvBuffer[j+0],uvBuffer[j+1]);uvB.set(uvBuffer[j+2],uvBuffer[j+3]);uvC.set(uvBuffer[j+4],uvBuffer[j+5]);centroid.copy(a).add(b).add(c).divideScalar(3);const azi=azimuth(centroid);correctUV(uvA,j+0,a,azi);correctUV(uvB,j+2,b,azi);correctUV(uvC,j+4,c,azi);}}
+function correctUV(uv,stride,vector,azimuth){if((azimuth<0)&&(uv.x===1)){uvBuffer[stride]=uv.x-1;}
+if((vector.x===0)&&(vector.z===0)){uvBuffer[stride]=azimuth/2/Math.PI+0.5;}}
+function azimuth(vector){return Math.atan2(vector.z,-vector.x);}
+function inclination(vector){return Math.atan2(-vector.y,Math.sqrt((vector.x*vector.x)+(vector.z*vector.z)));}}
+static fromJSON(data){return new PolyhedronGeometry(data.vertices,data.indices,data.radius,data.details);}}
 const _v0=new Vector3();const _v1$1=new Vector3();const _normal=new Vector3();const _triangle$1=new Triangle();class EdgesGeometry extends BufferGeometry{constructor(geometry=null,thresholdAngle=1){super();this.type='EdgesGeometry';this.parameters={geometry:geometry,thresholdAngle:thresholdAngle};if(geometry!==null){const precisionPoints=4;const precision=Math.pow(10,precisionPoints);const thresholdDot=Math.cos(DEG2RAD*thresholdAngle);const indexAttr=geometry.getIndex();const positionAttr=geometry.getAttribute('position');const indexCount=indexAttr?indexAttr.count:positionAttr.count;const indexArr=[0,0,0];const vertKeys=['a','b','c'];const hashes=new Array(3);const edgeData={};const vertices=[];for(let i=0;i<indexCount;i+=3){if(indexAttr){indexArr[0]=indexAttr.getX(i);indexArr[1]=indexAttr.getX(i+1);indexArr[2]=indexAttr.getX(i+2);}else{indexArr[0]=i;indexArr[1]=i+1;indexArr[2]=i+2;}
 const{a,b,c}=_triangle$1;a.fromBufferAttribute(positionAttr,indexArr[0]);b.fromBufferAttribute(positionAttr,indexArr[1]);c.fromBufferAttribute(positionAttr,indexArr[2]);_triangle$1.getNormal(_normal);hashes[0]=`${ Math.round( a.x * precision ) },${ Math.round( a.y * precision ) },${ Math.round( a.z * precision ) }`;hashes[1]=`${ Math.round( b.x * precision ) },${ Math.round( b.y * precision ) },${ Math.round( b.z * precision ) }`;hashes[2]=`${ Math.round( c.x * precision ) },${ Math.round( c.y * precision ) },${ Math.round( c.z * precision ) }`;if(hashes[0]===hashes[1]||hashes[1]===hashes[2]||hashes[2]===hashes[0]){continue;}
 for(let j=0;j<3;j++){const jNext=(j+1)%3;const vecHash0=hashes[j];const vecHash1=hashes[jNext];const v0=_triangle$1[vertKeys[j]];const v1=_triangle$1[vertKeys[jNext]];const hash=`${ vecHash0 }_${ vecHash1 }`;const reverseHash=`${ vecHash1 }_${ vecHash0 }`;if(reverseHash in edgeData&&edgeData[reverseHash]){if(_normal.dot(edgeData[reverseHash].normal)<=thresholdDot){vertices.push(v0.x,v0.y,v0.z);vertices.push(v1.x,v1.y,v1.z);}
 edgeData[reverseHash]=null;}else if(!(hash in edgeData)){edgeData[hash]={index0:indexArr[j],index1:indexArr[jNext],normal:_normal.clone(),};}}}
 for(const key in edgeData){if(edgeData[key]){const{index0,index1}=edgeData[key];_v0.fromBufferAttribute(positionAttr,index0);_v1$1.fromBufferAttribute(positionAttr,index1);vertices.push(_v0.x,_v0.y,_v0.z);vertices.push(_v1$1.x,_v1$1.y,_v1$1.z);}}
 this.setAttribute('position',new Float32BufferAttribute(vertices,3));}}}
+class IcosahedronGeometry extends PolyhedronGeometry{constructor(radius=1,detail=0){const t=(1+Math.sqrt(5))/2;const vertices=[-1,t,0,1,t,0,-1,-t,0,1,-t,0,0,-1,t,0,1,t,0,-1,-t,0,1,-t,t,0,-1,t,0,1,-t,0,-1,-t,0,1];const indices=[0,11,5,0,5,1,0,1,7,0,7,10,0,10,11,1,5,9,5,11,4,11,10,2,10,7,6,7,1,8,3,9,4,3,4,2,3,2,6,3,6,8,3,8,9,4,9,5,2,4,11,6,2,10,8,6,7,9,8,1];super(vertices,indices,radius,detail);this.type='IcosahedronGeometry';this.parameters={radius:radius,detail:detail};}
+static fromJSON(data){return new IcosahedronGeometry(data.radius,data.detail);}}
 class SphereGeometry extends BufferGeometry{constructor(radius=1,widthSegments=32,heightSegments=16,phiStart=0,phiLength=Math.PI*2,thetaStart=0,thetaLength=Math.PI){super();this.type='SphereGeometry';this.parameters={radius:radius,widthSegments:widthSegments,heightSegments:heightSegments,phiStart:phiStart,phiLength:phiLength,thetaStart:thetaStart,thetaLength:thetaLength};widthSegments=Math.max(3,Math.floor(widthSegments));heightSegments=Math.max(2,Math.floor(heightSegments));const thetaEnd=Math.min(thetaStart+thetaLength,Math.PI);let index=0;const grid=[];const vertex=new Vector3();const normal=new Vector3();const indices=[];const vertices=[];const normals=[];const uvs=[];for(let iy=0;iy<=heightSegments;iy++){const verticesRow=[];const v=iy/heightSegments;let uOffset=0;if(iy==0&&thetaStart==0){uOffset=0.5/widthSegments;}else if(iy==heightSegments&&thetaEnd==Math.PI){uOffset=-0.5/widthSegments;}
 for(let ix=0;ix<=widthSegments;ix++){const u=ix/widthSegments;vertex.x=-radius*Math.cos(phiStart+u*phiLength)*Math.sin(thetaStart+v*thetaLength);vertex.y=radius*Math.cos(thetaStart+v*thetaLength);vertex.z=radius*Math.sin(phiStart+u*phiLength)*Math.sin(thetaStart+v*thetaLength);vertices.push(vertex.x,vertex.y,vertex.z);normal.copy(vertex).normalize();normals.push(normal.x,normal.y,normal.z);uvs.push(u+uOffset,1-v);verticesRow.push(index++);}
 grid.push(verticesRow);}
@@ -2424,6 +2442,11 @@ setAngle(x)
 {if(x===null)
 return;if(this.axis)
 this.rotation[this.axis]=MathUtils.clamp(x,this.min,this.max);else
+throw`Error: body part '${this.name}' cannot rotate`;}
+setAngleRelative(x)
+{if(x===null)
+return;if(this.axis)
+this.rotation[this.axis]=MathUtils.clamp(this.rotation[this.axis]+x,this.min,this.max);else
 throw`Error: body part '${this.name}' cannot rotate`;}}
 class Robot extends Group
 {constructor()
@@ -2458,6 +2481,9 @@ getDOF()
 setAngles(...angles)
 {this.#prepare();var n=Math.min(this.motors.length,angles.length);for(var i=0;i<n;i++)
 this.motors[i].setAngle(angles[i]);}
+setAnglesRelative(...angles)
+{this.#prepare();var n=Math.min(this.motors.length,angles.length);for(var i=0;i<n;i++)
+this.motors[i].setAngleRelative(angles[i]);}
 getAngles()
 {this.#prepare();var angles=[];for(var motor of this.motors)
 angles.push(motor.getAngle());return angles;}
@@ -2465,17 +2491,23 @@ setAngle(index,angle)
 {this.#prepare();if(typeof this.motors[index]==='undefined')
 return;if(Number.isNaN(angle))
 return;this.motors[index].setAngle(angle);}
+setAngleRelative(index,angle)
+{this.#prepare();if(typeof this.motors[index]==='undefined')
+return;if(Number.isNaN(angle))
+return;this.motors[index].setAngleRelative(angle);}
 getAngle(index)
 {this.#prepare();if(typeof this.motors[index]==='undefined')
 return 0;return this.motors[index].getAngle();}}
 var canvas,ctx;canvas=document.createElement('CANVAS');canvas.width=4;canvas.height=4;ctx=canvas.getContext('2d');ctx.fillStyle='white';ctx.fillRect(0,0,4,4);ctx.fillStyle='black';ctx.fillRect(1,1,1,1);ctx.fillRect(3,3,1,1);var sensorTexture=new CanvasTexture(canvas);sensorTexture.wrapS=RepeatWrapping;sensorTexture.wrapT=RepeatWrapping;sensorTexture.anisotropy=2;sensorTexture.repeat.set(32,8);canvas=document.createElement('CANVAS');canvas.width=64;canvas.height=64;ctx=canvas.getContext('2d');ctx.fillStyle='white';ctx.arc(31,31,30,0,2*Math.PI);ctx.fill();var laserDotTexture=new CanvasTexture(canvas);laserDotTexture.anisotropy=2;class Laser extends Group
 {constructor(color='crimson')
-{super();var laserPointer=new Line(new BufferGeometry().setFromPoints([new Vector3,new Vector3]),new LineBasicMaterial({color:color,transparent:true,opacity:0.5,}));this.attrPos=laserPointer.geometry.getAttribute('position');var laserPoint=new Points(laserPointer.geometry,new PointsMaterial({color:color,size:8,sizeAttenuation:false,transparent:true,map:laserDotTexture}));this.add(laserPointer,laserPoint);this.frustumCulled=false;laserPointer.frustumCulled=false;laserPoint.frustumCulled=false;}
+{super();var laserPointer=new Line(new BufferGeometry().setFromPoints([new Vector3,new Vector3]),new LineBasicMaterial({color:color,transparent:true,opacity:0.5,}));laserPointer.name='Laser.Pointer';this.attrPos=laserPointer.geometry.getAttribute('position');var laserPoint=new Points(laserPointer.geometry,new PointsMaterial({color:color,size:8,sizeAttenuation:false,transparent:true,map:laserDotTexture}));laserPoint.name='Laser.Point';this.add(laserPointer,laserPoint);this.frustumCulled=false;laserPointer.frustumCulled=false;laserPoint.frustumCulled=false;}
 set(start,end)
 {this.attrPos.setXYZ(0,start.x,start.y,start.z);this.attrPos.setXYZ(1,end.x,end.y,end.z);this.attrPos.needsUpdate=true;}}
-var GEOMETRY=new SphereGeometry(1,32,8,0,2*Math.PI,0,Math.PI/2),MATERIAL$2=new MeshLambertMaterial({color:'lightgray',map:sensorTexture});var pos=new Vector3(),dir=new Vector3();var raycaster=new Raycaster();raycaster.params={Mesh:{},Line:{threshold:0},LOD:{},Points:{threshold:0},Sprite:{}};var v=new Vector3();class Sensor extends Part
-{constructor()
-{super();var pad=new Mesh(GEOMETRY,MATERIAL$2);pad.scale.set(0.1,0.05,0.1);this.laser=undefined;this.add(pad);}
+var GEOMETRY=new SphereGeometry(1,32,8,0,2*Math.PI,0,Math.PI/2),MATERIAL$2=new MeshLambertMaterial({color:'lightgray',map:sensorTexture});var pos=new Vector3(),dir=new Vector3();var raycaster=new Raycaster();raycaster.params={Mesh:{},Line:{threshold:0},LOD:{},Points:{threshold:0},Sprite:{}};var v=new Vector3(),u=new Vector3();class Sensor extends Part
+{constructor(visible=true)
+{super();if(visible)
+{var pad=new Mesh(GEOMETRY,MATERIAL$2);pad.scale.set(0.1,0.05,0.1);this.add(pad);}
+this.laser=undefined;}
 setRotation(x,y,z,order='XYZ')
 {this.rotation.set(x,y,z,order);}
 getWorldDirectionY(target)
@@ -2492,11 +2524,14 @@ return intersect[0].distance;}
 else
 {if(this.laser)
 {v.set(0,0.055,0);this.laser.set(pos,this.localToWorld(v));}
-return null;}}
+return Infinity;}}
 senseTouch()
-{raycaster.near=0;raycaster.far=0.05;this.getWorldPosition(pos);this.getWorldDirectionY(dir);raycaster.set(pos,dir);var intersect=raycaster.intersectObject(getScene(),true);if(intersect.length>0)
-return intersect[0].distance;else
-return null;}
+{raycaster.near=0;raycaster.far=0.05;this.getWorldPosition(pos);this.getWorldDirectionY(dir);raycaster.set(pos,dir);if(this.laser)
+{u.set(0.01,raycaster.near,0);v.set(0.01,raycaster.far,0);this.laser.set(this.localToWorld(u),this.localToWorld(v));}
+var intersect=raycaster.intersectObject(getScene(),true);if(intersect.length>0)
+{return 1-intersect[0].distance/(raycaster.far-raycaster.near);}
+else
+return 0;}
 sensePosition()
 {this.getWorldPosition(pos);return[pos.x,pos.y,pos.z];}}
 const MATERIAL$1=new MeshPhongMaterial({color:0x404040,shininess:100,});const GEOMETRY_16=new CylinderGeometry(1,1,1,16);const GEOMETRY_48=new CylinderGeometry(1,1,1,48);class MotorX extends Part
@@ -2528,4 +2563,4 @@ class RightPalm extends Part
 {super();var L=length,W=width/2,I=width/8;var shape=[W-I,0,-W+2*I,0,-W,2*I,-W,L,W,L,W,L/2,];this.add(extrudeShape(shape,thickness));var that=this;function addSlot(pointA,pointB,k)
 {var xA=shape[2*pointA],xB=shape[2*pointB],yA=shape[2*pointA+1],yB=shape[2*pointB+1];var slot=that.addSlot(xA*(1-k)+k*xB,yA*(1-k)+k*yB,0);slot.setRotation(0,Math.PI/2,Math.atan2(yB-yA,xB-xA),'ZXY');}
 addSlot(2,3,1/4);addSlot(3,4,1/8);addSlot(3,4,3/8);addSlot(3,4,5/8);addSlot(3,4,7/8);}}
-export{BoxGeometry,EndPhalange,Group,LeftPalm,Mesh,MeshLambertMaterial,MotorX,MotorY,MotorZ,Part,Phalange,RightPalm,Robot,Sensor,Slot,getScene,getTime,setAnimation,setCameraPosition,setCameraTarget};
+export{BoxGeometry,EndPhalange,Group,IcosahedronGeometry,LeftPalm,Mesh,MeshLambertMaterial,MotorX,MotorY,MotorZ,Part,Phalange,RightPalm,Robot,Sensor,Slot,SphereGeometry,getScene,getTime,setAnimation,setCameraPosition,setCameraTarget};

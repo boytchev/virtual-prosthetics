@@ -16,4 +16,4 @@ export * from "./sensor.js";
 export * from "./part-motors.js";
 export * from "./part-hand.js";
 
-export {Group, Mesh, BoxGeometry, SphereGeometry, MeshLambertMaterial} from "../libs/three.module.js";
+export {Group, Mesh, BoxGeometry, SphereGeometry, IcosahedronGeometry, MeshLambertMaterial} from "../libs/three.module.js";
