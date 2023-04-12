@@ -16,15 +16,19 @@
 
 import * as THREE from "../libs/three.module.js";
 import { OrbitControls } from "../libs/controls/OrbitControls.js";
+import { physics } from "./engine.js";
+
 
 
 var FPS = 30;
 
-var renderer, scene, camera, light, controls;
+var renderer, scene, camera, light, controls, ground;
 
 var animate,
 	oldTime = 0,
 	currentTime = 0;
+
+var bodies = [];
 
 function createScene( )
 {
@@ -49,7 +53,7 @@ function createScene( )
 	light.shadow.mapSize.height = 1024;
 	light.shadow.blurSamples = 10;
 	light.shadow.radius = 2;
-	light.shadow.bias = -0.001;
+	light.shadow.bias = -0.00001;
 	light.castShadow = true;
 	
 	light.shadow.camera.left = -10;
@@ -72,7 +76,9 @@ function createScene( )
 	window.addEventListener('resize', onWindowResize, false);
 	onWindowResize();
 
-	var ground = new THREE.Mesh(
+	class Ground extends THREE.Mesh {};
+	
+	ground = new Ground(
 		new THREE.PlaneGeometry(1000, 1000),
 		new THREE.MeshLambertMaterial(
 		{
@@ -83,9 +89,11 @@ function createScene( )
 	ground.rotation.x = -Math.PI / 2;
 	scene.add(ground);
 
-
 	controls = new OrbitControls( camera, renderer.domElement );
 	controls.target = new THREE.Vector3( 0, 1, 0 );
+
+	physics.init( scene, ground, bodies );
+	
 } // createScene
 
 createScene( );
@@ -109,6 +117,7 @@ function setAnimation( func, fps=30 )
 }
 
 
+
 function drawFrame( time )
 {
 	time /= 1000; // convert to seconds
@@ -117,10 +126,13 @@ function drawFrame( time )
 	
 	var dTime = time-oldTime;
 	
+	
 	if( dTime > 1/FPS )
 	{
 		
 		if( animate ) animate( time, dTime );
+		
+		physics.update( FPS, time, dTime );
 		
 		oldTime = time;
 		
@@ -141,4 +153,18 @@ function getTime( )
 	return currentTime;
 }
 
-export { setAnimation, getScene, setCameraPosition, setCameraTarget, getTime };
+
+function getBodies( )
+{
+	return bodies;
+}
+
+/*
+function getGround( )
+{
+	return ground;
+}
+*/
+
+
+export { setAnimation, getScene, setCameraPosition, setCameraTarget, getTime, getBodies/*, getGround*/ };

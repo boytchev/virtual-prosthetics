@@ -1,0 +1,71 @@
+
+//
+//	Shapes for Virtual prosthetics
+//
+//	class Ball( radius = 1, color = 'dimgray' )
+//
+
+
+import * as THREE from "../libs/three.module.js";
+import { Part } from "./part.js";
+import { getBodies, getScene } from "./scene.js";
+import { physics } from "./engine.js";
+
+
+
+//
+
+class Ball extends Part
+{
+	constructor ( radius=1.0, color='dimgray' )
+	{
+		super( );
+		
+		this.mainMesh = new THREE.Mesh(
+			new THREE.IcosahedronGeometry( radius, 10 ),
+			new THREE.MeshLambertMaterial( {color:color, emissive:'Crimson', emissiveIntensity:0} )
+		);
+		this.mainMesh.receiveShadow = true;
+		this.mainMesh.castShadow = true;
+
+		this.add( this.mainMesh );
+		
+		// physics
+		this.physics = physics.ball( radius );
+		this.physics.threejs = this;
+		
+		getBodies( ).push( this );
+
+	} // Ball.constructor
+	
+} // Ball
+
+
+class Box extends Part
+{
+	constructor ( sizex=1.0, sizey=1.0, sizez=1.0, color='dimgray' )
+	{
+		super( );
+		
+		var object = new THREE.Mesh(
+			new THREE.BoxGeometry( sizex, sizey, sizez ),
+			new THREE.MeshLambertMaterial( {color:color, emissive:'Crimson', emissiveIntensity:0} )
+		);
+		object.receiveShadow = true;
+		object.castShadow = true;
+		
+		this.add( object );
+		
+		
+		// physics
+		this.physics = physics.box( sizex, sizey, sizez );
+		this.physics.threejs = this;
+
+		getBodies( ).push( this );
+
+	} // Box.constructor
+	
+} // Box
+
+
+export { Ball, Box };

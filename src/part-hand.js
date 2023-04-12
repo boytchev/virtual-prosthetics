@@ -10,8 +10,9 @@
 
 import * as THREE from "../libs/three.module.js";
 import { ConvexGeometry } from "../libs/geometries/ConvexGeometry.js";
-import {Part} from "./part.js";
-
+import { Part} from "./part.js";
+import { getBodies, getScene } from "./scene.js";
+import { physics } from "./engine.js";
 
 
 // default materials 
@@ -20,6 +21,10 @@ const MATERIAL = new THREE.MeshLambertMaterial({
 				polygonOffset: true,
 				polygonOffsetUnits: 1,
 				polygonOffsetFactor: 1,
+				
+				emissive: 'Crimson',
+				emissiveIntensity: 0,
+
 
 				// transparent: true,
 				// opacity: 0,
@@ -48,7 +53,7 @@ function extrudeShape( shape, width )
 	}
 
 	// build the 3D shape
-	var image = new THREE.Mesh(new ConvexGeometry( vertices ), MATERIAL); 
+	var image = new THREE.Mesh(new ConvexGeometry( vertices ), MATERIAL.clone() ); 
 		image.receiveShadow = true;
 		image.castShadow = true;
 		
@@ -75,22 +80,68 @@ class Phalange extends Part
 		var L = length,
 			T = thickness/2,
 			I = Math.min( length, thickness ) / 8,
+			W = width,
 			E = 0.003;
 			
 		var shape = [
-				-T,   I,
-				-T+I, E,
-				 0,   E,
-				 T,   T,
-				 T,   L-T-E,
-				 0,   L-E,
-				-T+I, L-E,
-				-T,   L-I ];
+				-T,   I -L/2,
+				-T+I, E -L/2,
+				 0,   E -L/2,
+				 T,   T -L/2,
+				 T,   L-T-E -L/2,
+				 0,   L-E -L/2,
+				-T+I, L-E -L/2,
+				-T,   L-I  -L/2];
 		
 		// create main mesh
-		this.add( extrudeShape(shape,width) );
+		this.mainMesh = extrudeShape(shape,width);
+		this.mainMesh.position.y = length/2;
+		var overMesh = new THREE.Group();
+		overMesh.add( this.mainMesh );
+		this.add( overMesh );
 		
 		this.addSlot( 0, length, 0 );
+		
+		// 3D convex shape
+		var vertices = [
+							[ -T,   I -L/2,      W/2 ],
+							[ -T+I, E -L/2,      W/2 ],
+							[  0,   E -L/2,      W/2 ],
+							[  T,   T -L/2,  	 W/2 ],
+							[  T,   L-T-E -L/2,  W/2 ],
+							[  0,   L-E -L/2,    W/2 ],
+							[ -T+I, L-E -L/2,    W/2 ],
+							[ -T,   L-I -L/2,    W/2 ],
+
+							[ -T,   I -L/2,     -W/2 ],
+							[ -T+I, E -L/2,     -W/2 ],
+							[  0,   E -L/2,     -W/2 ],
+							[  T,   T -L/2,  	-W/2 ],
+							[  T,   L-T-E -L/2, -W/2 ],
+							[  0,   L-E -L/2,   -W/2 ],
+							[ -T+I, L-E -L/2,   -W/2 ],
+							[ -T,   L-I -L/2,   -W/2 ]
+						];
+						
+		var faces = [
+						[0,1,2,3,4,5,6,7],
+						[15,14,13,12,11,10,9,8],
+						[0,8,9,1],
+						[1,9,10,2],
+						[2,10,11,3],
+						[3,11,12,4],
+						[4,12,13,5],
+						[5,13,14,6],
+						[6,14,15,7],
+						[7,15,8,0]
+					];
+		
+		// physics
+		this.physics = physics.convex( vertices, faces );
+		this.physics.threejs = this;
+		
+		getBodies().push( this );
+
 	} // Phalange.constructor
 
 	
@@ -108,22 +159,69 @@ class EndPhalange extends Part
 		var L = length,
 			T = thickness/2,
 			I = Math.min( length, thickness ) / 8,
+			W = width,
 			E = 0.003;
 			
 		var shape = [
-				-T,   I,
-				-T+I, E,
-				 0,   E,
-				 T,   T,
-				 T,   L-I-E,
-				 T-I, L-E,
-				-T+I, L-E,
-				-T,   L-I ];
+				-T,   I -L/2,
+				-T+I, E -L/2,
+				 0,   E -L/2,
+				 T,   T -L/2,
+				 T,   L-I-E -L/2,
+				 T-I, L-E -L/2,
+				-T+I, L-E -L/2,
+				-T,   L-I -L/2 ];
 		
 		// create main mesh
-		this.add( extrudeShape(shape,width) );
+		this.mainMesh = extrudeShape(shape,width);
+		this.mainMesh.position.y = length/2;
+		var overMesh = new THREE.Group();
+		overMesh.add( this.mainMesh );
+		this.add( overMesh );
 
 		this.addSlot( 0, length, 0 );
+
+		// 3D convex shape
+		var vertices = [
+							[ -T,   I -L/2,      W/2 ],
+							[ -T+I, E -L/2,      W/2 ],
+							[  0,   E -L/2,      W/2 ],
+							[  T,   T -L/2,      W/2 ],
+							[  T,   L-I-E -L/2,  W/2 ],
+							[  T-I, L-E -L/2,    W/2 ],
+							[ -T+I, L-E -L/2,    W/2 ],
+							[ -T,   L-I -L/2,    W/2 ],
+						
+							[ -T,   I -L/2,     -W/2 ],
+							[ -T+I, E -L/2,     -W/2 ],
+							[  0,   E -L/2,     -W/2 ],
+							[  T,   T -L/2,     -W/2 ],
+							[  T,   L-I-E -L/2, -W/2 ],
+							[  T-I, L-E -L/2,   -W/2 ],
+							[ -T+I, L-E -L/2,   -W/2 ],
+							[ -T,   L-I -L/2,   -W/2 ],
+						];
+						
+		var faces = [
+						[0,1,2,3,4,5,6,7],
+						[15,14,13,12,11,10,9,8],
+						[0,8,9,1],
+						[1,9,10,2],
+						[2,10,11,3],
+						[3,11,12,4],
+						[4,12,13,5],
+						[5,13,14,6],
+						[6,14,15,7],
+						[7,15,8,0]
+					];
+		
+		
+		// physics
+		this.physics = physics.convex( vertices, faces );
+		this.physics.threejs = this;
+		
+		getBodies( ).push( this );
+
 	} // EndPhalange.constructor
 	
 } // EndPhalange

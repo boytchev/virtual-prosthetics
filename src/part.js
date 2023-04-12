@@ -13,7 +13,7 @@
 
 import * as THREE from "../libs/three.module.js";
 import { ConvexGeometry } from "../libs/geometries/ConvexGeometry.js";
-import {Slot} from "./slot.js";
+import { Slot } from "./slot.js";
 
 
 // base class for robot parts
@@ -34,6 +34,10 @@ class Part extends THREE.Group
 		this.min = null;
 		this.max = null;
 		this.def = null;
+		
+		// physics
+		this.physics = null;
+		this.collisions = [];
 	}
 
 	setMotor( axis, min=-Infinity, max=Infinity, def=0 )
@@ -110,8 +114,40 @@ class Part extends THREE.Group
 			throw `Error: body part '${this.name}' cannot rotate`;
 	}
 
+	setPosition( x, y, z )
+	{
+		this.position.set( x, y, z );
+		//if( this.physics )
+		//	this.physics.position.set( x, y, z );
+	}
 	
-	
+	beginContact( otherObject )
+	{
+		this.collisions.push( otherObject );
+
+		if( this.mainMesh )
+			this.mainMesh.material.emissiveIntensity = 1;
+
+//		console.log( 'contact', this.constructor.name, 'with', otherObject.constructor.name );
+	}
+
+	endContact( otherObject )
+	{
+		for( var i in this.collisions )
+			if( this.collisions[i] === otherObject )
+			{
+				this.collisions.splice( i, 1 );
+				break;
+			}
+
+		if( this.mainMesh )
+		if( this.collisions.length==0  )
+			this.mainMesh.material.emissiveIntensity = 0;
+
+//		console.log( 'no contact', this.constructor.name, 'with', otherObject.constructor.name );
+
+	}
+
 }
 
 export { Part };

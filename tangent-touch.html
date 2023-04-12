@@ -1,0 +1,195 @@
+﻿<!DOCTYPE html>
+
+
+<head>
+	<title>Tangent touch</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<link rel="shortcut icon" type="image/png" href="logo.png"/>
+	<link rel="stylesheet" href="examples.css">
+</head>
+
+
+<body>
+	<header>
+		<h1>Tangent touch</h1>
+		<h2>Sensing the orientation of target</h2>
+		<h3><a href="https://boytchev.github.io/virtual-prosthetics/">Virtual Prosthetics Examples</a></h3>
+	</header>
+	
+	<script type="module">
+
+	//import * as Prosthetic from "./build/virtual-prosthetics.js";
+	import * as Prosthetic from "./src/virtual-prosthetics.js";
+	import * as CANNON from "./libs/cannon-es.js";
+
+
+	const PI = Math.PI;
+	const sin = Math.sin;
+	const cos = Math.cos;
+
+
+	class TouchRobot extends Prosthetic.Robot
+	{
+		constructor( )
+		{
+			super( );
+			
+			this.done = false;
+			
+			var	firstPart = new Prosthetic.Phalange( 0.75 ),
+				lastPart = new Prosthetic.EndPhalange( 0.75 );
+			
+			this.addChain(
+				this,
+				new Prosthetic.MotorZ( PI/2, -PI/2, 0, 0.2, 0.3 ),
+				new Prosthetic.MotorY( -1, 1, 0, 0.2, 0.1 ),
+				firstPart,
+				new Prosthetic.MotorZ( 0.0, -PI/2, 0, 0.25, 0.08 ),
+				lastPart,
+			);
+			
+			var slot;
+
+			slot = new Prosthetic.Slot( 0.15, 0.65, 0.1 );
+			slot.setRotation( 0, 0, -Math.PI/2 );	
+			this.leftSensor = new Prosthetic.Sensor( false ).attachToSlot( lastPart, slot );
+			//this.leftSensor.addLaser( );
+
+			slot = new Prosthetic.Slot( 0.15, 0.65, -0.1 );
+			slot.setRotation( 0, 0, -Math.PI/2 );	
+			this.rightSensor = new Prosthetic.Sensor( false ).attachToSlot( lastPart, slot );
+			//this.rightSensor.addLaser( );
+		}
+	}
+
+
+	// create N robots in a row
+	
+	var n = 13,
+		robots = [];
+		
+	for( var i=0; i<n; i++ )
+	{
+		robots[i] = new TouchRobot;
+		robots[i].setPosition( 0, 0.1, Prosthetic.MathUtils.mapLinear( i, 0, n-1, -4, 4) );
+		robots[i].setAngles( PI/2, 0, -PI/6 );
+	}
+
+
+	// create a blob geometry
+
+	var points = [];
+	for( var i=0; i<10; i++ )
+		points.push( new Prosthetic.Vector2(
+			Prosthetic.MathUtils.mapLinear( i, 0, 20-1, -5, 6),
+			Prosthetic.MathUtils.randFloat( -0.5, 2 )
+		) );
+		
+	var spline = new Prosthetic.SplineCurve( points );
+		
+	var geometry = new Prosthetic.CylinderGeometry( 1/2, 1/2, 12, 48, 128 ).rotateX( Math.PI/2 ),
+		pos = geometry.getAttribute( 'position' ),
+		randX = 1.5+Math.random(),
+		randY = 1.5+Math.random(),
+		randZ = 1.5+Math.random();
+		
+	var v = new Prosthetic.Vector2();
+	
+	for( var i=0; i<pos.count; i++ )
+	{
+		var x = pos.getX( i ),
+			y = pos.getY( i ),
+			z = pos.getZ( i );
+	
+		spline.getPoint( (z+6)/12, v );
+		var k = 1 + v.y;
+		if( y < 0 ) k = 1/2;
+		else
+		
+		k *= 0.5+0.5*Math.cos(z/6*Math.PI);
+		
+		if( x>0) pos.setX( i, 3*x );
+		pos.setY( i, y*k );
+	}
+
+	geometry.computeVertexNormals();
+
+/*
+	// create a blob
+	
+	var blob = new Prosthetic.Mesh(
+			geometry,
+			new Prosthetic.MeshLambertMaterial( {color: 'dimgray'} )
+		);
+		blob.position.x = 1;
+		blob.position.y = 0.1;
+		blob.castShadow = true;
+		blob.receiveShadow = true;
+		
+		Prosthetic.getScene().add( blob );
+*/		
+		
+	Prosthetic.setAnimation( loop );
+	Prosthetic.setCameraPosition( 15, 2*8, 1*5 );
+
+
+
+
+
+var ball = new Prosthetic.Box( 2, 2, 1 );
+var ball2 = new Prosthetic.Box( 1.5, 2, 2 );
+
+Prosthetic.getScene().add( ball );
+Prosthetic.getScene().add( ball2 );
+
+Prosthetic.getScene().physics.addBody( ball.physics );
+Prosthetic.getScene().physics.addBody( ball2.physics );
+
+
+ball.setPosition( 2, 3, -2 );
+ball2.setPosition( -2, 5, 1.1-2 );
+
+ball.physics.angularVelocity.set(4,4,4);
+
+	function loop( t, dT )
+	{
+
+//if( ball.collisions.length==0 )  ball.physics.position.y -= 2*dT;
+//if( ball2.collisions.length==0 )  ball2.physics.position.y -= 2*dT;
+
+		for( var robot of robots ) if( !robot.done )
+		{
+			var left = robot.leftSensor.senseDistance( ),
+				right = robot.rightSensor.senseDistance( );
+				
+				
+			if( left>=0.3 && right>=0.3 )
+			{
+				robot.setAngleRelative( 0, -dT/2 );
+				if( left<0.5 && right<0.5 )
+					robot.setAngleRelative( 1, Math.sign(left-right)*Math.abs(left-right)**2 );
+			} else
+			if( left>=0.1 && right>=0.1 )
+			{
+				robot.setAngleRelative( 1, Math.sign(left-right)*Math.abs(left-right)**1.5 );
+				robot.setAngleRelative( 0, -dT*Math.min(left,right)**1.5 );
+			}
+			else
+			{
+					robot.done = true;
+				var leftTouch = robot.leftSensor.senseTouch(),
+					rightTouch = robot.rightSensor.senseTouch();
+
+				if( leftTouch==0 && rightTouch==0 )
+					robot.setAngleRelative( 2, -0.01*dT );
+				else
+					robot.done = true;
+			}
+
+		}
+	}
+
+
+	</script>
+</body>

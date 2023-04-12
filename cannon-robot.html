@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html>
+
+
+<head>
+	<title>Tangent touch</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<link rel="shortcut icon" type="image/png" href="logo.png"/>
+	<link rel="stylesheet" href="examples.css">
+</head>
+
+
+<body>
+	<header>
+		<h1>Tangent touch</h1>
+		<h2>Sensing the orientation of target</h2>
+		<h3><a href="https://boytchev.github.io/virtual-prosthetics/">Virtual Prosthetics Examples</a></h3>
+	</header>
+	
+	<script type="module">
+
+	//import * as Prosthetic from "./build/virtual-prosthetics.js";
+	import * as Prosthetic from "./src/virtual-prosthetics.js";
+
+
+	const PI = Math.PI;
+	const sin = Math.sin;
+	const cos = Math.cos;
+
+
+	class CannonRobot extends Prosthetic.Robot
+	{
+		constructor( )
+		{
+			super( );
+			
+			this.partA = new Prosthetic.Phalange( 2 );
+			this.partB = new Prosthetic.Phalange( 1 );
+			this.partC = new Prosthetic.EndPhalange( 0.75 );
+			
+			this.addChain(
+				this,
+				new Prosthetic.MotorZ( PI, -PI, 0, 0.2, 0.3 ),
+				new Prosthetic.MotorY( -1, 1, 0, 0.2, 0.1 ),
+				this.partA,
+				new Prosthetic.MotorZ( 0.0, -PI/2, 0, 0.25, 0.08 ),
+				this.partB,
+				new Prosthetic.MotorZ( 0.0, -PI/2, 0, 0.25, 0.08 ),
+				this.partC,
+			);
+		}
+	}
+
+
+	// create 2 robots
+	
+	var robotA = new CannonRobot;
+		robotA.setPosition( 0, 0.5, 0 );
+
+	var robotB = new CannonRobot;
+		robotB.setPosition( -2, 0.5, 0 );
+/*
+	var robotB = new CannonRobot;
+		robotB.setPosition( 0, 0.1, 1 );
+*/
+
+	Prosthetic.setAnimation( loop );
+	Prosthetic.setCameraPosition( 15, 8, 1*5 );
+
+
+var ballA = new Prosthetic.Ball( 1 );
+Prosthetic.getScene().add( ballA );
+//Prosthetic.getScene().physics.addBody( ballA.physics );
+ballA.setPosition( 2, 2, 0 );
+
+	ballA.addEventListener( 'collide', (event) =>
+	{	
+		console.log( '===>collide', event );
+	});
+
+
+	function loop( t, dT )
+	{
+//console.log('ball contacts =',ballA.collisions)
+//points.position.copy( robotA.partA.physics.position );
+//points.quaternion.copy( robotA.partA.physics.quaternion );
+ballA.setPosition( 3, 2+2*Math.cos(t/2), 0 );
+
+
+		robotA.setAngle( 0, -1-1*Math.sin(t/3) );
+		robotA.setAngle( 2, -1.5*(1+Math.sin(t)) );
+		robotA.setAngle( 3, -1.5*(1+Math.sin(t*3)) );
+
+		robotB.setAngle( 0, -1/3-1/3*Math.cos(t/3) );
+		robotB.setAngle( 2, -1.5*(1+Math.cos(t)) );
+		robotB.setAngle( 3, -1.5*(1+Math.cos(t*3)) );
+	}
+
+
+	</script>
+</body>
