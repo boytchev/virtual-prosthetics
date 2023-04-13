@@ -162,6 +162,16 @@ class Sensor extends Part
 		
 		return false;
 	}
+	
+	senseObjects( )
+	{
+		return this.parent.parent.collisions;
+	}
+	
+	senseObject( object )
+	{
+		return this.parent.parent.collisions.indexOf( object ) >= 0;
+	}
 }
 
 

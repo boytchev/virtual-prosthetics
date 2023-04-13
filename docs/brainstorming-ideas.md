@@ -11,8 +11,8 @@
 #### Sensors and feedback
 * S1. [**DONE**] Custom positions of sensors
 * S2. [**DONE**] Feedback from joint positions
-* S3. [**WIP**] Collision detection with external objects
-* S4. [**WIP**] Self-collision detection
+* S3. [**DONE**] Collision detection with external objects
+* S4. [**DONE**] Self-collision detection
 * S5. Visual feedback with color heatmaps
 * S6. [**DONE**] Visual feedback with vectors
 * S7. Visual feedback with tables/graphs

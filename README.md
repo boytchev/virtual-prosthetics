@@ -15,4 +15,5 @@ Modeling tool for virtual prosthetic body parts
 [<kbd><img src="examples/snapshots/position-sensors.jpg" width="300"></kbd>](examples/position-sensors.html)
 [<kbd><img src="examples/snapshots/touch-sensors.jpg" width="300"></kbd>](examples/touch-sensors.html)
 [<kbd><img src="examples/snapshots/collision-sensors.jpg" width="300"></kbd>](examples/collision-sensors.html)
+[<kbd><img src="examples/snapshots/object-sensors.jpg" width="300"></kbd>](examples/object-sensors.html)
 
