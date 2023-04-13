@@ -42,9 +42,9 @@ function createScene( )
 
 	scene = new THREE.Scene();
 	scene.background = new THREE.Color('gainsboro');
-	scene.fog = new THREE.Fog('gainsboro', 200, 500);
+	scene.fog = new THREE.Fog('gainsboro', 100, 400);
 
-	camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.01, 1000);
+	camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.1, 1000);
 	camera.position.set(4, 4, 7);
 
 	light = new THREE.DirectionalLight('white', 0.4);
@@ -79,7 +79,7 @@ function createScene( )
 	class Ground extends THREE.Mesh {};
 	
 	ground = new Ground(
-		new THREE.PlaneGeometry(1000, 1000),
+		new THREE.CircleGeometry( 2000 ),
 		new THREE.MeshLambertMaterial(
 		{
 			color: 'lightgray',

@@ -120,6 +120,11 @@ class Part extends THREE.Group
 		//if( this.physics )
 		//	this.physics.position.set( x, y, z );
 	}
+
+	setRotation( x, y, z, order='XYZ' )
+	{
+		this.rotation.set( x, y, z, order );
+	}
 	
 	beginContact( otherObject )
 	{
@@ -133,15 +138,9 @@ class Part extends THREE.Group
 
 	endContact( otherObject )
 	{
-		for( var i in this.collisions )
-			if( this.collisions[i] === otherObject )
-			{
-				this.collisions.splice( i, 1 );
-				break;
-			}
+		this.collisions = this.collisions.filter( object => object!==otherObject );
 
-		if( this.mainMesh )
-		if( this.collisions.length==0  )
+		if( this.mainMesh && (this.collisions.length==0)  )
 			this.mainMesh.material.emissiveIntensity = 0;
 
 //		console.log( 'no contact', this.constructor.name, 'with', otherObject.constructor.name );

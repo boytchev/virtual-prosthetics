@@ -35,10 +35,13 @@ function init( _scene, ground, _bodies )
 	ground.physics.threejs = ground;
 	ground.physics.quaternion.setFromEuler( -Math.PI / 2, 0, 0 );
 
+
 	scene.physics.addBody( ground.physics );
 
 	scene.physics.addEventListener( 'beginContact', (event) =>
 	{	
+		//console.log( event.bodyA.threejs.constructor.name, '<-[+]->', event.bodyB.threejs.constructor.name );
+
 		if( event.bodyA.threejs )
 		if( event.bodyA.threejs.beginContact )
 			event.bodyA.threejs.beginContact( event.bodyB.threejs );
@@ -46,14 +49,13 @@ function init( _scene, ground, _bodies )
 		if( event.bodyB.threejs )
 		if( event.bodyB.threejs.beginContact )
 			event.bodyB.threejs.beginContact( event.bodyA.threejs );
-		
-//		console.log( 'beginContact', event.bodyA.threejs.constructor.name, event.bodyB.threejs.constructor.name );
-
 //		console.log( event.target.contacts );
 	});
 
 	scene.physics.addEventListener( 'endContact', (event) =>
 	{	
+		//console.log( event.bodyA.threejs.constructor.name, '<-[|]->', event.bodyB.threejs.constructor.name );
+
 		if( event.bodyA.threejs )
 		if( event.bodyA.threejs.endContact )
 			event.bodyA.threejs.endContact( event.bodyB.threejs );
@@ -61,8 +63,6 @@ function init( _scene, ground, _bodies )
 		if( event.bodyB.threejs )
 		if( event.bodyB.threejs.endContact )
 			event.bodyB.threejs.endContact( event.bodyA.threejs );
-
-//		console.log( 'endContact', event.bodyA.threejs.constructor.name, event.bodyB.threejs.constructor.name );
 	});
 } // createCannonScene
 

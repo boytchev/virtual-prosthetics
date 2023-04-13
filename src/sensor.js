@@ -154,6 +154,14 @@ class Sensor extends Part
 		this.getWorldPosition( pos );
 		return [pos.x, pos.y, pos.z];
 	}
+	
+	senseCollision( )
+	{
+		if( this.parent.parent.collisions )
+			return this.parent.parent.collisions.length > 0;
+		
+		return false;
+	}
 }
 
 

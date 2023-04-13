@@ -13,11 +13,14 @@ import * as NATIVE from "./engine.native.js";
 
 
 var options = new URL( window.location.href ),
-	engine = options.searchParams.get( 'engine' ) || 'cannon',
 	physics;
 
 
-switch( engine )
+const OPTION_ENGINE = options.searchParams.get( 'engine' ) || 'cannon';
+const OPTION_TOUCH_COLOR = options.searchParams.get( 'touch-color' ) || 'black';
+
+
+switch( OPTION_ENGINE )
 {
 	case 'cannon':
 		physics = {
@@ -41,4 +44,4 @@ switch( engine )
 }
 
 
-export { physics };
+export { physics, OPTION_ENGINE, OPTION_TOUCH_COLOR };

@@ -12,7 +12,7 @@ import * as THREE from "../libs/three.module.js";
 import { ConvexGeometry } from "../libs/geometries/ConvexGeometry.js";
 import { Part} from "./part.js";
 import { getBodies, getScene } from "./scene.js";
-import { physics } from "./engine.js";
+import { physics, OPTION_TOUCH_COLOR } from "./engine.js";
 
 
 // default materials 
@@ -22,7 +22,7 @@ const MATERIAL = new THREE.MeshLambertMaterial({
 				polygonOffsetUnits: 1,
 				polygonOffsetFactor: 1,
 				
-				emissive: 'Crimson',
+				emissive: OPTION_TOUCH_COLOR,
 				emissiveIntensity: 0,
 
 

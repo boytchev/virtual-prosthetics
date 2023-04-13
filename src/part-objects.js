@@ -9,7 +9,7 @@
 import * as THREE from "../libs/three.module.js";
 import { Part } from "./part.js";
 import { getBodies, getScene } from "./scene.js";
-import { physics } from "./engine.js";
+import { physics, OPTION_TOUCH_COLOR } from "./engine.js";
 
 
 
@@ -23,7 +23,11 @@ class Ball extends Part
 		
 		this.mainMesh = new THREE.Mesh(
 			new THREE.IcosahedronGeometry( radius, 10 ),
-			new THREE.MeshLambertMaterial( {color:color, emissive:'Crimson', emissiveIntensity:0} )
+			new THREE.MeshLambertMaterial( {
+					color: color,
+					emissive: OPTION_TOUCH_COLOR,
+					emissiveIntensity: 0,
+				} )
 		);
 		this.mainMesh.receiveShadow = true;
 		this.mainMesh.castShadow = true;
@@ -47,14 +51,18 @@ class Box extends Part
 	{
 		super( );
 		
-		var object = new THREE.Mesh(
+		this.mainMesh = new THREE.Mesh(
 			new THREE.BoxGeometry( sizex, sizey, sizez ),
-			new THREE.MeshLambertMaterial( {color:color, emissive:'Crimson', emissiveIntensity:0} )
+			new THREE.MeshLambertMaterial( {
+				color: color,
+				emissive: OPTION_TOUCH_COLOR,
+				emissiveIntensity: 0,
+			} )
 		);
-		object.receiveShadow = true;
-		object.castShadow = true;
+		this.mainMesh.receiveShadow = true;
+		this.mainMesh.castShadow = true;
 		
-		this.add( object );
+		this.add( this.mainMesh );
 		
 		
 		// physics

@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html>
+
+
+<head>
+	<title>Collision sensors</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<link rel="shortcut icon" type="image/png" href="logo.png"/>
+	<link rel="stylesheet" href="examples.css">
+</head>
+
+
+<body>
+	<header>
+		<h1>Collision sensors</h1>
+		<h2>Sensing the collision with other objects</h2>
+		<h3><a href="https://boytchev.github.io/virtual-prosthetics/">Virtual Prosthetics Examples</a></h3>
+	</header>
+	
+	<script type="module">
+
+	import * as Prosthetic from "../build/virtual-prosthetics.js";
+	//import * as Prosthetic from "../src/virtual-prosthetics.js";
+
+
+	const PI = Math.PI;
+	const sin = Math.sin;
+	const cos = Math.cos;
+
+
+	class TouchRobot extends Prosthetic.Robot
+	{
+		constructor( )
+		{
+			super( );
+			
+			var part = new Prosthetic.EndPhalange( 0.75 );
+			
+			this.addChain(
+				this,
+				new Prosthetic.MotorZ( PI/2, -PI/2, 0, 0.2, 0.3 ),
+				new Prosthetic.MotorY( -1, 1, 0, 0.2, 0.1 ),
+				new Prosthetic.Phalange( 0.75 ),
+				new Prosthetic.MotorZ( 0.0, -PI/2, 0, 0.25, 0.08 ),
+				part,
+			);
+			
+			var slot = new Prosthetic.Slot( );
+			this.sensor = new Prosthetic.Sensor( false ).attachToSlot( part, slot );
+		}
+	}
+
+
+	// create N robots in a row
+	
+	var n = 11,
+		robots = [];
+		
+	for( var i=0; i<n; i++ )
+	{
+		robots[i] = new TouchRobot;
+		robots[i].setPosition( 0, 0, Prosthetic.MathUtils.mapLinear( i, 0, n-1, -4, 4) );
+		robots[i].setAngles( 0.5, 0.8*Math.random()-0.4, 0 );
+	}
+
+
+	// create 2N boxes in a row
+
+	for( var i=0; i<2*n; i++ )
+	{
+		var box = new Prosthetic.Box( 0.1, 2, 0.3 );
+			box.setPosition( 0.8, Math.random()-0.5, Prosthetic.MathUtils.mapLinear( i, 0, 2*n-1, -4, 4) );
+			box.setRotation( 0.4*Math.random()-0.2, 1.0*Math.random()-0.5, 0.4*Math.random()-0.2 );
+		
+		Prosthetic.getScene().add( box );
+		Prosthetic.getScene().physics.addBody( box.physics );
+	}
+
+
+	
+	Prosthetic.setAnimation( loop );
+	Prosthetic.setCameraPosition( -7, 7, 0 );
+
+
+
+	function loop( t, dT )
+	{
+		for( var robot of robots )
+		{
+			if( robot.sensor.senseCollision() ) continue;
+
+			robot.setAngleRelative( 0, -dT/2 );
+			robot.setAngleRelative( 2, -dT );
+		}
+	}
+
+
+	</script>
+</body>

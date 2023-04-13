@@ -33,7 +33,7 @@ var PLANE_GEOMETRY = new THREE.CircleGeometry( 0.1 ).rotateX( Math.PI/2 ),
 
 class Slot extends THREE.Group
 {
-	constructor( x, y, z )
+	constructor( x=0, y=0, z=0 )
 	{
 		super( );
 
