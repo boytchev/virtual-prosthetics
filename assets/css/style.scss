@@ -11,7 +11,7 @@ header.page-header {
 	padding: 1em 0;
 	margin-bottom: 0;
 	background-color: DimGray;
-	background-image: linear-gradient(120deg, DimGray, Gray);
+	background-image: linear-gradient(90deg, DimGray, LightGray);
 
 }
 
@@ -20,9 +20,9 @@ code {
 }
 
 h1, h2, h3 {
-	color: MediumSeaGreen;
+	color: Black;
 	font-weight: bold;
-	border-bottom: 1px dotted green;
+	border-bottom: 1px dotted lightgray;
 }
 
 /* command */
@@ -52,6 +52,7 @@ h2.project-tagline {
 	padding-top: 0 !important;
 	margin-bottom: 0 !important;
 	padding-bottom: 0.5em !important;
+	border-bottom: LightGray dotted 1px;
 }
 
 /* breadcrumbs */
