@@ -69,11 +69,9 @@ class Part extends THREE.Group
 		}
 		
 		// attachToSlot( Part, index )
-		if( parentPart.slots instanceof Array )
+		if( parentPart.slots )
+		if( parentPart.slots[slot] )
 		{
-			if( slot >= parentPart.slots.length )
-				throw 'Error: invalid slot';
-			
 			parentPart.slots[slot].add( this );
 			return this;
 		}
@@ -83,7 +81,7 @@ class Part extends THREE.Group
 		parentPart.add( this );
 		return this;
 	}
-	
+
 	getAngle( )
 	{
 		if( this.axis )

@@ -157,20 +157,29 @@ class Sensor extends Part
 	
 	senseCollision( )
 	{
-		if( this.parent.parent.collisions )
-			return this.parent.parent.collisions.length > 0;
+		for( var object=this.parent; object; object=object.parent )
+			if( object.collisions )
+				return object.collisions.length > 0;
 		
 		return false;
 	}
 	
 	senseObjects( )
 	{
-		return this.parent.parent.collisions;
+		for( var object=this.parent; object; object=object.parent )
+			if( object.collisions )
+				return object.collisions;
+		
+		return [];
 	}
 	
-	senseObject( object )
+	senseObject( otherObject )
 	{
-		return this.parent.parent.collisions.indexOf( object ) >= 0;
+		for( var object=this.parent; object; object=object.parent )
+			if( object.collisions )
+				return object.collisions.indexOf( otherObject ) >= 0;
+
+		return false;
 	}
 }
 

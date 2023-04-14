@@ -4452,9 +4452,9 @@ addSlot(x,y,z)
 attachToSlot(parentPart,slot=0)
 {if(slot instanceof Slot)
 {parentPart.add(slot);slot.add(this);return this;}
-if(parentPart.slots instanceof Array)
-{if(slot>=parentPart.slots.length)
-throw'Error: invalid slot';parentPart.slots[slot].add(this);return this;}
+if(parentPart.slots)
+if(parentPart.slots[slot])
+{parentPart.slots[slot].add(this);return this;}
 parentPart.add(this);return this;}
 getAngle()
 {if(this.axis)
@@ -4567,12 +4567,17 @@ return 0;}
 sensePosition()
 {this.getWorldPosition(pos);return[pos.x,pos.y,pos.z];}
 senseCollision()
-{if(this.parent.parent.collisions)
-return this.parent.parent.collisions.length>0;return false;}
+{for(var object=this.parent;object;object=object.parent)
+if(object.collisions)
+return object.collisions.length>0;return false;}
 senseObjects()
-{return this.parent.parent.collisions;}
-senseObject(object)
-{return this.parent.parent.collisions.indexOf(object)>=0;}}
+{for(var object=this.parent;object;object=object.parent)
+if(object.collisions)
+return object.collisions;return[];}
+senseObject(otherObject)
+{for(var object=this.parent;object;object=object.parent)
+if(object.collisions)
+return object.collisions.indexOf(otherObject)>=0;return false;}}
 const MATERIAL$1=new MeshPhongMaterial({color:0x404040,shininess:100,});const GEOMETRY_16=new CylinderGeometry(1,1,1,16);const GEOMETRY_48=new CylinderGeometry(1,1,1,48);class MotorX extends Part
 {constructor(min,max,def,width=0.1,height=0.05)
 {super();this.setMotor('x',min,max,def);this.addSlot(0,0,0);var image=new Mesh(GEOMETRY_16,MATERIAL$1);image.rotation.z=Math.PI/2;image.scale.set(height/2,width,height/2);image.receiveShadow=true;image.castShadow=true;this.add(image);}}
