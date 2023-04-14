@@ -70,7 +70,7 @@ Prosthetic.setAnimation( loop, 60 );
 
 function loop( time, dTime )
 {
-	// changing devices postures
+   // changing devices postures
 };
 ```
 

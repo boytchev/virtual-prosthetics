@@ -3,6 +3,14 @@
 
 ### Tweets
 
+---
+
+<img src="../examples/snapshots/object-sensors.jpg" width="200" style="float: right; margin-left: 1em;">
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">It took some time to implement the sense of collision and object touching by using cannon-es for this. This is a demo of two robots playing with a ball. The ball compression is done manually.<a href="https://twitter.com/hashtag/VirtualProsthetics?src=hash&amp;ref_src=twsrc%5Etfw">#VirtualProsthetics</a> <a href="https://twitter.com/hashtag/FMI?src=hash&amp;ref_src=twsrc%5Etfw">#FMI</a> <a href="https://twitter.com/hashtag/SU?src=hash&amp;ref_src=twsrc%5Etfw">#SU</a> <a href="https://twitter.com/hashtag/ThreeJS?src=hash&amp;ref_src=twsrc%5Etfw">#ThreeJS</a> <a href="https://twitter.com/hashtag/CannonES?src=hash&amp;ref_src=twsrc%5Etfw">#CannonES</a> <a href="https://t.co/jW6zuHaDr2">pic.twitter.com/jW6zuHaDr2</a></p>&mdash; Pavel Boytchev (@PavelBoytchev) <a href="https://twitter.com/PavelBoytchev/status/1646460819763331072?ref_src=twsrc%5Etfw">April 13, 2023</a></blockquote>
+
+---
+
 <img src="../examples/snapshots/touch-sensors.jpg" width="200" style="float: right; margin-left: 1em;">
 
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">Touch sensors sense when they are pressed against another object and return a pressure level. This video shows prosthetic fingers grabbing random pebbles.<br><br>Sadly, touch sensors are not enough for collision detection.<a href="https://twitter.com/hashtag/VirtualProsthetics?src=hash&amp;ref_src=twsrc%5Etfw">#VirtualProsthetics</a> <a href="https://twitter.com/hashtag/FMI?src=hash&amp;ref_src=twsrc%5Etfw">#FMI</a> <a href="https://twitter.com/hashtag/SU?src=hash&amp;ref_src=twsrc%5Etfw">#SU</a> <a href="https://twitter.com/hashtag/ThreeJS?src=hash&amp;ref_src=twsrc%5Etfw">#ThreeJS</a> <a href="https://t.co/T5d5eqtAeJ">pic.twitter.com/T5d5eqtAeJ</a></p>&mdash; Pavel Boytchev (@PavelBoytchev) <a href="https://twitter.com/PavelBoytchev/status/1635762229730504706?ref_src=twsrc%5Etfw">March 14, 2023</a></blockquote>
