@@ -3,15 +3,14 @@
 //	Virtual Prosthetics 1.0
 //	Scene
 //
-//	Public:
-//		setCameraPosition( x, y, z )
-//		setCameraTarget( x, y, z )
-//		setAnimation( func, fps=30 )
-//		getScene( )
-//		getTime( )
+//	setAnimation( func, fps=30 )
 //
-
-
+//	setCameraPosition( x, y, z )
+//	setCameraTarget( x, y, z )
+//
+//	getScene( )
+//	getTime( )
+//	getBodies( )
 
 
 import * as THREE from "../libs/three.module.js";
@@ -159,12 +158,6 @@ function getBodies( )
 	return bodies;
 }
 
-/*
-function getGround( )
-{
-	return ground;
-}
-*/
 
 
-export { setAnimation, getScene, setCameraPosition, setCameraTarget, getTime, getBodies/*, getGround*/ };
+export { setAnimation, getScene, setCameraPosition, setCameraTarget, getTime, getBodies };

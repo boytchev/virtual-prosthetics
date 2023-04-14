@@ -6,7 +6,8 @@ in radians and all indices start from 0.
 
 * **[Introduction](#introduction)**
 * **[Scene](#scene)**
-	* [setAnimation](#setanimation), [setCameraPosition](#setcameraposition), [setCameraTarget](#setcameratarget), [getScene](#getscene), [getTime](#gettime)
+	* <small> [setAnimation](#setanimation), [setCameraPosition](#setcameraposition), [setCameraTarget](#setcameratarget)</small>
+	* <small>[getScene](#getscene), [getTime](#gettime), [getBodies](#getbodies)</small>
 * **[Robots](#robots)**
 	* [Robot](#robot), [addChain](#addchain), [showSlots](#showslots)
 	* [getPosition](#getposition), [setPosition](#setposition), [setRotation](#setrotation)
@@ -30,31 +31,23 @@ in radians and all indices start from 0.
 
 # Introduction
 
-The Virtual Prosthetics library allows construction of virtual robots from above
-JavaScript program. The robots can be views and manipulated on desktop and
+The Virtual Prosthetics library allows construction of virtual robots from a
+JavaScript program. The robots can be viewed and manipulated on desktop and
 mobile platforms. The main concepts are:
 
-* **Scene** – a virtual environment. It contains a ground where robots are
-		placed and controlled. It also has a camera that define the viewing
-		position.
-* **Robot** – a virtual device constructed programmatically. It is made of one
-		or more connected robot parts. The parts are connected in a tree
-		hierarchy.
-* **Robot part** – a building block of a robot. Some parts are just 3D shapes,
-		other parts can be rotated.
-* **Motor** – a robot part that can be rotated around a predefined axis. 
-		Complex rotations are achieved by attaching several motors.
-* **Slot** – a place on a robot part to which another body part can be attached.
+* [**Scene**](#scene) – a virtual environment where robots are placed and controlled;
+* **Robot** – a virtual device constructed programmatically of robot parts;
+* **Robot part** – an element of a robot, that can be a shape, a motor or a slot;
+* **Motor** – a robot part that can be rotated around a predefined axis;
+* **Slot** – a place on a robot part to which another elements can be attached.
 
 <center><img src="images/architecture.png"></center>
 
 
-
-
 # Scene
 
-The Virtual Prosthetics library automatically creates a 3D scene that holds all
-created prosthetic devices.
+The Virtual Prosthetics library automatically creates a 3D scene that contains
+all created prosthetic devices.
 
 ### setAnimation
 
@@ -62,13 +55,13 @@ created prosthetic devices.
 setAnimation( func, fps=30 )
 ```
 
-Function. Defines what custom function `func` is called `fps` times per second.
-The function has two parameters:
-* `time` – elapsed time since the start of the library
-* `dTime` – elapsed time since the previous frame
-
+Function. Defines a callback function `func` to be called `fps` times per second.
 Higher `fps` produces smoother motion, but consumes more power. The maximal
-value for `fps` is controlled by the browser and is usually 60 or above.
+value for `fps` is controlled by the browser and is usually 60.
+
+The callback function has parameters `time` for the elapsed time since the
+start of the library; and `dTime` for the elapsed time since the previous frame.
+
 
 Example:
 
@@ -85,32 +78,32 @@ function loop( time, dTime )
 ### setCameraPosition
 
 ```js
-setCameraPosition( x, y, z );
+setCameraPosition( x, y, z )
 ```
 
-Function. Moves the camera to coordinates (`x`,`y`,`z`). By default the camera
-position is (4,4,7).
+Function. Places the camera at coordinates (`x,y,z`). Initially the camera is
+placed at (4,4,7).
 
-Examples:
+Example:
 
 ```js
-setCameraPosition( 10, 2, 0 );
+Prosthetic.setCameraPosition( 10, 2, 0 );
 ```
 
 
 ### setCameraTarget
 
 ```js
-setCameraTarget( x, y, z );
+setCameraTarget( x, y, z )
 ```
 
-Function. Turns the camera towards coordinates (`x`,`y`,`z`). By default the
-camera target is (0,0,0).
+Function. Turns the camera towards coordinates (`x,y,z`). Initially the camera
+target is (0,0,0).
 
-Examples:
+Example:
 
 ```js
-setCameraTarget( 0, 2, 0 );
+Prosthetic.setCameraTarget( 0, 2, 0 );
 ```
 
 
@@ -123,25 +116,40 @@ getScene( );
 Function. Gets the scene as a [`THREE.Scene`](https://threejs.org/docs/#api/en/scenes/Scene)
 object that can be manipulated by [Three.js](https://threejs.org/).
 
-Examples:
+Example:
 
 ```js
-scene = getScene( );
+scene = Prosthetic.getScene( );
 ```
 
 
 ### getTime
 
 ```js
-getSTime( );
+getTime( );
 ```
 
 Function. Gets the current time since the initialization of the library.
 
-Examples:
+Example:
 
 ```js
-t = getTime( );
+time = Prosthetic.getTime( );
+```
+
+
+### getBodies
+
+```js
+getBodies( );
+```
+
+Function. Gets an array of all robot parts that can collide.
+
+Example:
+
+```js
+bodies = Prosthetic.getBodies( );
 ```
 
 
