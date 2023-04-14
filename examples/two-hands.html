@@ -39,50 +39,50 @@
 			var palm = new Prosthetic.LeftPalm( );
 				palm.attachToSlot( this );
 			
-			var motor;
-
-			motor = new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 0 );
-			this.addChain( motor,
-						new Prosthetic.Phalange(),
-						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-						new Prosthetic.Phalange( 0.5 ),
-						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-						new Prosthetic.EndPhalange( 0.5 )
+			this.addChain(
+					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 0 ),
+					new Prosthetic.Phalange(),
+					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+					new Prosthetic.Phalange( 0.5 ),
+					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+					new Prosthetic.EndPhalange( 0.5 )
 				);
 			
-			motor = new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 1 );
-			this.addChain( motor,
-						new Prosthetic.Phalange(),
-						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-						new Prosthetic.Phalange( 0.5 ),
-						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-						new Prosthetic.EndPhalange( 0.5 )
+			this.addChain( 
+					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 1 ),
+					new Prosthetic.Phalange(),
+					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+					new Prosthetic.Phalange( 0.5 ),
+					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+					new Prosthetic.EndPhalange( 0.5 )
 				);
 			
-			motor = new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 2 );
-			this.addChain( motor,
-						new Prosthetic.Phalange( 1.1 ),
-						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-						new Prosthetic.Phalange( 0.5 ),
-						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-						new Prosthetic.EndPhalange( 0.5 )
+			this.addChain( 
+					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 2 ),
+					new Prosthetic.Phalange( 1.1 ),
+					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+					new Prosthetic.Phalange( 0.5 ),
+					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+					new Prosthetic.EndPhalange( 0.5 )
 				);
 			
-			motor = new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 3 );
-			this.addChain( motor,
-						new Prosthetic.Phalange( ),
-						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-						new Prosthetic.Phalange( 0.5 ),
-						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-						new Prosthetic.EndPhalange( 0.5 ) );
+			this.addChain( 
+					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 3 ),
+					new Prosthetic.Phalange( ),
+					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+					new Prosthetic.Phalange( 0.5 ),
+					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+					new Prosthetic.EndPhalange( 0.5 )
+				);
 			
-			motor = new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 4 );
-			this.addChain( motor,
-						new Prosthetic.Phalange( 0.8 ),
-						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-						new Prosthetic.Phalange( 0.5 ),
-						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-						new Prosthetic.EndPhalange( 0.5 ) );
+			this.addChain( 
+					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 4 ),
+					new Prosthetic.Phalange( 0.8 ),
+					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+					new Prosthetic.Phalange( 0.5 ),
+					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+					new Prosthetic.EndPhalange( 0.5 )
+				);
 		}
 		
 	}
@@ -98,51 +98,50 @@
 			var palm = new Prosthetic.RightPalm( );
 				palm.attachToSlot( this );
 			
-			var motor;
-
-			motor = new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 0 );
-
-			this.addChain( motor,
-						new Prosthetic.Phalange(),
-						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-						new Prosthetic.Phalange( 0.5 ),
-						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-						new Prosthetic.EndPhalange( 0.5 )
+			this.addChain(
+					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 0 ),
+					new Prosthetic.Phalange(),
+					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+					new Prosthetic.Phalange( 0.5 ),
+					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+					new Prosthetic.EndPhalange( 0.5 )
 				);
 			
-			motor = new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 1 );
-			this.addChain( motor,
-						new Prosthetic.Phalange(),
-						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-						new Prosthetic.Phalange( 0.5 ),
-						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-						new Prosthetic.EndPhalange( 0.5 )
+			this.addChain( 
+					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 1 ),
+					new Prosthetic.Phalange(),
+					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+					new Prosthetic.Phalange( 0.5 ),
+					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+					new Prosthetic.EndPhalange( 0.5 )
 				);
 
-			motor = new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 2 );
-			this.addChain( motor,
-						new Prosthetic.Phalange( 1.1 ),
-						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-						new Prosthetic.Phalange( 0.5 ),
-						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-						new Prosthetic.EndPhalange( 0.5 )
+			this.addChain( 
+					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 2 ),
+					new Prosthetic.Phalange( 1.1 ),
+					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+					new Prosthetic.Phalange( 0.5 ),
+					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+					new Prosthetic.EndPhalange( 0.5 )
 				);
 			
-			motor = new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 3 );
-			this.addChain( motor,
-						new Prosthetic.Phalange( ),
-						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-						new Prosthetic.Phalange( 0.5 ),
-						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-						new Prosthetic.EndPhalange( 0.5 ) );
+			this.addChain( 
+					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 3 ),
+					new Prosthetic.Phalange( ),
+					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+					new Prosthetic.Phalange( 0.5 ),
+					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+					new Prosthetic.EndPhalange( 0.5 )
+				);
 			
-			motor = new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 4 );
-			this.addChain( motor,
-						new Prosthetic.Phalange( 0.8 ),
-						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-						new Prosthetic.Phalange( 0.5 ),
-						new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-						new Prosthetic.EndPhalange( 0.5 ) );
+			this.addChain(
+					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 4 ),
+					new Prosthetic.Phalange( 0.8 ),
+					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+					new Prosthetic.Phalange( 0.5 ),
+					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
+					new Prosthetic.EndPhalange( 0.5 )
+				);
 		}
 		
 	}

@@ -14,6 +14,7 @@
 import * as THREE from "../libs/three.module.js";
 import { ConvexGeometry } from "../libs/geometries/ConvexGeometry.js";
 import { Slot } from "./slot.js";
+import { getScene } from "./scene.js";
 
 
 // base class for robot parts
@@ -38,6 +39,8 @@ class Part extends THREE.Group
 		// physics
 		this.physics = null;
 		this.collisions = [];
+		
+		getScene().add( this );
 	}
 
 	setMotor( axis, min=-Infinity, max=Infinity, def=0 )
@@ -112,14 +115,12 @@ class Part extends THREE.Group
 			throw `Error: body part '${this.name}' cannot rotate`;
 	}
 
-	setPosition( x, y, z )
+	setPosition( x, y=0, z=0 )
 	{
 		this.position.set( x, y, z );
-		//if( this.physics )
-		//	this.physics.position.set( x, y, z );
 	}
 
-	setRotation( x, y, z, order='XYZ' )
+	setRotation( x, y=0, z=0, order='XYZ' )
 	{
 		this.rotation.set( x, y, z, order );
 	}

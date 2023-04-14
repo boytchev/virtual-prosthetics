@@ -40,7 +40,12 @@ class Slot extends THREE.Group
 		this.position.set( x, y, z );
 	}
 
-	setRotation( x, y, z, order='XYZ' )
+	setPosition( x, y=0, z=0 )
+	{
+		this.position.set( x, y, z );
+	}
+	
+	setRotation( x, y=0, z=0, order='XYZ' )
 	{
 		this.rotation.set( x, y, z, order );
 	}

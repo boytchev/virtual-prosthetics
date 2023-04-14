@@ -60,11 +60,11 @@
 			this.sensorB = new Prosthetic.Sensor().attachToSlot( firstPart, slot ).addLaser( );
 
 			slot = new Prosthetic.Slot( 0, 0.40, 0.15 );
-			slot.setRotation( Math.PI/2, 0, 0 );
+			slot.setRotation( Math.PI/2 );
 			this.sensorC = new Prosthetic.Sensor().attachToSlot( firstPart, slot ).addLaser( );
 
 			slot = new Prosthetic.Slot( 0, 0.40, -0.15 );
-			slot.setRotation( -Math.PI/2, 0, 0 );
+			slot.setRotation( -Math.PI/2 );
 			this.sensorD = new Prosthetic.Sensor().attachToSlot( firstPart, slot ).addLaser( );
 
 
@@ -78,18 +78,18 @@
 			this.sensorF = new Prosthetic.Sensor().attachToSlot( lastPart, slot ).addLaser( );
 
 			slot = new Prosthetic.Slot( 0, 0.45-0.15, 0.15 );
-			slot.setRotation( Math.PI/2, 0, 0 );
+			slot.setRotation( Math.PI/2 );
 			this.sensorG = new Prosthetic.Sensor().attachToSlot( lastPart, slot ).addLaser( );
 
 			slot = new Prosthetic.Slot( 0, 0.45-0.15, -0.15 );
-			slot.setRotation( -Math.PI/2, 0, 0 );
+			slot.setRotation( -Math.PI/2 );
 			this.sensorH = new Prosthetic.Sensor().attachToSlot( lastPart, slot ).addLaser( );
 		}
 	}
 
 
 	var robot = new TouchRobot;
-		robot.setPosition( -0.75, 0, 0 );
+		robot.setPosition( -0.75 );
 
 	var n = 20; //blocks
 	for( var i=0; i<n; i++ )

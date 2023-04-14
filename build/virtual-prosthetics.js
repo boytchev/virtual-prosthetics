@@ -4438,13 +4438,15 @@ this.setAttribute('position',new Float32BufferAttribute(vertices,3));this.setAtt
 var RING_GEOMETRY=new TorusGeometry(0.1,0.01).rotateX(Math.PI/2),RING_MATERIAL=new MeshLambertMaterial({color:'crimson'});var PLANE_GEOMETRY=new CircleGeometry(0.1).rotateX(Math.PI/2),PLANE_MATERIAL=new MeshLambertMaterial({color:'crimson',side:DoubleSide,transparent:true,opacity:0.3,});class Slot extends Group
 {constructor(x=0,y=0,z=0)
 {super();this.position.set(x,y,z);}
-setRotation(x,y,z,order='XYZ')
+setPosition(x,y=0,z=0)
+{this.position.set(x,y,z);}
+setRotation(x,y=0,z=0,order='XYZ')
 {this.rotation.set(x,y,z,order);}
 show()
 {var ring=new Mesh(RING_GEOMETRY,RING_MATERIAL),plane=new Mesh(PLANE_GEOMETRY,PLANE_MATERIAL),axes=new AxesHelper(0.2);axes.scale.set(1,1,0.5);axes.setColors('crimson','crimson','crimson');this.add(ring,plane,axes);}}
 class Part extends Group
 {constructor()
-{super();this.receiveShadow=true;this.castShadow=true;this.slots=[];this.axis=null;this.min=null;this.max=null;this.def=null;this.physics=null;this.collisions=[];}
+{super();this.receiveShadow=true;this.castShadow=true;this.slots=[];this.axis=null;this.min=null;this.max=null;this.def=null;this.physics=null;this.collisions=[];getScene().add(this);}
 setMotor(axis,min=-Infinity,max=Infinity,def=0)
 {this.axis=axis;this.min=Math.min(min,max);this.max=Math.max(min,max);this.def=MathUtils.clamp(def,this.min,this.max);this.setAngle(def);}
 addSlot(x,y,z)
@@ -4470,9 +4472,9 @@ setAngleRelative(x)
 return;if(this.axis)
 this.rotation[this.axis]=MathUtils.clamp(this.rotation[this.axis]+x,this.min,this.max);else
 throw`Error: body part '${this.name}' cannot rotate`;}
-setPosition(x,y,z)
+setPosition(x,y=0,z=0)
 {this.position.set(x,y,z);}
-setRotation(x,y,z,order='XYZ')
+setRotation(x,y=0,z=0,order='XYZ')
 {this.rotation.set(x,y,z,order);}
 beginContact(otherObject)
 {this.collisions.push(otherObject);if(this.mainMesh)
@@ -4485,12 +4487,12 @@ class Robot extends Group
 {super();this.receiveShadow=true;this.castShadow=true;getScene().add(this);this.parts=null;this.motors=null;}
 getPosition()
 {return[this.position.x,this.position.y,this.position.z];}
-setPosition(x,y,z)
+setPosition(x,y=0,z=0)
 {var scene=getScene();if(x===undefined)
 {scene.remove(this);}
 else
 {this.position.set(x,y,z);if(this.parent!==scene)scene.add(this);}}
-setRotation(x,y,z,order='XYZ')
+setRotation(x,y=0,z=0,order='XYZ')
 {this.rotation.set(x,y,z,order);}
 addChain(...parts)
 {for(var i=1;i<parts.length;i++)
@@ -4540,8 +4542,6 @@ var GEOMETRY=new SphereGeometry(1,32,8,0,2*Math.PI,0,Math.PI/2),MATERIAL$2=new M
 {super();if(visible)
 {var pad=new Mesh(GEOMETRY,MATERIAL$2);pad.scale.set(0.1,0.05,0.1);this.add(pad);}
 this.laser=undefined;}
-setRotation(x,y,z,order='XYZ')
-{this.rotation.set(x,y,z,order);}
 getWorldDirectionY(target)
 {this.updateWorldMatrix(true,false);var e=this.matrixWorld.elements;return target.set(e[4],e[5],e[6]).normalize();}
 addLaser(color='crimson')

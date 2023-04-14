@@ -60,11 +60,6 @@ class Sensor extends Part
 		this.laser = undefined;
 	}
 
-	setRotation( x, y, z, order='XYZ' )
-	{
-		this.rotation.set( x, y, z, order );
-	}
-	
 	getWorldDirectionY( target )
 	{
 		this.updateWorldMatrix( true, false );

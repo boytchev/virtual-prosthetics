@@ -49,7 +49,7 @@ class Robot extends THREE.Group
 		return [this.position.x, this.position.y, this.position.z ];
 	}
 
-	setPosition( x, y, z )
+	setPosition( x, y=0, z=0 )
 	{
 		var scene = getScene();
 		
@@ -64,7 +64,7 @@ class Robot extends THREE.Group
 		}
 	}
 
-	setRotation( x, y, z, order='XYZ' )
+	setRotation( x, y=0, z=0, order='XYZ' )
 	{
 		this.rotation.set( x, y, z, order );
 	}
