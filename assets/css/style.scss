@@ -20,8 +20,9 @@ code {
 }
 
 h1, h2, h3 {
-	color: Black;
-	font-weight: bold;
+	margin-top: 1em;
+	color: Black !important;
+	font-weight: bold !important;
 	border-bottom: 1px dotted lightgray;
 }
 
