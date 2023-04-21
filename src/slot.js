@@ -1,10 +1,12 @@
 
 //
-//	Slot for Virtual prosthetics
+//	Virtual Prosthetics 1.0
+//	Slot
 //
 //	class Slot extends THREE.Group
-//		constructor( x, y, z )
-//		setRotation( x, y, z, order='XYZ' )
+//		constructor( x=0, y=0, z=0 )
+//		setPosition( x, y=0, z=0 )
+//		setRotation( x, y=0, z=0, order='XYZ' )
 //		show( )
 //
 

@@ -1,15 +1,18 @@
 
 //
-//	Sensor for Virtual prosthetics
+//	Virtual Prosthetics 1.0
+//	Sensor
 //
-//	class Sensor extends THREE.Group
-//		constructor( x, y, z )
-//		setRotation( x, y, z, order='XYZ' )
+//	class Sensor extends Part
+//		constructor( visible=true )
 //		addLaser( color='crimson' )
 //		getLaser( )
 //		senseDistance( )
 //		senseTouch( )
 //		sensePosition( )
+//		senseCollision( )
+//		senseObjects( )
+//		senseObject( otherObject )
 //
 
 import * as THREE from "../libs/three.module.js";
@@ -46,7 +49,7 @@ var v = new THREE.Vector3(),
 
 class Sensor extends Part
 {
-	constructor( visible = true )
+	constructor( visible=true )
 	{
 		super( );
 

@@ -8,8 +8,8 @@
 //		addChain( ...parts )
 //		showSlots( )
 //		getPosition( )
-//		setPosition( x, y, z )
-//		setRotation( x, y, z, order='XYZ' )
+//		setPosition( x, y=0, z=0 )
+//		setRotation( x, y=0, z=0, order='XYZ' )
 //		getParts( )
 //		getMotors( )
 //		getDOF( )
@@ -25,6 +25,7 @@
 import * as THREE from "../libs/three.module.js";
 import {getScene} from "./scene.js";
 import {Part} from "./part.js";
+import {Sensor} from "./sensor.js";
 
 
 	
@@ -38,10 +39,11 @@ class Robot extends THREE.Group
 		this.receiveShadow = true;
 		this.castShadow = true;
 		
-		getScene().add( this );
-		
 		this.parts = null;
 		this.motors = null;
+		this.sensors = null;
+			
+		getScene().add( this );
 	}
 
 	getPosition( )
@@ -81,11 +83,16 @@ class Robot extends THREE.Group
 		{
 			this.parts = [];
 			this.motors = [];
+			this.sensors = [];
 			
 			this.traverse( x => {
 				if( x instanceof Part )
 				{
 					this.parts.push( x );
+				}
+				if( x instanceof Sensor )
+				{
+					this.sensors.push( x );
 				}
 				if( x.axis != null )
 				{
@@ -117,10 +124,17 @@ class Robot extends THREE.Group
 		return this.motors;
 	}
 	
-	getDOF( )
+	getSensors( )
 	{
 		this.#prepare( );
 		
+		return this.sensors;
+	}
+	
+	getDOF( )
+	{
+		this.#prepare( );
+
 		return this.motors.length;
 	}
 	

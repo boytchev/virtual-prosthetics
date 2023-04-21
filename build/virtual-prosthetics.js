@@ -4482,56 +4482,6 @@ this.mainMesh.material.emissiveIntensity=1;}
 endContact(otherObject)
 {this.collisions=this.collisions.filter(object=>object!==otherObject);if(this.mainMesh&&(this.collisions.length==0))
 this.mainMesh.material.emissiveIntensity=0;}}
-class Robot extends Group
-{constructor()
-{super();this.receiveShadow=true;this.castShadow=true;getScene().add(this);this.parts=null;this.motors=null;}
-getPosition()
-{return[this.position.x,this.position.y,this.position.z];}
-setPosition(x,y=0,z=0)
-{var scene=getScene();if(x===undefined)
-{scene.remove(this);}
-else
-{this.position.set(x,y,z);if(this.parent!==scene)scene.add(this);}}
-setRotation(x,y=0,z=0,order='XYZ')
-{this.rotation.set(x,y,z,order);}
-addChain(...parts)
-{for(var i=1;i<parts.length;i++)
-parts[i].attachToSlot(parts[i-1]);}#prepare()
-{if(this.parts===null)
-{this.parts=[];this.motors=[];this.traverse(x=>{if(x instanceof Part)
-{this.parts.push(x);}
-if(x.axis!=null)
-{this.motors.push(x);}});}}
-showSlots()
-{this.#prepare();for(var part of this.parts)
-for(var slot of part.slots)
-slot.show();}
-getParts()
-{this.#prepare();return this.parts;}
-getMotors()
-{this.#prepare();return this.motors;}
-getDOF()
-{this.#prepare();return this.motors.length;}
-setAngles(...angles)
-{this.#prepare();var n=Math.min(this.motors.length,angles.length);for(var i=0;i<n;i++)
-this.motors[i].setAngle(angles[i]);}
-setAnglesRelative(...angles)
-{this.#prepare();var n=Math.min(this.motors.length,angles.length);for(var i=0;i<n;i++)
-this.motors[i].setAngleRelative(angles[i]);}
-getAngles()
-{this.#prepare();var angles=[];for(var motor of this.motors)
-angles.push(motor.getAngle());return angles;}
-setAngle(index,angle)
-{this.#prepare();if(typeof this.motors[index]==='undefined')
-return;if(Number.isNaN(angle))
-return;this.motors[index].setAngle(angle);}
-setAngleRelative(index,angle)
-{this.#prepare();if(typeof this.motors[index]==='undefined')
-return;if(Number.isNaN(angle))
-return;this.motors[index].setAngleRelative(angle);}
-getAngle(index)
-{this.#prepare();if(typeof this.motors[index]==='undefined')
-return 0;return this.motors[index].getAngle();}}
 var canvas,ctx;canvas=document.createElement('CANVAS');canvas.width=4;canvas.height=4;ctx=canvas.getContext('2d');ctx.fillStyle='white';ctx.fillRect(0,0,4,4);ctx.fillStyle='black';ctx.fillRect(1,1,1,1);ctx.fillRect(3,3,1,1);var sensorTexture=new CanvasTexture(canvas);sensorTexture.wrapS=RepeatWrapping;sensorTexture.wrapT=RepeatWrapping;sensorTexture.anisotropy=2;sensorTexture.repeat.set(32,8);canvas=document.createElement('CANVAS');canvas.width=64;canvas.height=64;ctx=canvas.getContext('2d');ctx.fillStyle='white';ctx.arc(31,31,30,0,2*Math.PI);ctx.fill();var laserDotTexture=new CanvasTexture(canvas);laserDotTexture.anisotropy=2;class Laser extends Group
 {constructor(color='crimson')
 {super();var laserPointer=new Line(new BufferGeometry().setFromPoints([new Vector3,new Vector3]),new LineBasicMaterial({color:color,transparent:true,opacity:0.5,}));laserPointer.name='Laser.Pointer';this.attrPos=laserPointer.geometry.getAttribute('position');var laserPoint=new Points(laserPointer.geometry,new PointsMaterial({color:color,size:8,sizeAttenuation:false,transparent:true,map:laserDotTexture}));laserPoint.name='Laser.Point';this.add(laserPointer,laserPoint);this.frustumCulled=false;laserPointer.frustumCulled=false;laserPoint.frustumCulled=false;}
@@ -4578,6 +4528,60 @@ senseObject(otherObject)
 {for(var object=this.parent;object;object=object.parent)
 if(object.collisions)
 return object.collisions.indexOf(otherObject)>=0;return false;}}
+class Robot extends Group
+{constructor()
+{super();this.receiveShadow=true;this.castShadow=true;this.parts=null;this.motors=null;this.sensors=null;getScene().add(this);}
+getPosition()
+{return[this.position.x,this.position.y,this.position.z];}
+setPosition(x,y=0,z=0)
+{var scene=getScene();if(x===undefined)
+{scene.remove(this);}
+else
+{this.position.set(x,y,z);if(this.parent!==scene)scene.add(this);}}
+setRotation(x,y=0,z=0,order='XYZ')
+{this.rotation.set(x,y,z,order);}
+addChain(...parts)
+{for(var i=1;i<parts.length;i++)
+parts[i].attachToSlot(parts[i-1]);}#prepare()
+{if(this.parts===null)
+{this.parts=[];this.motors=[];this.sensors=[];this.traverse(x=>{if(x instanceof Part)
+{this.parts.push(x);}
+if(x instanceof Sensor)
+{this.sensors.push(x);}
+if(x.axis!=null)
+{this.motors.push(x);}});}}
+showSlots()
+{this.#prepare();for(var part of this.parts)
+for(var slot of part.slots)
+slot.show();}
+getParts()
+{this.#prepare();return this.parts;}
+getMotors()
+{this.#prepare();return this.motors;}
+getSensors()
+{this.#prepare();return this.sensors;}
+getDOF()
+{this.#prepare();return this.motors.length;}
+setAngles(...angles)
+{this.#prepare();var n=Math.min(this.motors.length,angles.length);for(var i=0;i<n;i++)
+this.motors[i].setAngle(angles[i]);}
+setAnglesRelative(...angles)
+{this.#prepare();var n=Math.min(this.motors.length,angles.length);for(var i=0;i<n;i++)
+this.motors[i].setAngleRelative(angles[i]);}
+getAngles()
+{this.#prepare();var angles=[];for(var motor of this.motors)
+angles.push(motor.getAngle());return angles;}
+setAngle(index,angle)
+{this.#prepare();if(typeof this.motors[index]==='undefined')
+return;if(Number.isNaN(angle))
+return;this.motors[index].setAngle(angle);}
+setAngleRelative(index,angle)
+{this.#prepare();if(typeof this.motors[index]==='undefined')
+return;if(Number.isNaN(angle))
+return;this.motors[index].setAngleRelative(angle);}
+getAngle(index)
+{this.#prepare();if(typeof this.motors[index]==='undefined')
+return 0;return this.motors[index].getAngle();}}
 const MATERIAL$1=new MeshPhongMaterial({color:0x404040,shininess:100,});const GEOMETRY_16=new CylinderGeometry(1,1,1,16);const GEOMETRY_48=new CylinderGeometry(1,1,1,48);class MotorX extends Part
 {constructor(min,max,def,width=0.1,height=0.05)
 {super();this.setMotor('x',min,max,def);this.addSlot(0,0,0);var image=new Mesh(GEOMETRY_16,MATERIAL$1);image.rotation.z=Math.PI/2;image.scale.set(height/2,width,height/2);image.receiveShadow=true;image.castShadow=true;this.add(image);}}

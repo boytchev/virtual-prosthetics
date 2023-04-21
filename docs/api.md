@@ -6,25 +6,26 @@ in radians and all indices start from 0.
 
 * **[Introduction](#introduction)**
 * **[Scene](#scene)**
-	* <small> [setAnimation](#setanimation), [setCameraPosition](#setcameraposition), [setCameraTarget](#setcameratarget)</small>
-	* <small>[getScene](#getscene), [getTime](#gettime), [getBodies](#getbodies)</small>
+	* <small>Animation: [setAnimation](#setanimation), [getTime](#gettime)</small>
+	* <small>Camera: [setCameraPosition](#setcameraposition), [setCameraTarget](#setcameratarget)</small>
+	* <small>Scene: [getScene](#getscene), [getBodies](#getbodies), [options](#options)</small>
 * **[Robots](#robots)**
-	* [Robot](#robot), [addChain](#addchain), [showSlots](#showslots)
-	* [getPosition](#getposition), [setPosition](#setposition), [setRotation](#setrotation)
-	* [getAngle](#getangle), [setAngle](#setangle), [setAngleRelative](#setanglerelative), [getAngles](#getangles), [setAngles](#setangles), [setAnglesRelatve](#setanglesrelative)
-	* [getParts](#getparts), [getMotors](#getmotors), [getDOF](#getdof)
+	* <small>Structure: [Robot](#robot), [addChain](#addchain), [showSlots](#showslots), [getParts](#getparts), [getMotors](#getmotors), [getSensors](#getsensors), [getDOF](#getdof)</small>
+	* <small>Position: [getPosition](#getposition), [setPosition](#setposition), [setRotation](#setrotation)</small>
+	* <small>Angles: [getAngle](#getangle), [setAngle](#setangle), [setAngleRelative](#setanglerelative), [getAngles](#getangles), [setAngles](#setangles), [setAnglesRelatve](#setanglesrelative)</small>
 * **[Parts](#parts)**
-	* [Part](#part), [setMotor](#setmotor)
-	* [addSlot](#addslot), [attachToSlot](#attachtoslot)
-	* [getAngle](#getangle-1), [setAngle](#setangle-1), [setAngleRelative](#setanglerelative-1)	
+	* <small>Structure: [Part](#part), [setMotor](#setmotor),  [addSlot](#addslot), [attachToSlot](#attachtoslot), [beginContact](#begincontact), [endContact](#endcontact) </small>
+	* <small>Position: [setPosition](#setposition-1), [setRotation](#setrotation-1)</small>
+	* <small>Angles: [getAngle](#getangle-1), [setAngle](#setangle-1), [setAngleRelative](#setanglerelative-1)</small>
 * **[Slots](#slots)**
-	* [Slot](#slot), [setRotation](#setrotation-1), [show](#show)
+	* <small>Structure: [Slot](#slot), [show](#show)</small>
+	* <small>Position: [setPosition](#setposition-2), [setRotation](#setrotation-2)</small>
 * **[Sensors](#sensors)**
-	* [Sensor](#sensor), [setRotation](#setrotation-2), [addLaser](#addlaser), [getLaser](#getlaser)
-	* [senseDistance](#sensedistance), [senseTouch](#sensetouch), [sensePosition](#senseposition)
+	* <small>Structure: [Sensor](#sensor), [addLaser](#addlaser), [getLaser](#getlaser)</small>
+	* <small>Feedback: [senseDistance](#sensedistance), [senseTouch](#sensetouch), [sensePosition](#senseposition), [senseCollision](#sensecollision), [senseObjects](#senseobjects), [senseObject](#senseobject)</small>
 * **[Predefined parts](#predefined-parts)**
-	* **[Motors](#motors)**: [MotorX](#motorx), [MotorY](#motory), [MotorZ](#motorz)
-	* **[Shapes](#shapes)**: [Phalange](#phalange), [EndPhalange](#endphalange), [LeftPalm](#leftpalm), [RightPalm](#rightpalm)
+	* <small>[Motors](#motors): [MotorX](#motorx), [MotorY](#motory), [MotorZ](#motorz)</small>
+	* <small>[Shapes](#shapes): [Ball](#ball), [Box](#box), [Phalange](#phalange), [EndPhalange](#endphalange), [LeftPalm](#leftpalm), [RightPalm](#rightpalm)</small>
 
 
 
@@ -36,9 +37,10 @@ JavaScript program. The robots can be viewed and manipulated on desktop and
 mobile platforms. The main concepts are:
 
 * [**Scene**](#scene) – a virtual environment where robots are placed and controlled;
-* **Robot** – a virtual device constructed programmatically of robot parts;
-* **Robot part** – an element of a robot, that can be a shape, a motor or a slot;
+* [**Robot**](#robots) – a virtual device constructed programmatically of robot parts;
+* **Part** – an element of a robot, that can be a shape, a motor or a slot;
 * **Motor** – a robot part that can be rotated around a predefined axis;
+* **Sensor** – a robot part that can sense its environment and generate feedback;
 * **Slot** – a place on a robot part to which another elements can be attached.
 
 <center><img src="images/architecture.png"></center>
@@ -153,6 +155,20 @@ bodies = Prosthetic.getBodies( );
 ```
 
 
+### Options
+
+Some aspects of the simulation can be controlled by URL parameters.
+
+* `engine=cannon` -- sets [Cannon-es](https://pmndrs.github.io/cannon-es/) as underlying physics engine that detects collisions (default)
+* `engine=native` -- sets a native underlying physics engine, currently under development
+* `touch-color=black` -- collisions are not indicated visually
+* `touch-color=...` -- collisions are indicated by making objects reddish, any CSS color name can be used
+
+Click on the link to open the "Two hands" example with color indication for collisions:
+[https://boytchev.github.io/virtual-prosthetics/examples/two-hands.html?touch-color=crimson](https://boytchev.github.io/virtual-prosthetics/examples/two-hands.html?touch-color=crimson)
+
+
+
 
 
 # Robots 
@@ -185,14 +201,15 @@ class MyRobot extends Prosthetic.Robot
 ### addChain
 
 ```js
-addChain( part1, part2, ... );
+addChain( part1, part2, ... )
 ```
 
 Method. Used in the constructor of a custom robot to automatically connect parts
-`part1`, `part2` and so on in a chain. The variable `this` can be used to mark
-the robot itself. If `this` is used in `addChain` it must be the first parameter.
-At least one of the chains in a robot must start with `this`, otherwise the
-robot parts will stay invisible.
+`part1`, `part2` and so on in a chain. Method `addChain` is a shorthand
+for a sequence of [`attachToSlot`](#attachtoslot). The variable `this` can be
+used to mark the robot itself. If `this` is used in `addChain` it must be the
+first parameter. At least one of the chains in a robot must start with `this`,
+otherwise the robot parts will stay invisible.
 
 Example:
 
@@ -203,27 +220,28 @@ class MyRobot extends Prosthetic.Robot
 	{
 		super( );
 
-		this.partA = ...;
-		this.partB = ...;
+		var partA = ...;
+		var partB = ...;
 		
-		this.addChain( this, this.partA, this.partB );
+		this.addChain( this, partA, partB );
 	}
 }
 ```
 
 Adding a chain always attaches parts to slot 0. If another slot or a custom
-slot position is needed, use [`attachToSlot`](#attachtoslot) or
-[`attachToPosition`](#attachtoposition) methods of the robot parts. 
+slot position is needed, use [`attachToSlot`](#attachtoslot). 
 
 
 ### showSlots
 
 ```js
-showSlots( );
+showSlots( )
 ```
 
-Method. Shows the positions and orientations of all slots in a robot. This is
-used during the robot construction. By default slots are not shown.
+Method. Shows the positions and orientations of all slots in a robot. A slot is visualized as a circle with unnamed axes. This is used during the robot
+construction. By default slots are not shown.
+
+<img src="images/slot.png">
 
 Example:
 
@@ -235,7 +253,7 @@ robot.showSlots();
 ### getPosition
 
 ```js
-getPosition( );
+getPosition( )
 ```
 
 Method. Gets the position of a robot as an array of [x, y, z] coordinates.
@@ -251,11 +269,11 @@ pos = robot.getPosition( );
 ### setPosition
 
 ```js
-setPosition( x, y, z );
+setPosition( x, y=0, z=0 )
 ```
 
-Method. Sets the position of a robot to (`x`,`y`,`z`). If the coordinates are not
-provided, the robot is removed from the scene, but it is not deleted. The
+Method. Sets the position of a robot to (`x,y,z`). If the coordinates are
+not provided, the robot is removed from the scene, but it is not deleted. The
 default position of a robot is (0,0,0).
 
 Example:
@@ -268,11 +286,11 @@ robot.setPosition( 0, 10, 5 );
 ### setRotation
 
 ```js
-setRotation( x, y, z, order='XYZ' );
+setRotation( x, y=0, z=0, order='XYZ' )
 ```
 
 Method. Sets the orientation of a robot to [Euler angles](https://threejs.org/docs/#api/en/math/Euler)
-(`x`,`y`,`z`) and `order` of rotations.
+(`x,y,z`) and `order` of rotations.
 
 Example:
 
@@ -284,7 +302,7 @@ robot.setRotation( 0, Math.PI/2, 0 );
 ### getAngle
 
 ```js
-getAngle( index );
+getAngle( index )
 ```
 
 Method. Gets the angle of the `index`-th motor. If such motor does not exist,
@@ -301,12 +319,12 @@ a = robot.getAngle( 1 );
 ### setAngle
 
 ```js
-setAngle( index, angle );
+setAngle( index, angle )
 ```
 
 Method. Sets the `angle` of the `index`-th motor. If such motor does not exist
-or if the `angle` is `null`, the operation is ignored. Use [`setAngles`](#setangles)
-to set all angles at once.
+or if the `angle` is `null`, the operation is ignored. Use
+[`setAngles`](#setangles) to set all angles at once.
 
 Example:
 
@@ -319,7 +337,7 @@ robot.setAngle( 1, Math.PI );
 ### setAngleRelative
 
 ```js
-setAngleRelative( index, angle );
+setAngleRelative( index, angle )
 ```
 
 Method. Adds the `angle` to the current angle of the `index`-th motor. If such
@@ -337,7 +355,7 @@ robot.setAngleRelative( 1, Math.PI );
 ### getAngles
 
 ```js
-getAngles( );
+getAngles( )
 ```
 
 Method. Gets an array with angles of all motors. Use [`getAngle`](#getangle) to
@@ -354,7 +372,7 @@ a = robot.getAngles( );
 ### setAngles
 
 ```js
-setAngles( angle1, angle2, ... );
+setAngles( angle1, angle2, ... )
 ```
 
 Method. Sets the angles `angle1`, `angle2`, ... of all motors. If a value of
@@ -372,7 +390,7 @@ robot.setAngles( Math.PI, 0, -Math.PI/2 );
 ### setAnglesRelative
 
 ```js
-setAnglesRelative( angle1, angle2, ... );
+setAnglesRelative( angle1, angle2, ... )
 ```
 
 Method. Adds the `angle1`, `angle2`, ... to the current angles of all motors. If
@@ -391,7 +409,7 @@ robot.setAnglesRelative( Math.PI, 0, -Math.PI/2 );
 ### getParts
 
 ```js
-getParts( );
+getParts( )
 ```
 
 Method. Gets an array of all robot parts, including motors.
@@ -407,7 +425,7 @@ parts = robot.getParts( );
 ### getMotors
 
 ```js
-getMotors( );
+getMotors( )
 ```
 
 Method. Gets an array of all robot motors. 
@@ -420,14 +438,31 @@ motors = robot.getMotors( );
 
 
 
+### getSensors
+
+```js
+getSensors( )
+```
+
+Method. Gets an array of all robot sensors. 
+
+Example:
+
+```js
+sensors = robot.getSensors( );
+```
+
+
+
 ### getDOF
 
 ```js
-getDOF( );
+getDOF( )
 ```
 
 Method. Gets the overall degree of freedom (DOF) of a robot. The DOF is
-effectively equal to the number of motors.
+effectively equal to the number of motors, as each motor can be manipulated
+independently on other motors.
 
 Example:
 
@@ -443,7 +478,7 @@ dof = robot.getDOF( );
 
 Base class. Defines the core functionality of a robot part. Parts used in robots
 are extensions of this base class. Each part may have slots where other parts
-can be attached.
+can be attached. Motors and [sensors](#sensors) are parts too.
 
 Example:
 ```js
@@ -454,7 +489,7 @@ class MyPart extends Part
 		super( );
 		
 		// defining part shape
-		// added part slots
+		// adding part slots
 	}
 }
 ```
@@ -466,7 +501,7 @@ class MyPart extends Part
 setMotor( axis, min=-Infinity, max=Infinity, def=0 )
 ```
 
-Method. Sets that a robot part is a motor. A motor implements rotation around
+Method. Sets a robot part as a motor. A motor implements rotation around
 an `axis` defined by the character `'x'`, `'y'` or `'z'`. The rotation is
 restricted to interval [`min`, `max`] and the initial angle is `def`. 
 
@@ -481,11 +516,12 @@ part.setMotor( 'x', 0, Math.PI, Math.PI/2 );
 ### addSlot
 
 ```js
-addSlot( x, y, z );
+addSlot( x, y, z )
 ```
 
-Method. Adds a new slot to a robot part. The slot is at coordinates (`x`, `y`, `z`)
-relative to the part. To rotate a slot use its method [`setRotation`](#setrotation).
+Method. Adds a new [slot](#slots) to a robot part. The slot is at coordinates
+(`x,y,z`) relative to the part. To rotate a slot use its method
+[`setRotation`](#setrotation).
 
 Example:
 
@@ -498,31 +534,114 @@ part.addSlot( 2, 0, 1 );
 ### attachToSlot
 
 ```js
-attachToSlot( parentPart, slot=0 );
+attachToSlot( parentPart, slot=0 )
 ```
 
-Method. Attaches the part to a `parentPart` at its `slot`. If `slot` is not
-provided, the first slot of the parent is used. If `slot` is a number, it is the
-slot index within all parent's slots. If `slot` is a [`Slot`](#slot), then the
-part is attached to this temporary slot.
+Method. Attaches the part to a `parentPart` at its `slot`.
+* If `slot` is not provided, the first slot of the parent is used. If the parent
+has no slots, the part is directly attached to the parent. 
+* If `slot` is a number, it is the slot index within all parent's slots.
+* If `slot` is a [`Slot`](#slot), then the part is attached to this temporary slot.
+* If `slot` is the [scene](#getscene) the part is a sdandalone part in the scene.
+All parts are initially created as attached to the scene.
 
 Example:
 
 ```js
 partB.attachToSlot( partA );
-partC.attachToSlot( partB, 2 );
-partC.attachToSlot( partB, new Slot(0,3,0) );
+partB.attachToSlot( partA, 2 );
+partB.attachToSlot( partA, new Slot(0,3,0) );
+partB.attachToSlot( getScene() );
 ```
 
+
+
+### beginContact
+
+```js
+beginContact( otherObject )
+```
+
+Method. This method is automatically called when the physics engine detects a
+contact of this part with another part. The other part is passed as `otherObject` parameter. The main purpose of `beginContect` is to define the behaviour when
+the part collides with another part.
+
+Example:
+
+```js
+class MyPart extends Part
+{
+	beginContact( otherObject )
+	{
+		// reaction of contact
+	}
+}
+```
+
+
+
+### endContact
+
+```js
+endContact( otherObject )
+```
+
+Method. This method is automatically called when the physics engine detects a
+lost of contact of this part with another part. The other part is passed as `otherObject` parameter. The main purpose of `endContect` is to define the behaviour when the part parts away from another part.
+
+Example:
+
+```js
+class MyPart extends Part
+{
+	endContact( otherObject )
+	{
+		// reaction of lost contact
+	}
+}
+```
+
+
+
+### setPosition
+
+```js
+setPosition( x, y=0, z=0 )
+```
+
+Method. Sets the position of a part to (`x,y,z`). The position is relative to
+the part's parent.
+
+Example:
+
+```js
+part.setPosition( 0, 10, 5 );
+```
+
+
+### setRotation
+
+```js
+setRotation( x, y=0, z=0, order='XYZ' )
+```
+
+Method. Sets the orientation of a part to [Euler angles](https://threejs.org/docs/#api/en/math/Euler)
+(`x,y,z`) and `order` of rotations. The rotation is relative to the part's parent.
+
+Example:
+
+```js
+part.setRotation( 0, Math.PI/2, 0 );
+```
 
 
 ### getAngle
 
 ```js
-getAngle( );
+getAngle( )
 ```
 
-Method. Gets the angle of the part if it has a motor set, otherwise return 0.
+Method. Gets the angle of the part if it has a motor set, otherwise returns 0.
 
 Example:
 
@@ -535,7 +654,7 @@ a = part.getAngle( );
 ### setAngle
 
 ```js
-setAngle( angle );
+setAngle( angle )
 ```
 
 Method. Sets the motor's `angle` if the part has a motor. If `angle` is `null`,
@@ -552,7 +671,7 @@ part.setAngle( Math.PI );
 ### setAngleRelative
 
 ```js
-setAngleRelative( angle );
+setAngleRelative( angle )
 ```
 
 Method. Adds `angle` the motor's current angle if the part has a motor. If
@@ -577,28 +696,44 @@ parts can be attached to one slot.
 ### Slot
 
 ```js
-Slot( x, y, z )
+Slot( x=0, y=0, z=0 )
 ```
 
-Class. Defines a slot at coordinates (`x`, `y`, `z`). These coordinates are
-relative to the robot part of the slot.
+Class. Defines a slot at coordinates (`x,y,z`). These coordinates are relative
+to the robot part of the slot when it is added with [`addSlot`](#addslot).
 
 Example:
 
 ```js
-slot = new Slot( 0, 0, Math.PI/4 );
+slot = new Slot( 0, 4, 1 );
+```
+
+
+### setPosition
+
+```js
+setPosition( x, y=0, z=0 )
+```
+
+Method. Sets the position of a slot to (`x,y,z`). The position is relative to
+the slot's part.
+
+Example:
+
+```js
+slot.setPosition( 0, 10, 5 );
 ```
 
 
 ### setRotation
 
 ```js
-setRotation( x, y, z, order='XYZ' );
+setRotation( x, y=0, z=0, order='XYZ' );
 ```
 
 Method. Sets the orientation of a slot to [Euler angles](https://threejs.org/docs/#api/en/math/Euler)
-(`x`,`y`,`z`) and `order` of rotations. The orientation is relative to the
-robot part of the slot.
+(`x,y,z`) and `order` of rotations. The orientation is relative to the robot
+part of the slot.
 
 
 Example:
@@ -611,16 +746,17 @@ slot.setRotation( 0, Math.PI/2, 0 );
 ### show
 
 ```js
-slot.show( );
+show( )
 ```
 
 Method. Shows the slot. This is used during the robot construction. Shown and
-hidden slots are functionally equivalent.
+hidden slots are functionally equivalent. Method `show` is automatically called
+by robot's [`showSlots`](#showslots).
 
 Example:
 
 ```js
-robot.show();
+slot.show();
 ```
 
 
@@ -628,15 +764,16 @@ robot.show();
 
 # Sensors 
 
-A sensor is a robot part that measure some property and returns feedback. 
-Sensors are attached to slots (with [`attachToSlot`](#attachtoslot)) and use
-their position and orientation.
+A sensor is a robot part that measures some property and returns its value as a
+feedback. Sensors are attached to slots (with [`attachToSlot`](#attachtoslot))
+and use their position and orientation. Sensors are also robot parts so they
+have their methods like [`setPosition`](#setposition) and [`setRotation`](#setrotation).
 
 
 ### Sensor
 
 ```js
-Sensor( visible = true )
+Sensor( visible=true )
 ```
 
 Class. Defines a sensor. If `visible` is true, the sensor pad is drawn, otherwise
@@ -649,45 +786,28 @@ sensor = new Sensor( );
 ```
 
 
-### setRotation
-
-```js
-setRotation( x, y, z, order='XYZ' );
-```
-
-Method. Sets the orientation of a sensor to [Euler angles](https://threejs.org/docs/#api/en/math/Euler)
-(`x`,`y`,`z`) and `order` of rotations. The orientation is relative to the
-robot part of the slot.
-
-
-Example:
-
-```js
-sensor.setRotation( 0, Math.PI/2, 0 );
-```
-
-
 ### addLaser
 
 ```js
-sensor.addLaser( color='crimson' );
+addLaser( color='crimson' )
 ```
 
-Method of `Sensor`. Creates a laser beam with optional `color` emitted by the sensor. This beam is for visual
-representation only. Its exitance or non-existance do not affect the functionality
-of a sensor. A sensor may have only one laser attached.
+Method of `Sensor`. Creates a laser beam with optional `color` emitted by the
+sensor. This beam is for visual representation only. Its exitance or non-existance
+do not affect the functionality of the sensor. A sensor may have only one laser
+attached.
 
 Example:
 
 ```js
-sensor.addLaset( );
+sensor.addLaser( );
 ```
 
 
 ### getLaser
 
 ```js
-sensor.getLaser( );
+getLaser( )
 ```
 
 Method. Gets the laser object of a sensor.
@@ -702,11 +822,12 @@ laser = sensor.getLaser( );
 ### senseDistance
 
 ```js
-sensor.senseDistance( );
+senseDistance( )
 ```
 
-Method. Gets the distance to the nearest object (including the ground) looking
-toward the direction of the sensor. If there is no object, the result is `Infinity`.
+Method. Gets the distance from the sensor position to the nearest object
+(including the ground) along the direction of the sensor. If there is no object,
+the result is `Infinity`.
 
 Example:
 
@@ -716,19 +837,98 @@ dist = sensor.senseDistance( );
 
 
 
+### senseTouch
+
+```js
+senseTouch( )
+```
+
+Method. Gets the close-up distance from the sensor position to the nearest
+object (including the ground) along the direction of the sensor. Touch is senseDistance
+only for distances from 0 to 0.05. The returned value is a number from 0 to 1
+indicating the level of touching, i.e. 0 means no touching, 1 means complete touching.
+If there is no object that close, the result is 0.
+
+<img src="images/touch.png">
+
+Example:
+
+```js
+touch = sensor.senseTouch( );
+```
+
+
+
 ### sensePosition
 
 ```js
-sensor.sensePosition( );
+sensePosition( )
 ```
 
-Method. Gets the 3D position of the sensor as an array of [`x`, `y`, `z`] coordinates.
+Method. Gets the 3D position of the sensor as an array of [`x,y,z`] coordinates.
 
 Example:
 
 ```js
 pos = sensor.sensePosition( );
 ```
+
+
+
+### senseCollision
+
+```js
+senseCollision( )
+```
+
+Method. Returns `true` when the part containing the sensor collides
+(or intersects) another part or the ground, otherwise returns `false`.
+
+Example:
+
+```js
+if( sensor.senseCollision( ) )
+{
+   ...
+}
+```
+
+
+
+### senseObjects
+
+```js
+senseObjects( )
+```
+
+Method. Returns a list of all bodies that collide (or intersects) with the part,
+containing the sensor. 
+
+Example:
+
+```js
+objects = sensor.senseObjects( );
+```
+
+
+### senseObject
+
+```js
+senseObject( otherObject )
+```
+
+Method. Returns `true` when the part containing the sensor collides
+(or intersects) the `otherObject`, otherwise returns `false`.
+
+Example:
+
+```js
+if( sensor.senseObject( ball ) )
+{
+   ...
+}
+```
+
 
 
 
@@ -760,7 +960,7 @@ There is one slot at position (0,0,0).
 Example:
 
 ```js
-new MotorX( 0, Math.PI, Math.PI/2 );
+motor = new MotorX( 0, Math.PI, Math.PI/2 );
 ```
 
 
@@ -781,7 +981,7 @@ There is one slot at position (0,`height`,0).
 Example:
 
 ```js
-new MotorY( 0, Math.PI, Math.PI/2 );
+motor = new MotorY( 0, Math.PI, Math.PI/2 );
 ```
 
 
@@ -802,7 +1002,7 @@ There is one slot at position (0,0,0).
 Example:
 
 ```js
-new MotorZ( 0, Math.PI, Math.PI/2 );
+motor = new MotorZ( 0, Math.PI, Math.PI/2 );
 ```
 
 
@@ -813,6 +1013,42 @@ new MotorZ( 0, Math.PI, Math.PI/2 );
 Shapes are robot parts without motors. They cannot be rotated, unless they
 are attached to a motor or are set as a motor with [`setMotor`](#setmotor).
 
+
+
+### Ball
+
+```js
+Ball( radius=1.0, color='dimgray' )
+```
+
+Class. Defines a ball shape with given `radius` and `color`. The shape has no slots.
+
+<img src="images/ball.png">
+
+Example:
+
+```js
+part = new Ball( 2 );
+```
+
+
+
+### Box
+
+```js
+Box( sizex=1.0, sizey=1.0, sizez=1.0, color='dimgray' )
+```
+
+Class. Defines a box shape with given sizes long its axes `sizex`, `sizey` and
+`sizez`, and `color`. The shape has no slots.
+
+<img src="images/box.png">
+
+Example:
+
+```js
+part = new Box( 2, 1, 2 );
+```
 
 
 
@@ -831,7 +1067,7 @@ at the top at position (0,`length`,0).
 Example:
 
 ```js
-new Phalange( 1, 0.2, 0.2 );
+part = new Phalange( 1, 0.2, 0.2 );
 ```
 
 
@@ -852,7 +1088,7 @@ last part of a chain of phalanges. It has no slots.
 Example:
 
 ```js
-new EndPhalange( 1, 0.2, 0.2 );
+part = new EndPhalange( 1, 0.2, 0.2 );
 ```
 
 
@@ -873,7 +1109,7 @@ each finger.
 Example:
 
 ```js
-new LeftPalm( 1.5, 0.9, 0.3 );
+part = new LeftPalm( 1.5, 0.9, 0.3 );
 ```
 
 
@@ -894,7 +1130,7 @@ each finger.
 Example:
 
 ```js
-new RightPalm( 1.5, 0.9, 0.3 );
+part = new RightPalm( 1.5, 0.9, 0.3 );
 ```
 
 

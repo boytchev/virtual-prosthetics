@@ -9,6 +9,11 @@
 //		attachToSlot( parentPart, slot=0 )
 //		getAngle( )
 //		setAngle( x )
+//		setAngleRelative( x )
+//		setPosition( x, y=0, z=0 )
+//		setRotation( x, y=0, z=0, order='XYZ' )
+//	.	beginContact( otherObject )
+//	.	endContact( otherObject )
 //
 
 import * as THREE from "../libs/three.module.js";
