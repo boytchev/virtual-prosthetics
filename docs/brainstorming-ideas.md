@@ -13,7 +13,7 @@
 * S2. [**DONE**] Feedback from joint positions
 * S3. [**DONE**] Collision detection with external objects
 * S4. [**DONE**] Self-collision detection
-* S5. Visual feedback with color heatmaps
+* S5. [**DONE**] Visual feedback with color heatmaps
 * S6. [**DONE**] Visual feedback with vectors
 * S7. Visual feedback with tables/graphs
 * S8. Gravity for gripped objects
@@ -46,7 +46,7 @@
 * D2. [**DONE**] User documentation
 * D3. Educational content
 * D4. Academic papers
-* D5. Social network disseminations (e.g. videos)
+* D5. [**DONE**] Social network disseminations (e.g. videos)
 
 #### Initially needed information
 * Close-up images of hand prototype

@@ -1,10 +1,12 @@
 
 //
-//	Shapes for Virtual prosthetics
+//	Virtual Prosthetics 1.0
+//	Hand parts
 //
 //	class Phalange( length=1.0, width=0.3, thickness=0.3 )
 //	class EndPhalange( length=1.0, width=0.3, thickness=0.3 )
 //	class LeftPalm( length=1.4, width=1.4, thickness=0.3 )
+//	class RightPalm( length=1.4, width=1.4, thickness=0.3 )
 //
 
 
@@ -237,7 +239,8 @@ class LeftPalm extends Part
 		// profile shape (2D)
 		var L = length,
 			W = width/2,
-			I = width / 8;
+			I = width/8,
+			T = thickness;
 			
 		var shape = [
 				-W+I,   0,			// 0
@@ -249,7 +252,8 @@ class LeftPalm extends Part
 			];
 		
 		// create main mesh
-		this.add( extrudeShape(shape,thickness) );
+		this.mainMesh = extrudeShape(shape,thickness);
+		this.add( this.mainMesh );
 		
 		var that = this;
 		function addSlot( pointA, pointB, k )
@@ -269,6 +273,40 @@ class LeftPalm extends Part
 		addSlot( 3, 4, 5/8 ); // slot 3
 		addSlot( 3, 4, 7/8 ); // slot 4
 		
+		// 3D convex shape
+		var vertices = [
+							[ -W+I,   0,	 T/2 ],
+							[  W-2*I, 0,	 T/2 ],
+							[  W,     2*I,	 T/2 ],
+							[  W,     L,	 T/2 ],
+							[ -W,     L,	 T/2 ],
+							[ -W  ,   L/2,	 T/2 ],
+
+							[ -W+I,   0,	-T/2 ],
+							[  W-2*I, 0,	-T/2 ],
+							[  W,     2*I,	-T/2 ],
+							[  W,     L,	-T/2 ],
+							[ -W,     L,	-T/2 ],
+							[ -W  ,   L/2,	-T/2 ],
+						];
+
+		var faces = [
+						[0,1,2,3,4,5],
+						[11,10,9,8,7,6],
+						[0,6,7,1],
+						[1,7,8,2],
+						[2,8,9,3],
+						[3,9,10,4],
+						[4,10,11,5],
+						[5,11,6,0],
+					];
+		
+		// physics
+		this.physics = physics.convex( vertices, faces );
+		this.physics.threejs = this;
+		
+		getBodies().push( this );
+
 	} // LeftPalm.constructor
 	
 } // LeftPalm
@@ -284,7 +322,8 @@ class RightPalm extends Part
 		// profile shape (2D)
 		var L = length,
 			W = width/2,
-			I = width/8;
+			I = width/8,
+			T = thickness;
 			
 		var shape = [
 				 W-I,   0,			// 0
@@ -296,7 +335,8 @@ class RightPalm extends Part
 			];
 		
 		// create main mesh
-		this.add( extrudeShape(shape,thickness) );
+		this.mainMesh = extrudeShape(shape,thickness);
+		this.add( this.mainMesh );
 		
 		var that = this;
 		function addSlot( pointA, pointB, k )
@@ -315,6 +355,40 @@ class RightPalm extends Part
 		addSlot( 3, 4, 3/8 ); // slot 2
 		addSlot( 3, 4, 5/8 ); // slot 3
 		addSlot( 3, 4, 7/8 ); // slot 4
+
+		// 3D convex shape
+		var vertices = [
+							[  W-I,   0,	 T/2 ],
+							[ -W+2*I, 0,	 T/2 ],
+							[ -W,     2*I,	 T/2 ],
+							[ -W,     L,	 T/2 ],
+							[  W,     L,	 T/2 ],
+							[  W  ,   L/2,	 T/2 ],
+
+							[  W-I,   0,	-T/2 ],
+							[ -W+2*I, 0,	-T/2 ],
+							[ -W,     2*I,	-T/2 ],
+							[ -W,     L,	-T/2 ],
+							[  W,     L,	-T/2 ],
+							[  W  ,   L/2,	-T/2 ],
+						];
+
+		var faces = [
+						[5,4,3,2,1,0],
+						[6,7,8,9,10,11],
+						[0,1,7,6],
+						[1,2,8,7],
+						[2,3,9,8],
+						[3,4,10,9],
+						[4,5,11,10],
+						[5,0,6,11],
+					];
+		
+		// physics
+		this.physics = physics.convex( vertices, faces );
+		this.physics.threejs = this;
+		
+		getBodies().push( this );
 		
 	} // RightPalm.constructor
 	

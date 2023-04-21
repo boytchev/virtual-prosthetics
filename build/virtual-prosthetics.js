@@ -4603,14 +4603,14 @@ class EndPhalange extends Part
 {super();var L=length,T=thickness/2,I=Math.min(length,thickness)/8,W=width,E=0.003;var shape=[-T,I-L/2,-T+I,E-L/2,0,E-L/2,T,T-L/2,T,L-I-E-L/2,T-I,L-E-L/2,-T+I,L-E-L/2,-T,L-I-L/2];this.mainMesh=extrudeShape(shape,width);this.mainMesh.position.y=length/2;var overMesh=new Group();overMesh.add(this.mainMesh);this.add(overMesh);this.addSlot(0,length,0);var vertices=[[-T,I-L/2,W/2],[-T+I,E-L/2,W/2],[0,E-L/2,W/2],[T,T-L/2,W/2],[T,L-I-E-L/2,W/2],[T-I,L-E-L/2,W/2],[-T+I,L-E-L/2,W/2],[-T,L-I-L/2,W/2],[-T,I-L/2,-W/2],[-T+I,E-L/2,-W/2],[0,E-L/2,-W/2],[T,T-L/2,-W/2],[T,L-I-E-L/2,-W/2],[T-I,L-E-L/2,-W/2],[-T+I,L-E-L/2,-W/2],[-T,L-I-L/2,-W/2],];var faces=[[0,1,2,3,4,5,6,7],[15,14,13,12,11,10,9,8],[0,8,9,1],[1,9,10,2],[2,10,11,3],[3,11,12,4],[4,12,13,5],[5,13,14,6],[6,14,15,7],[7,15,8,0]];this.physics=physics.convex(vertices,faces);this.physics.threejs=this;getBodies().push(this);}}
 class LeftPalm extends Part
 {constructor(length=1.4,width=1.4,thickness=0.3)
-{super();var L=length,W=width/2,I=width/8;var shape=[-W+I,0,W-2*I,0,W,2*I,W,L,-W,L,-W,L/2,];this.add(extrudeShape(shape,thickness));var that=this;function addSlot(pointA,pointB,k)
+{super();var L=length,W=width/2,I=width/8,T=thickness;var shape=[-W+I,0,W-2*I,0,W,2*I,W,L,-W,L,-W,L/2,];this.mainMesh=extrudeShape(shape,thickness);this.add(this.mainMesh);var that=this;function addSlot(pointA,pointB,k)
 {var xA=shape[2*pointA],xB=shape[2*pointB],yA=shape[2*pointA+1],yB=shape[2*pointB+1];var slot=that.addSlot(xA*(1-k)+k*xB,yA*(1-k)+k*yB,0);slot.setRotation(0,Math.PI/2,Math.PI+Math.atan2(yB-yA,xB-xA),'ZXY');}
-addSlot(2,3,1/4);addSlot(3,4,1/8);addSlot(3,4,3/8);addSlot(3,4,5/8);addSlot(3,4,7/8);}}
+addSlot(2,3,1/4);addSlot(3,4,1/8);addSlot(3,4,3/8);addSlot(3,4,5/8);addSlot(3,4,7/8);var vertices=[[-W+I,0,T/2],[W-2*I,0,T/2],[W,2*I,T/2],[W,L,T/2],[-W,L,T/2],[-W,L/2,T/2],[-W+I,0,-T/2],[W-2*I,0,-T/2],[W,2*I,-T/2],[W,L,-T/2],[-W,L,-T/2],[-W,L/2,-T/2],];var faces=[[0,1,2,3,4,5],[11,10,9,8,7,6],[0,6,7,1],[1,7,8,2],[2,8,9,3],[3,9,10,4],[4,10,11,5],[5,11,6,0],];this.physics=physics.convex(vertices,faces);this.physics.threejs=this;getBodies().push(this);}}
 class RightPalm extends Part
 {constructor(length=1.4,width=1.4,thickness=0.3)
-{super();var L=length,W=width/2,I=width/8;var shape=[W-I,0,-W+2*I,0,-W,2*I,-W,L,W,L,W,L/2,];this.add(extrudeShape(shape,thickness));var that=this;function addSlot(pointA,pointB,k)
+{super();var L=length,W=width/2,I=width/8,T=thickness;var shape=[W-I,0,-W+2*I,0,-W,2*I,-W,L,W,L,W,L/2,];this.mainMesh=extrudeShape(shape,thickness);this.add(this.mainMesh);var that=this;function addSlot(pointA,pointB,k)
 {var xA=shape[2*pointA],xB=shape[2*pointB],yA=shape[2*pointA+1],yB=shape[2*pointB+1];var slot=that.addSlot(xA*(1-k)+k*xB,yA*(1-k)+k*yB,0);slot.setRotation(0,Math.PI/2,Math.atan2(yB-yA,xB-xA),'ZXY');}
-addSlot(2,3,1/4);addSlot(3,4,1/8);addSlot(3,4,3/8);addSlot(3,4,5/8);addSlot(3,4,7/8);}}
+addSlot(2,3,1/4);addSlot(3,4,1/8);addSlot(3,4,3/8);addSlot(3,4,5/8);addSlot(3,4,7/8);var vertices=[[W-I,0,T/2],[-W+2*I,0,T/2],[-W,2*I,T/2],[-W,L,T/2],[W,L,T/2],[W,L/2,T/2],[W-I,0,-T/2],[-W+2*I,0,-T/2],[-W,2*I,-T/2],[-W,L,-T/2],[W,L,-T/2],[W,L/2,-T/2],];var faces=[[5,4,3,2,1,0],[6,7,8,9,10,11],[0,1,7,6],[1,2,8,7],[2,3,9,8],[3,4,10,9],[4,5,11,10],[5,0,6,11],];this.physics=physics.convex(vertices,faces);this.physics.threejs=this;getBodies().push(this);}}
 class Ball extends Part
 {constructor(radius=1.0,color='dimgray')
 {super();this.mainMesh=new Mesh(new IcosahedronGeometry(radius,10),new MeshLambertMaterial({color:color,emissive:OPTION_TOUCH_COLOR,emissiveIntensity:0,}));this.mainMesh.receiveShadow=true;this.mainMesh.castShadow=true;this.add(this.mainMesh);this.physics=physics.ball(radius);this.physics.threejs=this;getBodies().push(this);}}
