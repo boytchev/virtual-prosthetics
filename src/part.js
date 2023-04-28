@@ -16,7 +16,7 @@
 //	.	endContact( otherObject )
 //
 
-import * as THREE from "../libs/three.module.js";
+import * as THREE from "../libs/three.module.min.js";
 import { ConvexGeometry } from "../libs/geometries/ConvexGeometry.js";
 import { Slot } from "./slot.js";
 import { getScene } from "./scene.js";

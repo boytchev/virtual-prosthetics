@@ -6,7 +6,7 @@
 //
 
 
-import * as THREE from "../libs/three.module.js";
+import * as THREE from "../libs/three.module.min.js";
 import { Part } from "./part.js";
 import { getBodies, getScene } from "./scene.js";
 import { physics, OPTION_TOUCH_COLOR } from "./engine.js";

@@ -6,7 +6,7 @@
 //	laserDotTexture
 //
 
-import * as THREE from "../libs/three.module.js";
+import * as THREE from "../libs/three.module.min.js";
 
 
 var canvas, ctx;

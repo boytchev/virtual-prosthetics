@@ -13,7 +13,7 @@
 //	getBodies( )
 
 
-import * as THREE from "../libs/three.module.js";
+import * as THREE from "../libs/three.module.min.js";
 import { OrbitControls } from "../libs/controls/OrbitControls.js";
 import { physics } from "./engine.js";
 

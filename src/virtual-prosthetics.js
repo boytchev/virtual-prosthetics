@@ -14,4 +14,4 @@ export * from "./part-objects.js";
 //export * from "./engine.cannon.js";
 //export * from "./engine.native.js";
 
-export * from "../libs/three.module.js";
+export * from "../libs/three.module.min.js";

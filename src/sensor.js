@@ -15,7 +15,7 @@
 //		senseObject( otherObject )
 //
 
-import * as THREE from "../libs/three.module.js";
+import * as THREE from "../libs/three.module.min.js";
 import { getScene, getTime } from "./scene.js";
 import { Part } from "./part.js";
 import { Laser } from "./laser.js";

@@ -7,7 +7,7 @@
 //		set( start, end )
 //
 
-import * as THREE from "../libs/three.module.js";
+import * as THREE from "../libs/three.module.min.js";
 import { laserDotTexture } from "./textures.js";
 
 
