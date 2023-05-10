@@ -7,41 +7,61 @@
 
 <body>
 	<script>
-		const HEIGHT = 4;
-		const WIDTH = 1;
+		const HEIGHT = 1;
+		const WIDTH = 0.3;
 	</script>
 	
-	<suica fullWindow>
-		<orbit distance="10" altitude="2" speed="0.5">
+	<suica fullWindow onTime="loop">
+		<orbit distance="4" altitude="1" speed="0.5">
 	</suica>
 	
 	<script>
+		oxyz();
 		
-		body = cube( [0,0,0], [WIDTH, HEIGHT-WIDTH], 'gray' );
+		ofsy = (HEIGHT-WIDTH)/2;
 		
-		capu = cylinder( [0,HEIGHT/2-WIDTH/2,-WIDTH/2], [WIDTH,WIDTH] );
+		body = cube( [0,ofsy,0], [WIDTH, HEIGHT-WIDTH], 'gray' );
+		
+		capu = cylinder( [0,HEIGHT/2-WIDTH/2+ofsy,-WIDTH/2], [WIDTH,WIDTH] );
 		its.spinV = 90;
 		
 		capd = capu.clone;
-		capd.y *= -1;
+		capd.y = -(HEIGHT-WIDTH)/2+ofsy;
 		
-		curve = sphere( [WIDTH*0,0,0], [WIDTH*1.4, HEIGHT*1.1] );
+		//curve = sphere( [WIDTH*0,ofsy,0], [WIDTH*1.2, HEIGHT*1] );
+		curve = cylinder( [WIDTH*0,-HEIGHT*1.1/2+ofsy,0], [WIDTH*1.4, HEIGHT*1.1] );
 
-		axisu = cylinder( [0,HEIGHT*0.42,-2], [WIDTH*1.3/3,4] );
+		axisu = cylinder( [0,HEIGHT/2-WIDTH/2+ofsy,-2], [WIDTH*1.3/3,4] );
 		its.spinV = 90;
 		
-		axisd = cylinder( [0,-HEIGHT*0.42,-2], [WIDTH*1.3/3,4] );
+		axisd = axisu.clone;
+		its.y = -(HEIGHT-WIDTH)/2+ofsy;
 		its.spinV = 90;
 		
-		cutu1 = cube( [0,HEIGHT*0.4,0.67*WIDTH], WIDTH, 'yellow' );
-		cutu2 = cube( [0,HEIGHT*0.4,-0.67*WIDTH], WIDTH, 'yellow' );
-		cutd = cube( [0,-HEIGHT*0.4], [WIDTH,WIDTH,0.3*WIDTH], 'yellow' );
+		cutu1 = cylinder( [0,HEIGHT/2-WIDTH/2+ofsy,0.5*0.34*WIDTH], WIDTH, 'yellow' );
+			its.spinV = 90;
+			
+		cutu2 = cutu1.clone;
+			its.spinV = -90;
+			its.z -= 2*0.5*0.34*WIDTH;
+			
+		cutd = cylinder( [0,-(HEIGHT/2-WIDTH/2)+ofsy,-0.5*0.4*WIDTH], [WIDTH,0.4*WIDTH], 'yellow' );
+			its.spinV = 90;
 	
 		g = group(body,capu,capd,curve,axisu,axisd,cutd,cutu1,cutu2);g.visible = false;
 		
 		phalange = construct( '(body+capu+capd)*curve - (axisu+axisd) - (cutu1+cutu2+cutd)' );
-		
+			its.spinS = 30;
+			
+		phalange2 = phalange.clone;
+			its.y = -(HEIGHT-WIDTH);
+			its.spinS = 0;
+			its.color="dimgray";
 
-		model.save( 'phalange4x1.glb', [phalange] );
+		function loop( t )
+		{
+			phalange.spinS = 90*Math.sin(t);
+		}
+		//model.save( 'phalange4x1.glb', [phalange] );
 	</script>
 </head>
