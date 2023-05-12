@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+
+<head>
+	<meta charset="utf-8">
+
+	<style>
+		button {
+			position: fixed;
+			top: 1em;
+			width: 12em;
+			left: calc(50% - 5em);
+			font-size: 1.2em;
+		}
+		
+		.small {
+			font-size: 75%;
+		}
+	</style>
+	
+	<script src="suica.js"></script>
+	<script src="phalange.js"></script>
+</head>
+
+<body>
+	<script>
+		const HEIGHT = 0.5;
+		const WIDTH = 0.3;
+	</script>
+	
+	<suica fullWindow onTime="loop">
+		<orbit distance="4" altitude="1" speed="0.5">
+	</suica>
+	
+	<button onclick="saveModel()"><small>Save model</small><br><b>phalange5x3.glb</b><br><span class="small"><span id="size"></span> vertices</span></button>
+	
+	<script>
+		oxyz();
+		
+		Suica.CIRCLECOUNT = 42;
+		
+		createPhalange( );
+		
+		element( 'size' ).innerHTML = phalange.threejs.geometry.getAttribute( 'position' ).count;
+
+		phalange2 = phalange.clone;
+			its.y = -(HEIGHT);
+			its.spinS = 0;
+			its.color="dimgray";
+
+
+		function loop( t )
+		{
+			phalange.spinS = -45+45*Math.sin(t);
+		}
+		
+		
+		function saveModel()
+		{
+			phalange.spinS = 0;
+			model.save( 'phalange5x3.glb', [phalange] );
+		}
+	</script>
+</head>
