@@ -23,7 +23,7 @@
 
 <body>
 	<script>
-		const HEIGHT = 0.5;
+		const HEIGHT = 1.1;
 		const WIDTH = 0.3;
 	</script>
 	
@@ -31,7 +31,7 @@
 		<orbit distance="4" altitude="1" speed="0.5">
 	</suica>
 	
-	<button onclick="saveModel()"><small>Save model</small><br><b>phalange5x3.glb</b><br><span class="small"><span id="size"></span> vertices</span></button>
+	<button onclick="saveModel()"><small>Save model</small><br><b>phalange11x3.glb</b><br><span class="small"><span id="size"></span> vertices</span></button>
 	
 	<script>
 		oxyz();
@@ -41,23 +41,23 @@
 		createPhalange( );
 		
 		element( 'size' ).innerHTML = phalange.threejs.geometry.getAttribute( 'position' ).count;
-
+		
 		phalange2 = phalange.clone;
 			its.y = -(HEIGHT);
 			its.spinS = 0;
-//			its.color="dimgray";
-
+//			its.color="royalblue";
 
 		function loop( t )
 		{
 			phalange.spinS = -45+45*Math.sin(t);
+//			phalange.spinS = -90;
 		}
 		
 		
 		function saveModel()
 		{
 			phalange.spinS = 0;
-			model.save( 'phalange5x3.glb', [phalange] );
+			model.save( 'phalange11x3.glb', [phalange] );
 		}
 	</script>
 </head>

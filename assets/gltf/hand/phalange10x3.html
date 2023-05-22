@@ -36,21 +36,21 @@
 	<script>
 		oxyz();
 		
-		Suica.CIRCLECOUNT = 42;
+		Suica.CIRCLECOUNT = 40;
 		
 		createPhalange( );
 		
 		element( 'size' ).innerHTML = phalange.threejs.geometry.getAttribute( 'position' ).count;
-
+		
 		phalange2 = phalange.clone;
 			its.y = -(HEIGHT);
 			its.spinS = 0;
-			its.color="dimgray";
-
+//			its.color="royalblue";
 
 		function loop( t )
 		{
 			phalange.spinS = -45+45*Math.sin(t);
+//			phalange.spinS = -90;
 		}
 		
 		

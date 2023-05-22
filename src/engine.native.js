@@ -3,7 +3,7 @@
 //	Virtual Prosthetics 1.0
 //
 
-import * as THREE from "../libs/three.module.js";
+import * as THREE from "../libs/three.module.min.js";
 
 var scene, bodies;
 
