@@ -27,7 +27,7 @@
 #### Visual
 * V1. Interactive controls
 * V2. Stock objects to grap and hold
-* V3. Importing GLTF body parts
+* V3. [**DONE**] Importing GLTF body parts
 * V4. Exporting GLTF models
 * V5. Customs warning (aka virtual pain)
 
