@@ -172,7 +172,6 @@ class Part extends THREE.Group
 			
 		geometry.setAttribute( 'position', new THREE.BufferAttribute( 
 			new Float32Array(points),3 ) );
-			console.log('aa',geometry)
 		
 		var lines = new THREE.LineSegments( geometry, material );
 

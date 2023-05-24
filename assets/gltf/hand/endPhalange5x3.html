@@ -3,19 +3,7 @@
 <head>
 	<meta charset="utf-8">
 
-	<style>
-		button {
-			position: fixed;
-			top: 1em;
-			width: 12em;
-			left: calc(50% - 5em);
-			font-size: 1.2em;
-		}
-		
-		.small {
-			font-size: 75%;
-		}
-	</style>
+	<link rel="stylesheet" href="hand.css">
 	
 	<script src="suica.js"></script>
 	<script src="endPhalange.js"></script>
@@ -25,26 +13,29 @@
 	<script>
 		const HEIGHT = 0.5;
 		const WIDTH = 0.3;
+		const NAME = 'endPhalange5x3.glb';
 	</script>
 	
 	<suica fullWindow>
 		<orbit distance="4" altitude="1" speed="0.5">
 	</suica>
 	
-	<button onclick="saveModel()"><small>Save model</small><br><b>endPhalange5x3.glb</b><br><span class="small"><span id="size"></span> vertices</span></button>
+	<div>
+		<button onclick="saveModel()">
+			<small>Save model</small><br>
+			<b>endPhalange5x3.glb</b><br>
+			<small><span id="size"></span> vertices</small>
+		</button>
+		<button onclick="getModelFrame()">
+			<small>Get model</small><br>
+			<b>frame JS code</b><br>
+			<small>for physics</small>
+		</button>
+	</div>
 	
 	<script>
-		oxyz();
-		
-		Suica.CIRCLECOUNT = 40;
-		
-		createEndPhalange( );
-		
-		element( 'size' ).innerHTML = endPhalange.threejs.geometry.getAttribute( 'position' ).count;
-		
-		function saveModel()
-		{
-			model.save( 'endPhalange5x3.glb', [endPhalange] );
-		}
+		// fixed names, used by phalange.js
+		object = createEndPhalange( );
+		objectFrame = createEndPhalangeFrame( );
 	</script>
 </head>

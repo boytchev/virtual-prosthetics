@@ -1,5 +1,11 @@
-﻿function createEndPhalange( )
+﻿
+Suica.CIRCLECOUNT = 40;
+
+
+function createEndPhalange( )
 {
+	oxyz();
+	
 	// main rectangular body
 	body = cube( [0,HEIGHT/2,0], [WIDTH, HEIGHT+2*WIDTH], 'gray' );
 	extraBody = cube( [0,HEIGHT/2,0], [WIDTH, HEIGHT+2*WIDTH, 0.25*WIDTH], 'gray' );
@@ -17,20 +23,19 @@
 	cutDown = prism( 8, [0.4*WIDTH,-0.5*WIDTH,-0.3*WIDTH/2], [2*WIDTH,0.3*WIDTH], 'yellow' );
 		its.spinV = 90;
 		
-	g = group(body,extraBody,curve,axisDown,cutDown,curve2);
+	var g = group(body,extraBody,curve,axisDown,cutDown,curve2);
 		its.visible = false;
 
-	endPhalange = construct( '( body + extraBody - axisDown )*curve * curve2 - cutDown' );
+	var endPhalange = construct( '( body + extraBody - axisDown )*curve * curve2 - cutDown' );
 		its.color = 'white';
+		its.threejs.material.vertexColors = true;
 
 
 	// recolor phalange
-	
-	endPhalange.threejs.material.vertexColors = true;
-	
-	geom = endPhalange.threejs.geometry;
-	pos = geom.getAttribute( 'position' );
-	nor = geom.getAttribute( 'normal' );
+
+	var geom = endPhalange.threejs.geometry,
+		pos = geom.getAttribute( 'position' ),
+		nor = geom.getAttribute( 'normal' );
 	
 	var colors = [];
 
@@ -50,4 +55,141 @@
       new THREE.BufferAttribute(new Float32Array(colors), 3));
 	  
 	geom.needsUpdate = true;
+	
+	
+	element( 'size' ).innerHTML = endPhalange.threejs.geometry.getAttribute( 'position' ).count;
+
+	return endPhalange;	
+}
+
+
+function createEndPhalangeFrame( )
+{
+	// build a 3-layers cube
+	
+	var phalangeFrame = cube( [0,0,0], 1 );
+		its.threejs.material = new THREE.MeshBasicMaterial({color: 'crimson'});
+		its.threejs.geometry = new THREE.BoxGeometry( WIDTH, HEIGHT, WIDTH, 1, 3, 1 ).translate(0,HEIGHT/2,0);
+	
+	
+	// update vertices to mimic the phalange shape
+	
+	var geom = phalangeFrame.threejs.geometry,
+		pos = geom.getAttribute( 'position' ),
+		ofs = THREE.MathUtils.mapLinear( HEIGHT, 0.5, 1.1, 0.15, 0.4 ),
+		sca = THREE.MathUtils.mapLinear( HEIGHT, 0.5, 1.1, 0.8, 0.6 );
+		
+	for( var i=0; i<pos.count; i++ )
+	{
+		var x = pos.getX( i ),
+			y = pos.getY( i ),
+			z = pos.getZ( i );
+
+		if( y > 0.8*HEIGHT )
+		{
+			pos.setX( i, 0.5*x+HEIGHT/20 );
+			pos.setY( i, y+0.01 );
+			pos.setZ( i, 0.5*z );
+		}
+
+		if( y < 0.2*HEIGHT )
+		{
+			pos.setX( i, sca*x );
+			pos.setZ( i, sca*z );
+		}
+		
+	}		
+	geom.needsUpdate = true;
+	
+	
+	// hash all vertices to eliminate duplicates
+	// hashes[hash] = vertex index
+	var hashes = {};
+	function hash(i) { return pos.getX(i)+7*pos.getY(i)+13*pos.getZ(i) }
+	for( var i=0; i<pos.count; i++ )
+		hashes[ hash(i) ] = i;
+	
+	// get a list of indices of unique vertices
+	var uniqueIndices = Object.values( hashes );
+	
+	// build JS code for unique vertices
+	var vertices = [],
+		prec = 2;
+	for( var i in uniqueIndices )
+		vertices.push( `[${+pos.getX(i).toFixed(prec)},${+pos.getY(i).toFixed(prec)},${+pos.getZ(i).toFixed(prec)}]` );
+	vertices = `'${NAME}': [${vertices.join(',')}],`;
+	phalangeFrame.verts = vertices;
+
+	// from a face of 4 arbitrary indices make a face of 4 unique indices
+	function face( a, b, c, d )
+	{
+		// ab  -> acdb
+		// cd
+		function idx( n ) { return uniqueIndices.indexOf( hashes[hash(n)] ); }
+		
+		return `[${idx(a)},${idx(c)},${idx(d)},${idx(b)}]`;
+	};
+	
+	// build JS code for faces
+	var faces = [
+		face(0,1,2,3), face(2,3,4,5), face(4,5,6,7),
+		face(1,8,3,10), face(3,10,5,12), face(5,12,7,14),
+		face(8,9,10,11), face(10,11,12,13), face(12,13,14,15),
+		face(9,0,11,2), face(11,2,13,4), face(13,4,15,6),
+		face(1,0,8,9), face(6,7,15,14)
+	]
+	faces = `'${NAME}': [${faces.join(',')}],`;
+	phalangeFrame.faces = faces;
+
+	// debug a face by adding increasing spheres
+	// indices are arbitrary, not unique
+	function debug( ia, ib, ic, id )
+	{
+		var a = sphere([pos.getX(ia),pos.getY(ia),pos.getZ(ia)],0.1),
+			b = sphere([pos.getX(ib),pos.getY(ib),pos.getZ(ib)],0.14);
+			c = sphere([pos.getX(ic),pos.getY(ic),pos.getZ(ic)],0.18);
+			d = sphere([pos.getX(id),pos.getY(id),pos.getZ(id)],0.22);
+
+		phalangeFrame.threejs.add( a.threejs );
+		phalangeFrame.threejs.add( b.threejs );
+		phalangeFrame.threejs.add( c.threejs );
+		phalangeFrame.threejs.add( d.threejs );
+	}
+	//debug(6,7,15,14);
+	
+	phalangeFrame.threejs.material.wireframe = true;
+	
+	return phalangeFrame;
+}
+		
+		
+function saveModel()
+{
+	object.spinS = 0;
+	objectFrame.spinS = 0;
+	model.save( NAME, [object] );
+}
+
+
+function getModelFrame()
+{
+	var text = objectFrame.verts+'\n\n'+objectFrame.faces;
+
+	navigator.clipboard.writeText(text).then(
+		function()
+		{
+			alert( 'Copied to clipboard' );
+		},
+		function( err )
+		{
+			console.log( text );
+			alert( 'Copied to the console' );
+		});
+}
+
+
+function loop( t )
+{
+	object.spinS = -45+45*Math.sin(t);
+	objectFrame.spinS = object.spinS;
 }
