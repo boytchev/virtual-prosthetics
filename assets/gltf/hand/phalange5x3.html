@@ -3,19 +3,7 @@
 <head>
 	<meta charset="utf-8">
 
-	<style>
-		button {
-			position: fixed;
-			top: 1em;
-			width: 12em;
-			left: calc(50% - 5em);
-			font-size: 1.2em;
-		}
-		
-		.small {
-			font-size: 75%;
-		}
-	</style>
+	<link rel="stylesheet" href="hand.css">
 	
 	<script src="suica.js"></script>
 	<script src="phalange.js"></script>
@@ -31,32 +19,40 @@
 		<orbit distance="4" altitude="1" speed="0.5">
 	</suica>
 	
-	<button onclick="saveModel()"><small>Save model</small><br><b>phalange5x3.glb</b><br><span class="small"><span id="size"></span> vertices</span></button>
+	<div>
+		<button onclick="saveModel()"><small>Save model</small><br><b>phalange5x3.glb</b><br><span class="small"><span id="size"></span> vertices</span></button>
+	</div>
 	
 	<script>
 		oxyz();
 		
+		
 		Suica.CIRCLECOUNT = 40;
 		
+		
 		createPhalange( );
+		createPhalangeFrame( );
+		
 		
 		element( 'size' ).innerHTML = phalange.threejs.geometry.getAttribute( 'position' ).count;
+
 
 		phalange2 = phalange.clone;
 			its.y = -(HEIGHT);
 			its.spinS = 0;
-//			its.color="dimgray";
 
 
 		function loop( t )
 		{
 			phalange.spinS = -45+45*Math.sin(t);
+			phalangeFrame.spinS = phalange.spinS;
 		}
 		
 		
 		function saveModel()
 		{
 			phalange.spinS = 0;
+			phalangeFrame.spinS = 0;
 			model.save( 'phalange5x3.glb', [phalange] );
 		}
 	</script>

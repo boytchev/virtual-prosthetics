@@ -3,8 +3,9 @@
 //	Virtual Prosthetics 1.0
 //	Antropomorphic Hand parts
 //
-//	class Phalange( length=1.0, width=0.3, thickness=0.3 )
-//	class EndPhalange( length=1.0, width=0.3, thickness=0.3 )
+//	class GLTFPart( filename );
+//	class PhalangeAnthro( filename, length=1.0, width=0.3, thickness=0.3 )
+//	class EndPhalangeAnthro( filename, length=1.0, width=0.3, thickness=0.3 )
 //	class LeftPalm( length=1.4, width=1.4, thickness=0.3 )
 //	class RightPalm( length=1.4, width=1.4, thickness=0.3 )
 //
