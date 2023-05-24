@@ -162,7 +162,8 @@ Some aspects of the simulation can be controlled by URL parameters.
 * `engine=cannon` -- sets [Cannon-es](https://pmndrs.github.io/cannon-es/) as underlying physics engine that detects collisions (default)
 * `engine=native` -- sets a native underlying physics engine, currently under development
 * `touch-color=black` -- collisions are not indicated visually
-* `touch-color=...` -- collisions are indicated by making objects reddish, any CSS color name can be used
+* `touch-color=...` -- collisions are indicated by changing objects colors, any CSS color name can be used
+* `debug-physics` -- flag, if exists, convex bodies used by the physics engine are shown
 
 Click on the link to open the "Two hands" example with color indication for collisions:
 [https://boytchev.github.io/virtual-prosthetics/examples/two-hands.html?touch-color=crimson](https://boytchev.github.io/virtual-prosthetics/examples/two-hands.html?touch-color=crimson)

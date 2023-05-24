@@ -20,7 +20,7 @@ import * as THREE from "../libs/three.module.min.js";
 import { ConvexGeometry } from "../libs/geometries/ConvexGeometry.js";
 import { Slot } from "./slot.js";
 import { getScene } from "./scene.js";
-
+import { OPTION_DEBUG_PHYSICS } from "./engine.js";
 
 // base class for robot parts
 
@@ -151,6 +151,33 @@ class Part extends THREE.Group
 
 	}
 
+	debugConvex( vertices, faces )
+	{
+		if( !OPTION_DEBUG_PHYSICS ) return;
+
+		var points = [];
+
+		for( var f of faces )
+		for( var i=0; i<f.length; i++ )
+		{
+			var v = vertices[f[i]];
+			points.push( v.x, v.y, v.z );
+			
+			v = vertices[f[(i+1)%f.length]];
+			points.push( v.x, v.y, v.z );
+		}
+
+		var geometry = new THREE.BufferGeometry( ),
+			material = new THREE.LineBasicMaterial({ color: 'crimson' });
+			
+		geometry.setAttribute( 'position', new THREE.BufferAttribute( 
+			new Float32Array(points),3 ) );
+			console.log('aa',geometry)
+		
+		var lines = new THREE.LineSegments( geometry, material );
+
+		this.mainMesh.add( lines );
+	}
 }
 
 export { Part };

@@ -141,6 +141,8 @@ class Phalange extends Part
 		// physics
 		this.physics = physics.convex( vertices, faces );
 		this.physics.threejs = this;
+		this.debugConvex( vertices, faces );
+
 		
 		getBodies().push( this );
 
@@ -221,6 +223,7 @@ class EndPhalange extends Part
 		// physics
 		this.physics = physics.convex( vertices, faces );
 		this.physics.threejs = this;
+		this.debugConvex( vertices, faces );
 		
 		getBodies( ).push( this );
 

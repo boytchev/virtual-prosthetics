@@ -18,6 +18,7 @@ var options = new URL( window.location.href ),
 
 const OPTION_ENGINE = options.searchParams.get( 'engine' ) || 'cannon';
 const OPTION_TOUCH_COLOR = options.searchParams.get( 'touch-color' ) || 'black';
+const OPTION_DEBUG_PHYSICS = options.searchParams.has( 'debug-physics' ) || false;
 
 
 switch( OPTION_ENGINE )
@@ -44,4 +45,4 @@ switch( OPTION_ENGINE )
 }
 
 
-export { physics, OPTION_ENGINE, OPTION_TOUCH_COLOR };
+export { physics, OPTION_ENGINE, OPTION_TOUCH_COLOR, OPTION_DEBUG_PHYSICS };

@@ -119,7 +119,7 @@ function createPhalangeFrame( )
 		prec = 2;
 	for( var i in uniqueIndices )
 		vertices.push( `[${+pos.getX(i).toFixed(prec)},${+pos.getY(i).toFixed(prec)},${+pos.getZ(i).toFixed(prec)}]` );
-	vertices = 'var vertices = [' + vertices.join(',') + '];';
+	vertices = `'${NAME}': [${vertices.join(',')}],`;
 	phalangeFrame.verts = vertices;
 
 	// from a face of 4 arbitrary indices make a face of 4 unique indices
@@ -140,7 +140,7 @@ function createPhalangeFrame( )
 		face(9,0,11,2), face(11,2,13,4), face(13,4,15,6),
 		face(1,0,8,9), face(6,7,15,14)
 	]
-	faces = 'var faces = [' + faces.join(',') + '];';
+	faces = `'${NAME}': [${faces.join(',')}],`;
 	phalangeFrame.faces = faces;
 
 	// debug a face by adding increasing spheres
@@ -175,7 +175,18 @@ function saveModel()
 
 function getModelFrame()
 {
-	window.prompt( 'JS Code', objectFrame.verts+'\n\n'+objectFrame.faces );
+	var text = objectFrame.verts+'\n\n'+objectFrame.faces;
+
+	navigator.clipboard.writeText(text).then(
+		function()
+		{
+			alert( 'Copied to clipboard' );
+		},
+		function( err )
+		{
+			console.log( text );
+			alert( 'Copied to the console' );
+		});
 }
 
 

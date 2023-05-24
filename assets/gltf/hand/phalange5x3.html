@@ -13,6 +13,7 @@
 	<script>
 		const HEIGHT = 0.5;
 		const WIDTH = 0.3;
+		const NAME = 'phalange5x3.glb';
 	</script>
 	
 	<suica fullWindow onTime="loop">
@@ -20,40 +21,25 @@
 	</suica>
 	
 	<div>
-		<button onclick="saveModel()"><small>Save model</small><br><b>phalange5x3.glb</b><br><span class="small"><span id="size"></span> vertices</span></button>
+		<button onclick="saveModel()">
+			<small>Save model</small><br>
+			<b>phalange5x3.glb</b><br>
+			<small><span id="size"></span> vertices</small>
+		</button>
+		<button onclick="getModelFrame()">
+			<small>Get model</small><br>
+			<b>frame JS code</b><br>
+			<small>for physics</small>
+		</button>
 	</div>
 	
 	<script>
-		oxyz();
+		// fixed names, used by phalange.js
+		object = createPhalange( );
+		objectFrame = createPhalangeFrame( );
 		
-		
-		Suica.CIRCLECOUNT = 40;
-		
-		
-		createPhalange( );
-		createPhalangeFrame( );
-		
-		
-		element( 'size' ).innerHTML = phalange.threejs.geometry.getAttribute( 'position' ).count;
-
-
-		phalange2 = phalange.clone;
+		object2 = object.clone;
 			its.y = -(HEIGHT);
 			its.spinS = 0;
-
-
-		function loop( t )
-		{
-			phalange.spinS = -45+45*Math.sin(t);
-			phalangeFrame.spinS = phalange.spinS;
-		}
-		
-		
-		function saveModel()
-		{
-			phalange.spinS = 0;
-			phalangeFrame.spinS = 0;
-			model.save( 'phalange5x3.glb', [phalange] );
-		}
 	</script>
 </head>
