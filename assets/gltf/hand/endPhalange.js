@@ -7,20 +7,20 @@ function createEndPhalange( )
 	oxyz();
 	
 	// main rectangular body
-	body = cube( [0,HEIGHT/2,0], [WIDTH, HEIGHT+2*WIDTH], 'gray' );
-	extraBody = cube( [0,HEIGHT/2,0], [WIDTH, HEIGHT+2*WIDTH, 0.25*WIDTH], 'gray' );
+	body = cube( [0,0,0], [WIDTH, HEIGHT+2*WIDTH], 'gray' );
+	extraBody = cube( [0,0,0], [WIDTH, HEIGHT+2*WIDTH, 0.25*WIDTH], 'gray' );
 
 	// curved polishing of body edges
-	curve = sphere( [0,HEIGHT/2,0], [WIDTH*1.3, HEIGHT+WIDTH*0.8] );
-	curve2 = sphere( [0.025,HEIGHT/2-WIDTH*0.3,0], [WIDTH*1.3, HEIGHT+WIDTH*0.8] );
+	curve = sphere( [0,0,0], [WIDTH*1.3, HEIGHT+WIDTH*0.8] );
+	curve2 = sphere( [0.025,-WIDTH*0.3,0], [WIDTH*1.3, HEIGHT+WIDTH*0.8] );
 
 
 	// axial openings for attaching other elemtns
-	axisDown = prism( 20, [0,0,-WIDTH], [WIDTH*1.3/3,2*WIDTH] );
+	axisDown = prism( 20, [0,-HEIGHT/2,-WIDTH], [WIDTH*1.3/3,2*WIDTH] );
 		its.spinV = 90;
 
 	// circular cut at bottom
-	cutDown = prism( 8, [0.4*WIDTH,-0.5*WIDTH,-0.3*WIDTH/2], [2*WIDTH,0.3*WIDTH], 'yellow' );
+	cutDown = prism( 8, [0.4*WIDTH,-HEIGHT/2-0.5*WIDTH,-0.3*WIDTH/2], [2*WIDTH,0.3*WIDTH], 'yellow' );
 		its.spinV = 90;
 		
 	var g = group(body,extraBody,curve,axisDown,cutDown,curve2);
@@ -69,35 +69,55 @@ function createEndPhalangeFrame( )
 	
 	var phalangeFrame = cube( [0,0,0], 1 );
 		its.threejs.material = new THREE.MeshBasicMaterial({color: 'crimson'});
-		its.threejs.geometry = new THREE.BoxGeometry( WIDTH, HEIGHT, WIDTH, 1, 3, 1 ).translate(0,HEIGHT/2,0);
+		its.threejs.geometry = new THREE.BoxGeometry( WIDTH, HEIGHT, WIDTH, 1, 3, 1 );
 	
 	
 	// update vertices to mimic the phalange shape
 	
 	var geom = phalangeFrame.threejs.geometry,
-		pos = geom.getAttribute( 'position' ),
-		ofs = THREE.MathUtils.mapLinear( HEIGHT, 0.5, 1.1, 0.15, 0.4 ),
-		sca = THREE.MathUtils.mapLinear( HEIGHT, 0.5, 1.1, 0.8, 0.6 );
+		pos = geom.getAttribute( 'position' );
 		
+	function RANGE(a,b) {return THREE.MathUtils.mapLinear( HEIGHT, 0.5, 1.1, a, b )}
+	const
+		TOP_ROW = HEIGHT/2-0.1,
+		MID_ROW = HEIGHT/4-0.1,
+		BOT_ROW = -HEIGHT/2+0.1,
+		
+		TOP_SHRINK = RANGE( 0.55, 0.75 ),
+		TOP_SHIFT = RANGE( 0.02, 0.02 ),
+	
+		MID_MOVE = RANGE( 0.02, 0 ),
+
+		BOT_SHRINK = RANGE( 0.90, 0.85 ),
+		BOT_MOVE = RANGE( 0.06, 0.05 ),
+		BOT_SLOPE = RANGE( 0.4, 0.3 );
+	
 	for( var i=0; i<pos.count; i++ )
 	{
 		var x = pos.getX( i ),
 			y = pos.getY( i ),
 			z = pos.getZ( i );
 
-		if( y > 0.8*HEIGHT )
+		if( y > TOP_ROW )
 		{
-			pos.setX( i, 0.5*x+HEIGHT/20 );
-			pos.setY( i, y+0.01 );
-			pos.setZ( i, 0.5*z );
+			pos.setX( i, TOP_SHRINK*x+TOP_SHIFT );
+			pos.setZ( i, TOP_SHRINK*z );
 		}
-
-		if( y < 0.2*HEIGHT )
+		else
+		if( y > MID_ROW )
 		{
-			pos.setX( i, sca*x );
-			pos.setZ( i, sca*z );
 		}
-		
+		else
+		if( y > BOT_ROW )
+		{
+			pos.setY( i, y + MID_MOVE );
+		}
+		else
+		{
+			pos.setX( i, BOT_SHRINK*x );
+			pos.setY( i, y + BOT_MOVE + BOT_SLOPE*x );
+			pos.setZ( i, BOT_SHRINK*z );
+		}
 	}		
 	geom.needsUpdate = true;
 	
@@ -165,8 +185,6 @@ function createEndPhalangeFrame( )
 		
 function saveModel()
 {
-	object.spinS = 0;
-	objectFrame.spinS = 0;
 	model.save( NAME, [object] );
 }
 
@@ -190,6 +208,5 @@ function getModelFrame()
 
 function loop( t )
 {
-	object.spinS = -45+45*Math.sin(t);
-	objectFrame.spinS = object.spinS;
+	objectGroup.spinS = -45+45*Math.sin(t);
 }

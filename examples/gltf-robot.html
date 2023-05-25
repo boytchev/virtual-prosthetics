@@ -2,7 +2,7 @@
 
 
 <head>
-	<title>Simple robot</title>
+	<title>GLTF robot</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 	<link rel="shortcut icon" type="image/png" href="logo.png"/>
@@ -28,74 +28,65 @@
 	const sin = Math.sin;
 	const cos = Math.cos;
 
-
-	class SimpleRobot extends Prosthetic.Robot
+	class GLTFRobot extends Prosthetic.Robot
 	{
 		constructor( )
 		{
 			super( );
 			
-			this.addChain(
-				this,
-				new Prosthetic.MotorY( -Infinity, Infinity, 0, 0.6, 0.1 ),
-				new Prosthetic.MotorZ( 0, -PI/2, 0, 0.34, 0.25 ),
-				new Prosthetic.Phalange( ),
-				new Prosthetic.MotorZ( 0, -PI/2, 0, 0.2, 0.12 ),
-				new Prosthetic.Phalange( 0.5 ),
-				new Prosthetic.MotorZ( 0, -PI/2, 0, 0.2, 0.12 ),
-				new Prosthetic.EndPhalange( 0.5 ),
-			);
-		}
-	}
-
-	class SimpleRobotAnthro extends Prosthetic.Robot
-	{
-		constructor( )
-		{
-			super( );
+			var p;
 			
 			this.addChain(
 				this,
 				new Prosthetic.MotorY( -Infinity, Infinity, 0, 0.6, 0.1 ),
-				new Prosthetic.MotorZ( 0, -PI/2, 0, 0.34, 0.25 ),
+				new Prosthetic.MotorZ( PI/2, -PI/2, 0, 0.34, 0.25 ),
 				new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange10x3.glb' ),
 				new Prosthetic.MotorZ( 0, -PI/2, 0, 0.2, 0.12 ),
 				new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange5x3.glb', 0.5 ),
 				new Prosthetic.MotorZ( 0, -PI/2, 0, 0.2, 0.12 ),
+				new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange5x3.glb', 0.5 ),
+				p = new Prosthetic.MotorZ( 0, -PI/2, 0, 1, 0.12 ),
 				new Prosthetic.EndPhalangeAnthro( '../assets/gltf/endPhalange5x3.glb', 0.5 ),
 			);
+
+			new Prosthetic.EndPhalangeAnthro( '../assets/gltf/endPhalange5x3.glb', 0.5 )
+				.attachToSlot( p, new Prosthetic.Slot(0,0,0.4) );
+
+			new Prosthetic.EndPhalangeAnthro( '../assets/gltf/endPhalange5x3.glb', 0.5 )
+				.attachToSlot( p, new Prosthetic.Slot(0,0,-0.4) );
 		}
 	}
 
-
-	var robot = new SimpleRobot;
-		robot.setPosition( -0.29, 0, 0 );
-		robot.setRotation( 0, Math.PI, 0 );
+	var N = 8;
+	var robots = [];
+	
+	for( var i=0; i<N; i++ )
+	{
+		var alpha = 2*Math.PI * i/N,
+			r = 2.5;
 		
-	var robotAnthro = new SimpleRobotAnthro;
-		robotAnthro.setPosition( 0.29, 0, 0 );
+		robots[i] = new GLTFRobot;
+		robots[i].setRotation( 0, alpha+Math.PI/2, 0 );
+		robots[i].setPosition( r*Math.sin(alpha), 0, r*Math.cos(alpha) );
+	}
 	
 
 	Prosthetic.setAnimation( loop );
-	Prosthetic.setCameraPosition( 0, 2, 5 );
+	Prosthetic.setCameraPosition( 0, 4, 10 );
 
 	function loop( t )
 	{
-		robot.setAngles( 
-			PI/3*sin(t),
-			-PI/4*(0.5 + 0.5*sin(2*t)),
-			-PI/2*(0.5 + 0.5*sin(2*t-1)),
-			-PI/2*(0.5 + 0.5*sin(2*t-2))
-		);
+		t = t/2;
 
-		robotAnthro.setAngles( 
-			PI/3*sin(t),
-			-PI/4*(0.5 + 0.5*sin(2*t)),
-			-PI/2*(0.5 + 0.5*sin(2*t-1)),
-			-PI/2*(0.5 + 0.5*sin(2*t-2))
-		);
+		for( var i=0; i<N; i++, t+=3*Math.PI/N )
+			robots[i].setAngles( 
+				0,
+				-PI/4*(sin(2*t)),
+				-PI/2*(0.5 + 0.5*sin(2*t-1)),
+				-PI/2*(0.5 + 0.5*sin(2*t-2)),
+				-PI/2*(0.5 + 0.5*sin(2*t-3)),
+			);
 	}
-
 
 	</script>
 </body>

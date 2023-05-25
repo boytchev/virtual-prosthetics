@@ -148,7 +148,6 @@ class Part extends THREE.Group
 			this.mainMesh.material.emissiveIntensity = 0;
 
 //		console.log( 'no contact', this.constructor.name, 'with', otherObject.constructor.name );
-
 	}
 
 	debugConvex( vertices, faces )

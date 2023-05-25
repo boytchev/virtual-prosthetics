@@ -7,23 +7,23 @@ function createPhalange( )
 	oxyz();
 	
 	// main rectangular body
-	body = cube( [0,HEIGHT/2,0], [WIDTH, HEIGHT+WIDTH] );
-	extraBody = cube( [0,HEIGHT/2,0], [WIDTH, HEIGHT+2*WIDTH, 0.25*WIDTH] );
+	body = cube( [0,0,0], [WIDTH, HEIGHT+WIDTH] );
+	extraBody = cube( [0,0,0], [WIDTH, HEIGHT+2*WIDTH, 0.25*WIDTH] );
 
 	// curved polishing of body edges
-	curve = sphere( [0,HEIGHT/2,0], [WIDTH*1.3, HEIGHT+WIDTH*0.8] );
+	curve = sphere( [0,0,0], [WIDTH*1.3, HEIGHT+WIDTH*0.8] );
 
 	// axial openings for attaching other elemtns
-	axisDown = prism( 20, [0,0,-WIDTH], [WIDTH*1.3/3,2*WIDTH] );
+	axisDown = prism( 20, [0,-HEIGHT/2,-WIDTH], [WIDTH*1.3/3,2*WIDTH] );
 		its.spinV = 90;
-		its.y = 0;
+//		its.y = 0;
 
 	//flatUp = cube( [WIDTH/2,HEIGHT,0], [WIDTH,WIDTH,2*WIDTH], 'yellow' );
-	cutUp = prism( 50, [0.4*WIDTH,HEIGHT+0.5*WIDTH,-WIDTH], [2*WIDTH,2*WIDTH], 'yellow' );
+	cutUp = prism( 50, [0.4*WIDTH,HEIGHT/2+0.5*WIDTH,-WIDTH], [2*WIDTH,2*WIDTH], 'yellow' );
 		its.spinV = 90;
 		
 	// circular cut at bottom
-	cutDown = prism( 8, [0.4*WIDTH,-0.5*WIDTH,-0.3*WIDTH/2], [2*WIDTH,0.3*WIDTH], 'yellow' );
+	cutDown = prism( 8, [0.4*WIDTH,-0.5*WIDTH-HEIGHT/2,-0.3*WIDTH/2], [2*WIDTH,0.3*WIDTH], 'yellow' );
 		its.spinV = 90;
 		
 	var g = group(body,extraBody,curve,axisDown,cutDown,cutUp);
@@ -71,35 +71,58 @@ function createPhalangeFrame( )
 	
 	var phalangeFrame = cube( [0,0,0], 1 );
 		its.threejs.material = new THREE.MeshBasicMaterial({color: 'crimson'});
-		its.threejs.geometry = new THREE.BoxGeometry( WIDTH, HEIGHT, WIDTH, 1, 3, 1 ).translate(0,HEIGHT/2,0);
+		its.threejs.geometry = new THREE.BoxGeometry( WIDTH, HEIGHT, WIDTH, 1, 3, 1 );///.translate(0,HEIGHT/2,0);
 	
 	
 	// update vertices to mimic the phalange shape
 	
 	var geom = phalangeFrame.threejs.geometry,
-		pos = geom.getAttribute( 'position' ),
-		ofs = THREE.MathUtils.mapLinear( HEIGHT, 0.5, 1.1, 0.15, 0.4 ),
-		sca = THREE.MathUtils.mapLinear( HEIGHT, 0.5, 1.1, 0.8, 0.6 );
+		pos = geom.getAttribute( 'position' );
 		
+	function RANGE(a,b) {return THREE.MathUtils.mapLinear( HEIGHT, 0.5, 1.1, a, b )}
+	const
+		TOP_ROW = HEIGHT/2-0.1,
+		MID_ROW = HEIGHT/4-0.1,
+		BOT_ROW = -HEIGHT/2+0.1,
+		
+		TOP_SHRINK = RANGE( 0.90, 0.85 ),
+		TOP_MOVE = RANGE( 0.10, 0.11 ),
+		TOP_SLOPE = RANGE( 0.4, 0.3 ),
+	
+		MID_MOVE = RANGE( 0.05, 0 ),
+
+		BOT_SHRINK = RANGE( 0.90, 0.85 ),
+		BOT_MOVE = RANGE( 0.06, 0.05 ),
+		BOT_SLOPE = RANGE( 0.4, 0.3 );
+	
 	for( var i=0; i<pos.count; i++ )
 	{
 		var x = pos.getX( i ),
 			y = pos.getY( i ),
 			z = pos.getZ( i );
 
-		if( y > 0.8*HEIGHT )
+		if( y > TOP_ROW )
 		{
-			pos.setY( i, y-ofs*x/HEIGHT-0.1 );
-			pos.setX( i, 0.85*x+HEIGHT/40 );
-			pos.setZ( i, 0.85*z );
+			pos.setX( i, TOP_SHRINK*x );
+			pos.setY( i, y - TOP_MOVE - TOP_SLOPE*x );
+			pos.setZ( i, TOP_SHRINK*z );
 		}
-
-		if( y < 0.2*HEIGHT )
+		else
+		if( y > MID_ROW )
 		{
-			pos.setX( i, sca*x );
-			pos.setZ( i, sca*z );
+			pos.setY( i, y - MID_MOVE );
 		}
-		
+		else
+		if( y > BOT_ROW )
+		{
+			pos.setY( i, y + MID_MOVE );
+		}
+		else
+		{
+			pos.setX( i, BOT_SHRINK*x );
+			pos.setY( i, y + BOT_MOVE + BOT_SLOPE*x );
+			pos.setZ( i, BOT_SHRINK*z );
+		}
 	}		
 	geom.needsUpdate = true;
 	
@@ -167,8 +190,6 @@ function createPhalangeFrame( )
 		
 function saveModel()
 {
-	object.spinS = 0;
-	objectFrame.spinS = 0;
 	model.save( NAME, [object] );
 }
 
@@ -192,6 +213,5 @@ function getModelFrame()
 
 function loop( t )
 {
-	object.spinS = -45+45*Math.sin(t);
-	objectFrame.spinS = object.spinS;
+	objectGroup.spinS = -45+45*Math.sin(t);
 }

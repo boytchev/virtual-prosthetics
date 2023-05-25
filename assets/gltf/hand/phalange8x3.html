@@ -37,8 +37,15 @@
 		object = createPhalange( );
 		objectFrame = createPhalangeFrame( );
 		
+		subGroup = group( object, objectFrame );
+		subGroup.y = HEIGHT/2;
+		objectGroup = group( subGroup );
+		
 		object2 = object.clone;
-			its.y = -(HEIGHT);
+			its.y = -HEIGHT/2;
+			its.spinS = 0;
+		objectFrame2 = createPhalangeFrame( );
+			its.y = -HEIGHT/2;
 			its.spinS = 0;
 	</script>
 </head>
