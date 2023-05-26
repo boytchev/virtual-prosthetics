@@ -39,8 +39,15 @@
 			var palm = new Prosthetic.LeftPalm( );
 				palm.attachToSlot( this );
 			
+			this.spread0 = new Prosthetic.MotorX( -1, 1, 0, 0, 0 );
+			this.spread1 = new Prosthetic.MotorX( -0.3, 0.3, 0, 0, 0 );
+			this.spread2 = new Prosthetic.MotorX( -0.3, 0.3, 0, 0, 0 );
+			this.spread3 = new Prosthetic.MotorX( -0.3, 0.3, 0, 0, 0 );
+			this.spread4 = new Prosthetic.MotorX( -0.3, 0.3, 0, 0, 0 );
+			
 			this.addChain(
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ).attachToSlot( palm, 0 ),
+					this.spread0,
 					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange10x3.glb', 1.0 ),
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ),
 					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange5x3.glb', 0.5 ),
@@ -50,6 +57,7 @@
 			
 			this.addChain( 
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ).attachToSlot( palm, 1 ),
+					this.spread1,
 					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange10x3.glb', 1.0 ),
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ),
 					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange5x3.glb', 0.5 ),
@@ -59,6 +67,7 @@
 			
 			this.addChain( 
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ).attachToSlot( palm, 2 ),
+					this.spread2,
 					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange11x3.glb', 1.1 ),
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ),
 					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange5x3.glb', 0.5 ),
@@ -68,6 +77,7 @@
 			
 			this.addChain( 
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ).attachToSlot( palm, 3 ),
+					this.spread3,
 					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange10x3.glb' ),
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ),
 					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange5x3.glb', 0.5 ),
@@ -77,6 +87,7 @@
 			
 			this.addChain( 
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ).attachToSlot( palm, 4 ),
+					this.spread4,
 					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange8x3.glb', 0.8 ),
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ),
 					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange5x3.glb', 0.5 ),
@@ -88,7 +99,6 @@
 	}
 
 
-
 	class RightHand extends Prosthetic.Robot
 	{
 		constructor( )
@@ -98,8 +108,15 @@
 			var palm = new Prosthetic.RightPalm( );
 				palm.attachToSlot( this );
 			
+			this.spread0 = new Prosthetic.MotorX( -1, 1, 0, 0, 0 );
+			this.spread1 = new Prosthetic.MotorX( -0.3, 0.3, 0, 0, 0 );
+			this.spread2 = new Prosthetic.MotorX( -0.3, 0.3, 0, 0, 0 );
+			this.spread3 = new Prosthetic.MotorX( -0.3, 0.3, 0, 0, 0 );
+			this.spread4 = new Prosthetic.MotorX( -0.3, 0.3, 0, 0, 0 );
+
 			this.addChain(
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ).attachToSlot( palm, 0 ),
+					this.spread0,
 					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange10x3.glb', 1.0 ),
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ),
 					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange5x3.glb', 0.5 ),
@@ -109,6 +126,7 @@
 			
 			this.addChain( 
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ).attachToSlot( palm, 1 ),
+					this.spread1,
 					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange10x3.glb', 1.0 ),
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ),
 					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange5x3.glb', 0.5 ),
@@ -118,6 +136,7 @@
 
 			this.addChain( 
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ).attachToSlot( palm, 2 ),
+					this.spread2,
 					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange11x3.glb', 1.1 ),
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ),
 					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange5x3.glb', 0.5 ),
@@ -127,6 +146,7 @@
 			
 			this.addChain( 
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ).attachToSlot( palm, 3 ),
+					this.spread3,
 					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange10x3.glb', 1.0 ),
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ),
 					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange5x3.glb', 0.5 ),
@@ -136,6 +156,7 @@
 			
 			this.addChain(
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ).attachToSlot( palm, 4 ),
+					this.spread4,
 					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange8x3.glb', 0.8 ),
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ),
 					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange5x3.glb', 0.5 ),
@@ -149,32 +170,49 @@
 
 
 	var A = new LeftHand( );
-		A.setPosition( -2, 0.2, 0);
-		A.setRotation( -0.3, -0.5, 0.2 );
 
 	var B = new RightHand( );
-		B.setPosition( 2, 0.2, 0 );
-		B.setRotation( -0.3, 0.5, -0.2 );
 
 	Prosthetic.setCameraPosition( 4, 2, -10 );
 	Prosthetic.setCameraTarget( 0, 1.5, 0 );
 	Prosthetic.setAnimation( loop );
 
-	function loop( t )
+	function loop( t, dT )
 	{
-		for( var i=0; i<2; i++ )
+		t *= 3;
+		
+		var sin = Math.sin(t);
+
+
+		for( var i=0; i<A.getDOF(); i++ )
 		{
-			var sin = -PI/4-PI/4*(1+Math.sin(2*t-i/3));
-			A.setAngle( i, sin );
-			B.setAngle( i, sin );
+			A.setAngle( i, -PI/4*(1+sin) );
+			B.setAngle( i, -PI/4*(1+sin) );
 		}
 
-		for( var i=3; i<A.getDOF(); i++ )
-		{
-			var sin = -PI/4*(1+Math.sin(3*t-i/3));
-			A.setAngle( i, sin );
-			B.setAngle( i, sin );
-		}
+			
+		var s = 0.5-0.5*sin;
+
+		A.spread0.setAngle( -s );
+		A.spread1.setAngle( 0.3*s );
+		A.spread2.setAngle( 0.1*s );
+		A.spread3.setAngle( -0.1*s );
+		A.spread4.setAngle( -0.3*s );
+
+		B.spread0.setAngle( s );
+		B.spread1.setAngle( -0.3*s );
+		B.spread2.setAngle( -0.1*s );
+		B.spread3.setAngle( 0.1*s );
+		B.spread4.setAngle( 0.3*s );
+		
+		s = Math.sin( t+1.5 );
+		A.setPosition( -2+0.3*s**3, 1+s, -2*s);
+		B.setPosition( 2-0.3*s**3, 1.2+s, -2*s);
+		
+		s = 1+Math.sin( t+1.5 );
+		A.setRotation( -Math.PI/3*s/2, -Math.PI/2*s/2,  Math.PI/4*s/2 );
+		B.setRotation( -Math.PI/3*s/2, Math.PI/2*s/2, -Math.PI/4*s/2 );
+
 	}
 
 
