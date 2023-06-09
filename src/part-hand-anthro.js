@@ -141,7 +141,7 @@ class PhalangeAnthro extends GLTFPart
 		var that = this;
 		function recolor( )
 		{
-			that.recolor( [0,0.21,1], [0.2,0.7,1] );
+			that.recolor( [0,0.21,1], [0.3,0.3,0.3] );
 		}
 	} // PhalangeAnthro.constructor
 
@@ -199,7 +199,7 @@ class LeftPalmAnthro extends GLTFPart
 		var that = this;
 		function recolor( )
 		{
-			that.recolor( [0,0.21,1], [0.2,0.7,1] );
+			that.recolor( [0,0.21,1], [0.3,0.3,0.3] );
 		}
 	} // LeftPalmAnthro.constructor
 	
@@ -250,7 +250,7 @@ class RightPalmAnthro extends GLTFPart
 		var that = this;
 		function recolor( )
 		{
-			that.recolor( [0,0.21,1], [0.2,0.7,1] );
+			that.recolor( [0,0.21,1], [0.3,0.3,0.3] );
 		}
 	} // RightPalmAnthro.constructor
 	
