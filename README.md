@@ -2,6 +2,7 @@
 Modeling tool for virtual prosthetic body parts
 
 * [Virtual prosthetics API](docs/api.md)
+* [Predefined parts](docs/predefined.md)
 * [Social activities](docs/social.md)
 * [Brainstorming ideas](docs/brainstorming-ideas.md)
 
