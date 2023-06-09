@@ -1,8 +1,8 @@
 # Virtual prosthetics API
 
-The Virtual Prosthetics library provides an API for all its functionalily. In
-this document all times are in seconds, all sizes are in meters, all angles are
-in radians and all indices start from 0.
+The Virtual Prosthetics library provides an API for construction of simple 
+virtual robots. In this document all times are in seconds, all sizes are in
+meters, all angles are in radians and all indices start from 0.
 
 * **[Introduction](#introduction)**
 * **[Scene](#scene)**
@@ -31,7 +31,7 @@ in radians and all indices start from 0.
 
 The Virtual Prosthetics library allows construction of virtual robots from a
 JavaScript program. The robots can be viewed and manipulated on desktop and
-mobile platforms. The main concepts are:
+mobile platforms. The library is base on the following main concepts:
 
 * [**Scene**](#scene) – a virtual environment where robots are placed and controlled;
 * [**Robot**](#robots) – a virtual device constructed programmatically of robot parts;
