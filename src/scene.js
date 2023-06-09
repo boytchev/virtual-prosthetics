@@ -1,7 +1,7 @@
 
-//
+//	Scene API
 //	Virtual Prosthetics 1.0
-//	Scene
+//
 //
 //	setAnimation( func, fps=30 )
 //
@@ -11,6 +11,12 @@
 //	getScene( )
 //	getTime( )
 //	getBodies( )
+//
+//	Internals:
+//
+//	createScene( )
+//	drawFrame( time )
+
 
 
 import * as THREE from "../libs/three.module.min.js";
@@ -28,6 +34,8 @@ var animate,
 	currentTime = 0;
 
 var bodies = [];
+
+
 
 function createScene( )
 {
@@ -62,9 +70,6 @@ function createScene( )
 	
 	scene.add(light, new THREE.HemisphereLight('white', 'cornsilk', 0.6));
 
-//	const helper = new THREE.DirectionalLightHelper( light, 5 );
-//	scene.add( helper );
-
 	function onWindowResize(event)
 	{
 		camera.aspect = window.innerWidth / window.innerHeight;
@@ -97,17 +102,23 @@ function createScene( )
 
 createScene( );
 
+
+
 function setCameraPosition( x, y, z )
 {
 	camera.position.set( x, y, z );
 	camera.lookAt( controls.target );
 }
 
+
+
 function setCameraTarget( x, y, z )
 {
 	controls.target.set( x, y, z );
 	camera.lookAt( controls.target );
 }
+
+
 
 function setAnimation( func, fps=30 )
 {

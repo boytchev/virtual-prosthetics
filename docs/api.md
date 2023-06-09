@@ -48,18 +48,22 @@ mobile platforms. The library is base on the following main concepts:
 The Virtual Prosthetics library automatically creates a 3D scene that contains
 all created prosthetic devices.
 
-### setAnimation
+Source code: [src/scene.js](https://github.com/boytchev/virtual-prosthetics/blob/main/src/scene.js)
+
+
+> ### setAnimation
 
 ```js
 setAnimation( func, fps=30 )
 ```
 
 Function. Defines a callback function `func` to be called `fps` times per second.
-Higher `fps` produces smoother motion, but consumes more power. The maximal
-value for `fps` is controlled by the browser and is usually 60.
+Higher `fps` (or frames-per-second) produces smoother motion, but consumes more
+computational resources. The maximal value for `fps` is controlled by the
+browser and is usually 60 or more.
 
-The callback function has parameters `time` for the elapsed time since the
-start of the library; and `dTime` for the elapsed time since the previous frame.
+The callback function has optional parameters `time` for the elapsed time since
+the start of the library; and `dTime` for the elapsed time since the previous frame.
 
 
 Example:
@@ -69,66 +73,19 @@ Prosthetic.setAnimation( loop, 60 );
 
 function loop( time, dTime )
 {
-   // changing devices postures
+   // one step of the animation
 };
 ```
 
 
-### setCameraPosition
-
-```js
-setCameraPosition( x, y, z )
-```
-
-Function. Places the camera at coordinates (`x,y,z`). Initially the camera is
-placed at (4,4,7).
-
-Example:
-
-```js
-Prosthetic.setCameraPosition( 10, 2, 0 );
-```
-
-
-### setCameraTarget
-
-```js
-setCameraTarget( x, y, z )
-```
-
-Function. Turns the camera towards coordinates (`x,y,z`). Initially the camera
-target is (0,0,0).
-
-Example:
-
-```js
-Prosthetic.setCameraTarget( 0, 2, 0 );
-```
-
-
-### getScene
-
-```js
-getScene( );
-```
-
-Function. Gets the scene as a [`THREE.Scene`](https://threejs.org/docs/#api/en/scenes/Scene)
-object that can be manipulated by [Three.js](https://threejs.org/).
-
-Example:
-
-```js
-scene = Prosthetic.getScene( );
-```
-
-
-### getTime
+> ### getTime
 
 ```js
 getTime( );
 ```
 
-Function. Gets the current time since the initialization of the library.
+Function. Gets the current time since the initialization of the library. Inside
+the animation loop, the time is available as a parameter.
 
 Example:
 
@@ -137,13 +94,65 @@ time = Prosthetic.getTime( );
 ```
 
 
-### getBodies
+> ### setCameraPosition
+
+```js
+setCameraPosition( x, y, z )
+```
+
+Function. Places the camera at coordinates (`x,y,z`). Initially the camera is
+placed at (4,4,7). The camera position can be changed in the animation loop to
+control its motion programmatically.
+
+Example:
+
+```js
+Prosthetic.setCameraPosition( 10, 2, 0 );
+```
+
+
+> ### setCameraTarget
+
+```js
+setCameraTarget( x, y, z )
+```
+
+Function. Turns the camera towards coordinates (`x,y,z`). Initially the camera
+target is (0,0,0). The camera target can be changed in the animation loop to
+control its rotation programmatically.
+
+Example:
+
+```js
+Prosthetic.setCameraTarget( 0, 2, 0 );
+```
+
+
+> ### getScene
+
+```js
+getScene( );
+```
+
+Function. Gets the scene as a [`THREE.Scene`](https://threejs.org/docs/#api/en/scenes/Scene)
+object that can be manipulated by [Three.js](https://threejs.org/). Getting the
+scene is used when custom Three.js objects are added to it.
+
+Example:
+
+```js
+scene = Prosthetic.getScene( );
+```
+
+
+> ### getBodies
 
 ```js
 getBodies( );
 ```
 
-Function. Gets an array of all robot parts that can collide.
+Function. Gets an array of all robot parts (called ***bodies***) that support
+collision detection. 
 
 Example:
 
@@ -152,7 +161,7 @@ bodies = Prosthetic.getBodies( );
 ```
 
 
-### Options
+> ### Options
 
 Some aspects of the simulation can be controlled by URL parameters.
 
