@@ -60,9 +60,11 @@ const FACES = {
 
 var loader = new GLTFLoader();
 
+
+
 class GLTFPart extends Part
 {
-	constructor ( filename, length )
+	constructor ( filename, length, callback )
 	{
 		super( );
 
@@ -72,6 +74,8 @@ class GLTFPart extends Part
 
 		loader.load( filename, gltf => {
 			this.mainMesh.geometry = gltf.scene.children[0].geometry;
+			this.mainMesh.scale.copy( gltf.scene.children[0].scale );
+			if( callback ) callback();
 		} );
 		
 		// create main mesh
@@ -81,6 +85,27 @@ class GLTFPart extends Part
 		overMesh.add( this.mainMesh );
 		this.add( overMesh );
 	} // GLTFPart.constructor
+
+	recolor( fromColor, toColor, eps=0.01 )
+	{
+		var col = this.mainMesh.geometry.getAttribute( 'color' );
+
+		for( var i=0; i<col.count; i++ )
+		{
+			var r = col.getX( i ),
+				g = col.getY( i ),
+				b = col.getZ( i );
+			
+			if( Math.abs(r-fromColor[0]) < eps )
+			if( Math.abs(g-fromColor[1]) < eps )
+			if( Math.abs(b-fromColor[2]) < eps )
+			{
+				col.setXYZ( i, ...toColor );
+			}
+		}
+		
+		col.needsUpdate = true;
+	}
 	
 } // GLTFPart
 
@@ -93,15 +118,8 @@ class PhalangeAnthro extends GLTFPart
 {
 	constructor ( filename, length=1.0, width=0.3, thickness=0.3 )
 	{
-		super( filename, length );
+		super( filename, length, recolor );
 		
-		// profile shape (2D)
-		var L = length,
-			T = thickness/2,
-			I = Math.min( length, thickness ) / 8,
-			W = width,
-			E = 0.003;
-			
 		this.addSlot( 0, length, 0 );
 		
 		filename = filename.split('/').pop();
@@ -120,6 +138,11 @@ class PhalangeAnthro extends GLTFPart
 			getBodies().push( this );
 		}
 		
+		var that = this;
+		function recolor( )
+		{
+			that.recolor( [0,0.21,1], [0.2,0.7,1] );
+		}
 	} // PhalangeAnthro.constructor
 
 	
@@ -127,20 +150,35 @@ class PhalangeAnthro extends GLTFPart
 
 
 
-class EndPhalangeAnthro extends GLTFPart
+class EndPhalangeAnthro extends PhalangeAnthro
 {
-	constructor ( filename, length=1.0, width=0.3, thickness=0.3 )
+} // EndPhalangeAnthro
+
+
+
+
+class LeftPalmAnthro extends GLTFPart
+{
+	constructor ( filename, length=1.4, width=1.4, thickness=0.3 )
 	{
-		super( filename, length );
+		super( filename, length, recolor );
 		
-		// profile shape (2D)
-		var L = length,
-			T = thickness/2,
-			I = Math.min( length, thickness ) / 8,
-			W = width,
-			E = 0.003;
-			
-		this.addSlot( 0, length, 0 );
+		this.flip = 1;
+		
+		var slot = this.addSlot( 0.58*length, 0.55*length, 0 );
+		slot.setRotation( Math.PI, -Math.PI/2, Math.PI/2+0.12, 'ZXY' );
+		
+		slot = this.addSlot( 0.36*length, 1.13*length, -0.0*length );
+		slot.setRotation( 0, Math.PI/2, -3*Math.PI/180, 'ZXY' );
+		
+		slot = this.addSlot( 0.12*length, 1.17*length, -0.0*length );
+		slot.setRotation( 0, Math.PI/2, -1*Math.PI/180, 'ZXY' );
+		
+		slot = this.addSlot( -0.12*length, 1.16*length, -0.0*length );
+		slot.setRotation( 0, Math.PI/2, 1*Math.PI/180, 'ZXY' );
+
+		slot = this.addSlot( -0.36*length, 1.09*length, -0.0*length );
+		slot.setRotation( 0, Math.PI/2, 3*Math.PI/180, 'ZXY' );
 		
 		filename = filename.split('/').pop();
 		if( VERTICES[filename] && FACES[filename] )
@@ -157,10 +195,66 @@ class EndPhalangeAnthro extends GLTFPart
 		
 			getBodies().push( this );
 		}
-		
-	} // EndPhalangeAnthro.constructor
+
+		var that = this;
+		function recolor( )
+		{
+			that.recolor( [0,0.21,1], [0.2,0.7,1] );
+		}
+	} // LeftPalmAnthro.constructor
 	
-} // EndPhalangeAnthro
+} // LeftPalmAnthro
 
 
-export { PhalangeAnthro, EndPhalangeAnthro };
+
+
+class RightPalmAnthro extends GLTFPart
+{
+	constructor ( filename, length=1.4, width=1.4, thickness=0.3 )
+	{
+		super( filename, length, recolor );
+		
+		this.flip = -1;
+		
+		var slot = this.addSlot( -0.58*length, 0.55*length, 0 );
+		slot.setRotation( Math.PI*0, Math.PI/2, Math.PI/2-0.12, 'ZXY' );
+		
+		slot = this.addSlot( -0.36*length, 1.13*length, -0.0*length );
+		slot.setRotation( 0, Math.PI/2, 3*Math.PI/180, 'ZXY' );
+		
+		slot = this.addSlot( -0.12*length, 1.17*length, -0.0*length );
+		slot.setRotation( 0, Math.PI/2, 1*Math.PI/180, 'ZXY' );
+		
+		slot = this.addSlot( 0.12*length, 1.16*length, -0.0*length );
+		slot.setRotation( 0, Math.PI/2, -1*Math.PI/180, 'ZXY' );
+
+		slot = this.addSlot( 0.36*length, 1.09*length, -0.0*length );
+		slot.setRotation( 0, Math.PI/2, -3*Math.PI/180, 'ZXY' );
+		
+		filename = filename.split('/').pop();
+		if( VERTICES[filename] && FACES[filename] )
+		{
+			
+			// 3D convex shape
+			var vertices = [...VERTICES[filename]];
+			var faces = FACES[filename];
+			
+			// physics
+			this.physics = physics.convex( vertices, faces );
+			this.physics.threejs = this;
+			this.debugConvex( vertices, faces );
+		
+			getBodies().push( this );
+		}
+
+		var that = this;
+		function recolor( )
+		{
+			that.recolor( [0,0.21,1], [0.2,0.7,1] );
+		}
+	} // RightPalmAnthro.constructor
+	
+} // RightPalmAnthro
+
+
+export { PhalangeAnthro, EndPhalangeAnthro, LeftPalmAnthro, RightPalmAnthro };

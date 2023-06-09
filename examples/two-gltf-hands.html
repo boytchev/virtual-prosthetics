@@ -22,197 +22,151 @@
 
 	//import * as Prosthetic from "../build/virtual-prosthetics.js";
 	import * as Prosthetic from "../src/virtual-prosthetics.js";
+	import * as lil from "../libs/lil-gui.module.min.js";
 
 
 	const PI = Math.PI;
 	const sin = Math.sin;
 	const cos = Math.cos;
+	
+	var data = {
+			speed: 3,
+			motion: true,
+			rotation: true,
+			grabbing: true,
+		};
+	
+	var gui = new lil.GUI();
+		gui.add( data, 'speed' ).min(0).max(6).step(0.2).name( 'Time speed' );
+		gui.add( data, 'motion' ).name( 'Forward-backward' );
+		gui.add( data, 'rotation' ).name( 'Palm rotation' );
+		gui.add( data, 'grabbing' ).name( 'Finger flexing' );
 
 
-
-	class LeftHand extends Prosthetic.Robot
+	class Hand extends Prosthetic.Robot
 	{
-		constructor( )
+		constructor( isLeft = true )
 		{
 			super( );
+	
+			this.isLeft = isLeft;
+
+			if( isLeft )
+				this.palm = new Prosthetic.LeftPalmAnthro( '../assets/gltf/palm-left.glb' );
+			else
+				this.palm = new Prosthetic.RightPalmAnthro( '../assets/gltf/palm-right.glb' );
 			
-			var palm = new Prosthetic.LeftPalm( );
-				palm.attachToSlot( this );
-			
-			this.spread0 = new Prosthetic.MotorX( -1, 1, 0, 0, 0 );
-			this.spread1 = new Prosthetic.MotorX( -0.3, 0.3, 0, 0, 0 );
-			this.spread2 = new Prosthetic.MotorX( -0.3, 0.3, 0, 0, 0 );
-			this.spread3 = new Prosthetic.MotorX( -0.3, 0.3, 0, 0, 0 );
-			this.spread4 = new Prosthetic.MotorX( -0.3, 0.3, 0, 0, 0 );
-			
-			this.addChain(
-					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ).attachToSlot( palm, 0 ),
-					this.spread0,
-					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange10x3.glb', 1.0 ),
-					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ),
-					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange5x3.glb', 0.5 ),
-					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ),
-					new Prosthetic.EndPhalangeAnthro( '../assets/gltf/endPhalange5x3.glb', 0.5 )
-				);
-			
+			this.palm.attachToSlot( this );
+
+			this.spread = [];
+			for( var i=0; i<5; i++ )
+				this.spread[i] = this.addFinger( i );
+		}
+		
+		addFinger( slot )
+		{
+			var Phalange = Prosthetic.PhalangeAnthro, // shortcut
+				Joint = Prosthetic.MotorZ, // shortcut
+				spread;
+				
+			if( slot == 0 )
+				spread = new Prosthetic.MotorY( -1, 1, 0, 0.25, 0.02 );
+			else
+				spread = new Prosthetic.MotorX( -0.3, 0.3, 0, 0, 0 );
+						
 			this.addChain( 
-					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ).attachToSlot( palm, 1 ),
-					this.spread1,
-					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange10x3.glb', 1.0 ),
-					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ),
-					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange5x3.glb', 0.5 ),
-					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ),
-					new Prosthetic.EndPhalangeAnthro( '../assets/gltf/endPhalange5x3.glb', 0.5 )
+					spread.attachToSlot( this.palm, slot ),
+					new Joint( 0, -PI/2, -PI/4, 0.2, 0.07 ),
+					new Phalange( '../assets/gltf/phalange-8.glb', 0.8 ),
+					new Joint( 0, -PI/2, -PI/4, 0.2, 0.07 ),
+					new Phalange( '../assets/gltf/phalange-5.glb', 0.5 ),
+					new Joint( 0, -PI/2, -PI/4, 0.2, 0.07 ),
+					new Phalange( '../assets/gltf/phalange-end.glb', 0.5 ),
 				);
+				
+			return spread;
+		}		
+		
+
+		flexFinger( i, angle )
+		{
+			var motors = this.getMotors();
 			
-			this.addChain( 
-					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ).attachToSlot( palm, 2 ),
-					this.spread2,
-					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange11x3.glb', 1.1 ),
-					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ),
-					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange5x3.glb', 0.5 ),
-					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ),
-					new Prosthetic.EndPhalangeAnthro( '../assets/gltf/endPhalange5x3.glb', 0.5 )
-				);
+			motors[4*i+1].setAngle( -angle );
+			motors[4*i+2].setAngle( -angle );
+			motors[4*i+3].setAngle( -angle );
+		}
+
+
+		flexFingers( angle )
+		{
+			for( var i=0; i<5; i++ )
+				this.flexFinger( i, angle );
+		}
+		
+		
+		spreadFinger( i, angle )
+		{
+			var motors = this.getMotors();
 			
-			this.addChain( 
-					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ).attachToSlot( palm, 3 ),
-					this.spread3,
-					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange10x3.glb' ),
-					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ),
-					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange5x3.glb', 0.5 ),
-					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ),
-					new Prosthetic.EndPhalangeAnthro( '../assets/gltf/endPhalange5x3.glb', 0.5 )
-				);
+			motors[4*i].setAngle( this.palm.flip * angle );
+		}
+
+
+		spreadFingers( angle, includeThumb=false )
+		{
+			if( includeThumb )
+			{
+				this.spreadFinger( 0, 3*angle );
+			}
 			
-			this.addChain( 
-					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ).attachToSlot( palm, 4 ),
-					this.spread4,
-					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange8x3.glb', 0.8 ),
-					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ),
-					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange5x3.glb', 0.5 ),
-					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ),
-					new Prosthetic.EndPhalangeAnthro( '../assets/gltf/endPhalange5x3.glb', 0.5 )
-				);
+			this.spreadFinger( 1,  1.0*angle );
+			this.spreadFinger( 2,  0.3*angle );
+			this.spreadFinger( 3, -0.3*angle );
+			this.spreadFinger( 4, -1.0*angle );
 		}
 		
 	}
 
 
-	class RightHand extends Prosthetic.Robot
-	{
-		constructor( )
-		{
-			super( );
-			
-			var palm = new Prosthetic.RightPalm( );
-				palm.attachToSlot( this );
-			
-			this.spread0 = new Prosthetic.MotorX( -1, 1, 0, 0, 0 );
-			this.spread1 = new Prosthetic.MotorX( -0.3, 0.3, 0, 0, 0 );
-			this.spread2 = new Prosthetic.MotorX( -0.3, 0.3, 0, 0, 0 );
-			this.spread3 = new Prosthetic.MotorX( -0.3, 0.3, 0, 0, 0 );
-			this.spread4 = new Prosthetic.MotorX( -0.3, 0.3, 0, 0, 0 );
-
-			this.addChain(
-					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ).attachToSlot( palm, 0 ),
-					this.spread0,
-					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange10x3.glb', 1.0 ),
-					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ),
-					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange5x3.glb', 0.5 ),
-					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ),
-					new Prosthetic.EndPhalangeAnthro( '../assets/gltf/endPhalange5x3.glb', 0.5 )
-				);
-			
-			this.addChain( 
-					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ).attachToSlot( palm, 1 ),
-					this.spread1,
-					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange10x3.glb', 1.0 ),
-					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ),
-					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange5x3.glb', 0.5 ),
-					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ),
-					new Prosthetic.EndPhalangeAnthro( '../assets/gltf/endPhalange5x3.glb', 0.5 )
-				);
-
-			this.addChain( 
-					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ).attachToSlot( palm, 2 ),
-					this.spread2,
-					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange11x3.glb', 1.1 ),
-					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ),
-					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange5x3.glb', 0.5 ),
-					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ),
-					new Prosthetic.EndPhalangeAnthro( '../assets/gltf/endPhalange5x3.glb', 0.5 )
-				);
-			
-			this.addChain( 
-					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ).attachToSlot( palm, 3 ),
-					this.spread3,
-					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange10x3.glb', 1.0 ),
-					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ),
-					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange5x3.glb', 0.5 ),
-					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ),
-					new Prosthetic.EndPhalangeAnthro( '../assets/gltf/endPhalange5x3.glb', 0.5 )
-				);
-			
-			this.addChain(
-					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ).attachToSlot( palm, 4 ),
-					this.spread4,
-					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange8x3.glb', 0.8 ),
-					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ),
-					new Prosthetic.PhalangeAnthro( '../assets/gltf/phalange5x3.glb', 0.5 ),
-					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.1 ),
-					new Prosthetic.EndPhalangeAnthro( '../assets/gltf/endPhalange5x3.glb', 0.5 )
-				);
-		}
-		
-	}
-
-
-
-	var A = new LeftHand( );
-
-	var B = new RightHand( );
+	var A = new Hand( true ),
+		B = new Hand( false );
 
 	Prosthetic.setCameraPosition( 4, 2, -10 );
 	Prosthetic.setCameraTarget( 0, 1.5, 0 );
 	Prosthetic.setAnimation( loop );
 
+
+	var time = 0;
 	function loop( t, dT )
 	{
-		t *= 3;
+		// increase speed
+		time += data.speed*dT;
+
+		// grabing with fingers
+		var k = data.grabbing ? 0.5 + 0.5*sin(time) : 0.1;
+		A.flexFingers( 1.5*k );
+		B.flexFingers( 1.5*k );
+
+		k = data.grabbing ? 0.5 + 0.5*sin(time) : 0.5;
+		A.spreadFingers( 0.2-0.2*k );
+		B.spreadFingers( 0.2-0.2*k );
 		
-		var sin = Math.sin(t);
+		// adjusting thumbs
+		k = data.grabbing ? 0.5 + 0.5*sin(time+1) : 1;
+		A.spreadFinger( 0, k );
+		B.spreadFinger( 0, k );
 
+		// palm forward-backward motion
+		k = data.motion ? sin(time+2.5) : 0;
+		A.setPosition( -2+0.5*k, 1.5+0.5*k, -2*k);
+		B.setPosition( 2-0.5*k, 1.5+0.5*k, -2*k);
 
-		for( var i=0; i<A.getDOF(); i++ )
-		{
-			A.setAngle( i, -PI/4*(1+sin) );
-			B.setAngle( i, -PI/4*(1+sin) );
-		}
-
-			
-		var s = 0.5-0.5*sin;
-
-		A.spread0.setAngle( -s );
-		A.spread1.setAngle( 0.3*s );
-		A.spread2.setAngle( 0.1*s );
-		A.spread3.setAngle( -0.1*s );
-		A.spread4.setAngle( -0.3*s );
-
-		B.spread0.setAngle( s );
-		B.spread1.setAngle( -0.3*s );
-		B.spread2.setAngle( -0.1*s );
-		B.spread3.setAngle( 0.1*s );
-		B.spread4.setAngle( 0.3*s );
 		
-		s = Math.sin( t+1.5 );
-		A.setPosition( -2+0.3*s**3, 1+s, -2*s);
-		B.setPosition( 2-0.3*s**3, 1.2+s, -2*s);
-		
-		s = 1+Math.sin( t+1.5 );
-		A.setRotation( -Math.PI/3*s/2, -Math.PI/2*s/2,  Math.PI/4*s/2 );
-		B.setRotation( -Math.PI/3*s/2, Math.PI/2*s/2, -Math.PI/4*s/2 );
-
+		// palm rotation
+		k = data.rotation ? 1 + sin(time+2) : 1.5;
+		A.setRotation( -0.5*k, -0.8*k,  0.5*k );
+		B.setRotation( -0.5*k,  0.8*k, -0.5*k );
 	}
 
 
