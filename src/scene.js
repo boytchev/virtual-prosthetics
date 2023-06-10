@@ -6,7 +6,10 @@
 //	setAnimation( func, fps=30 )
 //	getTime( )
 //
+//	setCameraPosition( position )
 //	setCameraPosition( x, y, z )
+//
+//	setCameraTarget( target )
 //	setCameraTarget( x, y, z )
 //
 //	getScene( )
@@ -100,6 +103,12 @@ createScene( );
 
 function setCameraPosition( x, y, z )
 {
+	if( x instanceof Array )
+	{
+		setCameraPosition( ...x );
+		return;
+	}
+	
 	camera.position.set( x, y, z );
 	camera.lookAt( controls.target );
 }

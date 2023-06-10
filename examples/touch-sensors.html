@@ -117,10 +117,10 @@
 				touch2 = robot.sensor2.senseTouch();
 				
 			if( touch1 == 0 && touch2 == 0 )
-				robot.setAngleRelative( 0, -dT/2 );
+				robot.setAngle( 0, robot.getAngle(0)-dT/2 );
 
 			if( touch1 != 0 && touch2 == 0 )
-				robot.setAngleRelative( 1, -dT/2 );
+				robot.setAngle( 1, robot.getAngle(1)-dT/2 );
 		}
 	}
 

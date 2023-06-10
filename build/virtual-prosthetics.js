@@ -811,7 +811,9 @@ var FPS=30;var renderer,scene,camera,light,controls,ground;var animate,oldTime=0
 window.addEventListener('resize',onWindowResize,false);onWindowResize();class Ground extends xs{}
 ground=new Ground(new uh(2000),new vu({color:'lightgray',}));ground.receiveShadow=true;ground.rotation.x=-Math.PI/2;scene.add(ground);controls=new OrbitControls(camera,renderer.domElement);controls.target=new oi(0,1,0);physics.init(scene,ground);}
 createScene();function setCameraPosition(x,y,z)
-{camera.position.set(x,y,z);camera.lookAt(controls.target);}
+{if(x instanceof Array)
+{setCameraPosition(...x);return;}
+camera.position.set(x,y,z);camera.lookAt(controls.target);}
 function setCameraTarget(x,y,z)
 {controls.target.set(x,y,z);camera.lookAt(controls.target);}
 function setAnimation(func,fps=30)
@@ -1020,12 +1022,15 @@ class Robot extends fl
 {super();this.receiveShadow=true;this.castShadow=true;this.parts=null;this.motors=null;this.sensors=null;getScene().add(this);}
 getPosition()
 {return[this.position.x,this.position.y,this.position.z];}
-setPosition(x,y=0,z=0)
+setPosition(x,y,z)
 {var scene=getScene();if(x===undefined)
 {scene.remove(this);}
 else
+if(x instanceof Array)
+{this.setPosition(...x);}
+else
 {this.position.set(x,y,z);if(this.parent!==scene)scene.add(this);}}
-setRotation(x,y=0,z=0,order='XYZ')
+setRotation(x,y,z,order='XYZ')
 {this.rotation.set(x,y,z,order);}
 addChain(...parts)
 {for(var i=1;i<parts.length;i++)
@@ -1050,9 +1055,6 @@ getSensors()
 setAngles(...angles)
 {this.#prepare();var n=Math.min(this.motors.length,angles.length);for(var i=0;i<n;i++)
 this.motors[i].setAngle(angles[i]);}
-setAnglesRelative(...angles)
-{this.#prepare();var n=Math.min(this.motors.length,angles.length);for(var i=0;i<n;i++)
-this.motors[i].setAngleRelative(angles[i]);}
 getAngles()
 {this.#prepare();var angles=[];for(var motor of this.motors)
 angles.push(motor.getAngle());return angles;}
@@ -1060,10 +1062,6 @@ setAngle(index,angle)
 {this.#prepare();if(typeof this.motors[index]==='undefined')
 return;if(Number.isNaN(angle))
 return;this.motors[index].setAngle(angle);}
-setAngleRelative(index,angle)
-{this.#prepare();if(typeof this.motors[index]==='undefined')
-return;if(Number.isNaN(angle))
-return;this.motors[index].setAngleRelative(angle);}
 getAngle(index)
 {this.#prepare();if(typeof this.motors[index]==='undefined')
 return 0;return this.motors[index].getAngle();}}

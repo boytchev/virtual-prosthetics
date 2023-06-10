@@ -85,8 +85,8 @@
 		{
 			if( robot.sensor.senseCollision() ) continue;
 
-			robot.setAngleRelative( 0, -dT/2 );
-			robot.setAngleRelative( 2, -dT );
+			robot.setAngle( 0, robot.getAngle(0)-dT/2 );
+			robot.setAngle( 2, robot.getAngle(0)-dT );
 		}
 	}
 

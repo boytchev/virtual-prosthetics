@@ -16,15 +16,16 @@
 //	getMotors( )
 //
 //	getPosition( )
-//	setPosition( x, y=0, z=0 )
-//	setRotation( x, y=0, z=0, order='XYZ' )
+//	setPosition( position )
+//	setPosition( x, y, z )
 //
-//	setAngles( ...angles )
-//	setAnglesRelative( ...angles )
-//	getAngles( )
-//	setAngle( index, angle )
-//	setAngleRelative( index, angle )
+//	setRotation( x, y, z, order='XYZ' )
+//
 //	getAngle( index )
+//	setAngle( index, angle )
+//
+//	getAngles( )
+//	setAngles( ...angles )
 
 
 
@@ -59,13 +60,18 @@ class Robot extends THREE.Group
 	}
 
 
-	setPosition( x, y=0, z=0 )
+	setPosition( x, y, z )
 	{
 		var scene = getScene();
 		
 		if( x === undefined )
 		{
 			scene.remove( this );
+		}
+		else
+		if( x instanceof Array )
+		{
+			this.setPosition( ...x );
 		}
 		else
 		{
@@ -75,7 +81,7 @@ class Robot extends THREE.Group
 	}
 
 
-	setRotation( x, y=0, z=0, order='XYZ' )
+	setRotation( x, y, z, order='XYZ' )
 	{
 		this.rotation.set( x, y, z, order );
 	}
@@ -159,17 +165,6 @@ class Robot extends THREE.Group
 	}
 	
 	
-	setAnglesRelative( ...angles )
-	{
-		this.#prepare( );
-		
-		var n = Math.min( this.motors.length, angles.length );
-		
-		for( var i=0; i<n; i++ )
-			this.motors[i].setAngleRelative( angles[i] );
-	}
-	
-	
 	getAngles( )
 	{
 		this.#prepare( );
@@ -193,19 +188,6 @@ class Robot extends THREE.Group
 		if( Number.isNaN(angle) )
 			return;
 		this.motors[index].setAngle( angle );
-	}
-
-
-	setAngleRelative( index, angle )
-	{
-		this.#prepare( );
-
-		if( typeof this.motors[index] === 'undefined' )
-			return;
-		
-		if( Number.isNaN(angle) )
-			return;
-		this.motors[index].setAngleRelative( angle );
 	}
 
 

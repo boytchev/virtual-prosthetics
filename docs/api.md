@@ -4,14 +4,14 @@ The Virtual Prosthetics library provides a set of APIs for constructing simple
 virtual robots. In this document all times are in seconds, all sizes are in
 meters, all angles are in radians and all indices start from 0.
 
+
 * **[Introduction](#introduction)**
 * **[Scene API](#scene-api)**
 	* <small>Animation: [setAnimation](#setanimation), [getTime](#gettime) [getScene](#getscene)</small>
 	* <small>Camera: [setCameraPosition](#setcameraposition), [setCameraTarget](#setcameratarget)</small>
 * **[Robot API](#robot-api)**
 	* <small>Structure: [Robot](#robot), [addChain](#addchain), [showSlots](#showslots), [getParts](#getparts), [getMotors](#getmotors), [getSensors](#getsensors)</small>
-	* <small>Position: [getPosition](#getposition), [setPosition](#setposition), [setRotation](#setrotation)</small>
-	* <small>Angles: [getAngle](#getangle), [setAngle](#setangle), [setAngleRelative](#setanglerelative), [getAngles](#getangles), [setAngles](#setangles), [setAnglesRelatve](#setanglesrelative)</small>
+	* <small>Position: [getPosition](#getposition), [setPosition](#setposition), [setRotation](#setrotation), [getAngle](#getangle), [setAngle](#setangle), [getAngles](#getangles), [setAngles](#setangles)</small>
 * **[Parts](#parts)**
 	* <small>Structure: [Part](#part), [setMotor](#setmotor),  [addSlot](#addslot), [attachToSlot](#attachtoslot), [beginContact](#begincontact), [endContact](#endcontact) </small>
 	* <small>Position: [setPosition](#setposition-1), [setRotation](#setrotation-1)</small>
@@ -113,16 +113,21 @@ scene = Prosthetic.getScene( );
 > ### setCameraPosition
 
 ```js
+setCameraPosition( position )
 setCameraPosition( x, y, z )
 ```
 
-Function. Places the camera at coordinates (`x,y,z`). Initially the camera is
-placed at (4,4,7). The camera position can be changed in the animation loop to
-control its motion programmatically.
+Function. Places the camera at given `position` which is a list of coordinates
+(`x,y,z`). The position can also be provided as three individual values.
+Initially the camera is placed at (4,4,7). The camera position can be changed in
+the animation loop to control its motion programmatically.
 
 Example:
 
 ```js
+position = [10, 2, 0];
+Prosthetic.setCameraPosition( position );
+
 Prosthetic.setCameraPosition( 10, 2, 0 );
 ```
 
@@ -130,17 +135,21 @@ Prosthetic.setCameraPosition( 10, 2, 0 );
 > ### setCameraTarget
 
 ```js
+setCameraTarget( target )
 setCameraTarget( x, y, z )
 ```
 
-Function. Turns the camera towards coordinates (`x,y,z`), so that they are in
-the center of the screen. Initially the camera target is (0,0,0). The camera
-target can be changed in the animation loop to control its rotation
-programmatically.
+Function. Turns the camera towards given `target` which is a list of coordinates
+(`x,y,z`). The target can also be provided as three individual values.
+Initially the camera target is (0,0,0). The camera target can be changed in the
+animation loop to control its rotation programmatically.
 
 Example:
 
 ```js
+target = [0, 2, 0];
+Prosthetic.setCameraTarget( target );
+
 Prosthetic.setCameraTarget( 0, 2, 0 );
 ```
 
@@ -275,13 +284,13 @@ sensors = robot.getSensors( );
 
 
 
-### getPosition
+> ### getPosition
 
 ```js
 getPosition( )
 ```
 
-Method. Gets the position of a robot as an array of [x, y, z] coordinates.
+Method. Gets the position of a robot as a list of [**x, y, z**] coordinates.
 
 Example:
 
@@ -291,31 +300,37 @@ pos = robot.getPosition( );
 
 
 
-### setPosition
+> ### setPosition
 
 ```js
-setPosition( x, y=0, z=0 )
+setPosition( position )
+setPosition( x, y, z )
 ```
 
-Method. Sets the position of a robot to (`x,y,z`). If the coordinates are
-not provided, the robot is removed from the scene, but it is not deleted. The
-default position of a robot is (0,0,0).
+Method. Sets the position of a robot to `position` which is a list of 
+coordinates (`x,y,z`). The position can also be provided as three individual
+values. If no position is provided, the robot is removed from the scene, but it
+is not deleted. The default position of a robot is (0,0,0).
 
 Example:
 
 ```js
+position = [0, 10, 5];
+robot.setPosition( position );
+
 robot.setPosition( 0, 10, 5 );
 ```
 
 
-### setRotation
+
+> ### setRotation
 
 ```js
-setRotation( x, y=0, z=0, order='XYZ' )
+setRotation( x, y, z, order='XYZ' )
 ```
 
-Method. Sets the orientation of a robot to [Euler angles](https://threejs.org/docs/#api/en/math/Euler)
-(`x,y,z`) and `order` of rotations.
+Method. Sets the orientation of a robot defined by [Euler angles](https://threejs.org/docs/#api/en/math/Euler)
+(`x,y,z`) and optional `order` of rotations.
 
 Example:
 
@@ -324,7 +339,8 @@ robot.setRotation( 0, Math.PI/2, 0 );
 ```
 
 
-### getAngle
+
+> ### getAngle
 
 ```js
 getAngle( index )
@@ -341,7 +357,7 @@ a = robot.getAngle( 1 );
 
 
 
-### setAngle
+> ### setAngle
 
 ```js
 setAngle( index, angle )
@@ -355,24 +371,6 @@ Example:
 
 ```js
 robot.setAngle( 1, Math.PI );
-```
-
-
-
-### setAngleRelative
-
-```js
-setAngleRelative( index, angle )
-```
-
-Method. Adds the `angle` to the current angle of the `index`-th motor. If such
-motor does not exist or if the `angle` is `null`, the operation is ignored. Use
-[`setAnglesRelative`](#setanglesrelative) to add to all angles at once.
-
-Example:
-
-```js
-robot.setAngleRelative( 1, Math.PI );
 ```
 
 
@@ -408,25 +406,6 @@ Example:
 
 ```js
 robot.setAngles( Math.PI, 0, -Math.PI/2 );
-```
-
-
-
-### setAnglesRelative
-
-```js
-setAnglesRelative( angle1, angle2, ... )
-```
-
-Method. Adds the `angle1`, `angle2`, ... to the current angles of all motors. If
-a value of some angle is `null`, then the corresponding motor's angle is
-unchanged. Use [`setAngleRelative`](#setanglerelative) to add to an individual
-angle.
-
-Example:
-
-```js
-robot.setAnglesRelative( Math.PI, 0, -Math.PI/2 );
 ```
 
 
