@@ -1,13 +1,27 @@
-# Predefined Parts
+# Tutorial
 
 The Virtual Prosthetics library provides an API for all its functionalily. In
 this document all times are in seconds, all sizes are in meters, all angles are
 in radians and all indices start from 0.
 
+* **[Options](#options)**
 * **[Predefined parts](#predefined-parts)**
 	* <small>[Motors](#motors): [MotorX](#motorx), [MotorY](#motory), [MotorZ](#motorz)</small>
 	* <small>[Shapes](#shapes): [Ball](#ball), [Box](#box), [Phalange](#phalange), [EndPhalange](#endphalange), [LeftPalm](#leftpalm), [RightPalm](#rightpalm)</small>
 
+
+# Options
+
+Some aspects of the simulation can be controlled by URL parameters.
+
+* `engine=cannon` -- sets [Cannon-es](https://pmndrs.github.io/cannon-es/) as underlying physics engine that detects collisions (default)
+* `engine=native` -- sets a native underlying physics engine, currently under development
+* `touch-color=black` -- collisions are not indicated visually
+* `touch-color=...` -- collisions are indicated by changing objects colors, any CSS color name can be used
+* `debug-physics` -- flag, if exists, convex bodies used by the physics engine are shown
+
+Click on the link to open the "Two hands" example with color indication for collisions:
+[https://boytchev.github.io/virtual-prosthetics/examples/two-hands.html?touch-color=crimson](https://boytchev.github.io/virtual-prosthetics/examples/two-hands.html?touch-color=crimson)
 
 
 # Predefined parts

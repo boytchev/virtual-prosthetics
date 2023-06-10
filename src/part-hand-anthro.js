@@ -15,7 +15,7 @@ import * as THREE from "../libs/three.module.min.js";
 import { ConvexGeometry } from "../libs/geometries/ConvexGeometry.js";
 import { GLTFLoader } from "../libs/loaders/GLTFLoader.js";
 import { Part} from "./part.js";
-import { getBodies, getScene } from "./scene.js";
+import { getScene } from "./scene.js";
 import { physics, OPTION_TOUCH_COLOR } from "./engine.js";
 
 
@@ -135,7 +135,7 @@ class PhalangeAnthro extends GLTFPart
 			this.physics.threejs = this;
 			this.debugConvex( vertices, faces );
 		
-			getBodies().push( this );
+			physics.bodies.push( this );
 		}
 		
 		var that = this;
@@ -193,7 +193,7 @@ class LeftPalmAnthro extends GLTFPart
 			this.physics.threejs = this;
 			this.debugConvex( vertices, faces );
 		
-			getBodies().push( this );
+			physics.bodies.push( this );
 		}
 
 		var that = this;
@@ -244,7 +244,7 @@ class RightPalmAnthro extends GLTFPart
 			this.physics.threejs = this;
 			this.debugConvex( vertices, faces );
 		
-			getBodies().push( this );
+			physics.bodies.push( this );
 		}
 
 		var that = this;

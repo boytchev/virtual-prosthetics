@@ -4,18 +4,12 @@
 //
 //
 //	setAnimation( func, fps=30 )
+//	getTime( )
 //
 //	setCameraPosition( x, y, z )
 //	setCameraTarget( x, y, z )
 //
 //	getScene( )
-//	getTime( )
-//	getBodies( )
-//
-//	Internals:
-//
-//	createScene( )
-//	drawFrame( time )
 
 
 
@@ -33,7 +27,7 @@ var animate,
 	oldTime = 0,
 	currentTime = 0;
 
-var bodies = [];
+/*var bodies = [];*/
 
 
 
@@ -96,7 +90,7 @@ function createScene( )
 	controls = new OrbitControls( camera, renderer.domElement );
 	controls.target = new THREE.Vector3( 0, 1, 0 );
 
-	physics.init( scene, ground, bodies );
+	physics.init( scene, ground/*, bodies*/ );
 	
 } // createScene
 
@@ -164,11 +158,6 @@ function getTime( )
 }
 
 
-function getBodies( )
-{
-	return bodies;
-}
 
 
-
-export { setAnimation, getScene, setCameraPosition, setCameraTarget, getTime, getBodies };
+export { setAnimation, getScene, setCameraPosition, setCameraTarget, getTime };

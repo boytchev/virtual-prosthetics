@@ -13,7 +13,7 @@
 import * as THREE from "../libs/three.module.min.js";
 import { ConvexGeometry } from "../libs/geometries/ConvexGeometry.js";
 import { Part} from "./part.js";
-import { getBodies, getScene } from "./scene.js";
+import { getScene } from "./scene.js";
 import { physics, OPTION_TOUCH_COLOR } from "./engine.js";
 
 
@@ -144,7 +144,7 @@ class Phalange extends Part
 		this.debugConvex( vertices, faces );
 
 		
-		getBodies().push( this );
+		physics.bodies.push( this );
 
 	} // Phalange.constructor
 
@@ -225,7 +225,7 @@ class EndPhalange extends Part
 		this.physics.threejs = this;
 		this.debugConvex( vertices, faces );
 		
-		getBodies( ).push( this );
+		physics.bodies.push( this );
 
 	} // EndPhalange.constructor
 	
@@ -308,7 +308,7 @@ class LeftPalm extends Part
 		this.physics = physics.convex( vertices, faces );
 		this.physics.threejs = this;
 		
-		getBodies().push( this );
+		physics.bodies.push( this );
 
 	} // LeftPalm.constructor
 	
@@ -391,7 +391,7 @@ class RightPalm extends Part
 		this.physics = physics.convex( vertices, faces );
 		this.physics.threejs = this;
 		
-		getBodies().push( this );
+		physics.bodies.push( this );
 		
 	} // RightPalm.constructor
 	

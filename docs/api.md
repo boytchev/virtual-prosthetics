@@ -1,14 +1,13 @@
 # Virtual prosthetics API
 
-The Virtual Prosthetics library provides an API for construction of simple 
+The Virtual Prosthetics library provides a set of APIs for constructing simple 
 virtual robots. In this document all times are in seconds, all sizes are in
 meters, all angles are in radians and all indices start from 0.
 
 * **[Introduction](#introduction)**
-* **[Scene](#scene)**
-	* <small>Animation: [setAnimation](#setanimation), [getTime](#gettime)</small>
+* **[Scene API](#scene-api)**
+	* <small>Animation: [setAnimation](#setanimation), [getTime](#gettime) [getScene](#getscene)</small>
 	* <small>Camera: [setCameraPosition](#setcameraposition), [setCameraTarget](#setcameratarget)</small>
-	* <small>Scene: [getScene](#getscene), [getBodies](#getbodies), [options](#options)</small>
 * **[Robots](#robots)**
 	* <small>Structure: [Robot](#robot), [addChain](#addchain), [showSlots](#showslots), [getParts](#getparts), [getMotors](#getmotors), [getSensors](#getsensors), [getDOF](#getdof)</small>
 	* <small>Position: [getPosition](#getposition), [setPosition](#setposition), [setRotation](#setrotation)</small>
@@ -33,7 +32,7 @@ The Virtual Prosthetics library allows construction of virtual robots from a
 JavaScript program. The robots can be viewed and manipulated on desktop and
 mobile platforms. The library is base on the following main concepts:
 
-* [**Scene**](#scene) – a virtual environment where robots are placed and controlled;
+* [**Scene**](#scene-api) – a virtual environment where robots are placed and controlled;
 * [**Robot**](#robots) – a virtual device constructed programmatically of robot parts;
 * **Part** – an element of a robot, that can be a shape, a motor or a slot;
 * **Motor** – a robot part that can be rotated around a predefined axis;
@@ -43,7 +42,7 @@ mobile platforms. The library is base on the following main concepts:
 <center><img src="images/architecture.png"></center>
 
 
-# Scene
+# Scene API
 
 The Virtual Prosthetics library automatically creates a 3D scene that contains
 all created prosthetic devices.
@@ -94,6 +93,23 @@ time = Prosthetic.getTime( );
 ```
 
 
+> ### getScene
+
+```js
+getScene( );
+```
+
+Function. Gets the scene as a [`THREE.Scene`](https://threejs.org/docs/#api/en/scenes/Scene)
+object that can be manipulated by [Three.js](https://threejs.org/), e.g. for
+adding custom Three.js objects.
+
+Example:
+
+```js
+scene = Prosthetic.getScene( );
+```
+
+
 > ### setCameraPosition
 
 ```js
@@ -117,64 +133,16 @@ Prosthetic.setCameraPosition( 10, 2, 0 );
 setCameraTarget( x, y, z )
 ```
 
-Function. Turns the camera towards coordinates (`x,y,z`). Initially the camera
-target is (0,0,0). The camera target can be changed in the animation loop to
-control its rotation programmatically.
+Function. Turns the camera towards coordinates (`x,y,z`), so that they are in
+the center of the screen. Initially the camera target is (0,0,0). The camera
+target can be changed in the animation loop to control its rotation
+programmatically.
 
 Example:
 
 ```js
 Prosthetic.setCameraTarget( 0, 2, 0 );
 ```
-
-
-> ### getScene
-
-```js
-getScene( );
-```
-
-Function. Gets the scene as a [`THREE.Scene`](https://threejs.org/docs/#api/en/scenes/Scene)
-object that can be manipulated by [Three.js](https://threejs.org/). Getting the
-scene is used when custom Three.js objects are added to it.
-
-Example:
-
-```js
-scene = Prosthetic.getScene( );
-```
-
-
-> ### getBodies
-
-```js
-getBodies( );
-```
-
-Function. Gets an array of all robot parts (called ***bodies***) that support
-collision detection. 
-
-Example:
-
-```js
-bodies = Prosthetic.getBodies( );
-```
-
-
-> ### Options
-
-Some aspects of the simulation can be controlled by URL parameters.
-
-* `engine=cannon` -- sets [Cannon-es](https://pmndrs.github.io/cannon-es/) as underlying physics engine that detects collisions (default)
-* `engine=native` -- sets a native underlying physics engine, currently under development
-* `touch-color=black` -- collisions are not indicated visually
-* `touch-color=...` -- collisions are indicated by changing objects colors, any CSS color name can be used
-* `debug-physics` -- flag, if exists, convex bodies used by the physics engine are shown
-
-Click on the link to open the "Two hands" example with color indication for collisions:
-[https://boytchev.github.io/virtual-prosthetics/examples/two-hands.html?touch-color=crimson](https://boytchev.github.io/virtual-prosthetics/examples/two-hands.html?touch-color=crimson)
-
-
 
 
 

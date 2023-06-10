@@ -8,7 +8,7 @@
 
 import * as THREE from "../libs/three.module.min.js";
 import { Part } from "./part.js";
-import { getBodies, getScene } from "./scene.js";
+import { getScene } from "./scene.js";
 import { physics, OPTION_TOUCH_COLOR } from "./engine.js";
 
 
@@ -38,7 +38,7 @@ class Ball extends Part
 		this.physics = physics.ball( radius );
 		this.physics.threejs = this;
 		
-		getBodies( ).push( this );
+		physics.bodies.push( this );
 
 	} // Ball.constructor
 	
@@ -69,7 +69,7 @@ class Box extends Part
 		this.physics = physics.box( sizex, sizey, sizez );
 		this.physics.threejs = this;
 
-		getBodies( ).push( this );
+		physics.bodies.push( this );
 
 	} // Box.constructor
 	

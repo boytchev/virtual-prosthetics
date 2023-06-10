@@ -15,13 +15,13 @@ import * as CANNON from "../libs/cannon-es.js";
 
 
 
-var scene, bodies;
+var scene, bodies = [];
 
 // init cannon physics world and ground
 
-function init( _scene, ground, _bodies )
+function init( _scene, ground/*, _bodies*/ )
 {
-	bodies = _bodies;
+	/*bodies = _bodies;*/
 	
 	scene = _scene;
 	scene.physics = new CANNON.World();
@@ -154,4 +154,4 @@ function box( sizex, sizey, sizez )
 }
 
 
-export { init, update, convex, ball, box };
+export { init, update, convex, ball, box, bodies };

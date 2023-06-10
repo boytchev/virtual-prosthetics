@@ -30,6 +30,7 @@ switch( OPTION_ENGINE )
 			convex: CANNON.convex,
 			ball: 	CANNON.ball,
 			box: 	CANNON.box,
+			bodies:	CANNON.bodies,
 		};
 		break;
 	case 'native':
@@ -39,6 +40,7 @@ switch( OPTION_ENGINE )
 			convex: NATIVE.convex,
 			ball: 	NATIVE.ball,
 			box: 	NATIVE.box,
+			bodies:	NATIVE.bodies,
 		};
 		break;
 	default: throw 'Unknown engine';
