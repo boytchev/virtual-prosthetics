@@ -26,16 +26,50 @@ const GEOMETRY_48 = new THREE.CylinderGeometry( 1, 1, 1, 48 );
 
 
 
-// a simple motor that rotates around X axis
-// it looks like a horizontal cylinder
-
-class MotorX extends Part
+class Motor extends Part
 {
-	constructor ( min, max, def, width=0.1, height=0.05 )
+	constructor( axis, min=-Infinity, max=Infinity, def=0 )
 	{
 		super( );
 		
-		this.setMotor( 'x', min, max, def );
+		// rotation
+		this.axis = axis;
+		this.min = Math.min( min, max );
+		this.max = Math.max( min, max );
+		this.def = THREE.MathUtils.clamp( def, this.min, this.max );
+	}
+
+	getAngle( )
+	{
+		if( this.axis )
+			return this.rotation[this.axis];
+		else
+			return 0;
+	}
+	
+	setAngle( x )
+	{
+		if( x === null )
+			return;
+		
+		if( this.axis )
+			this.rotation[this.axis] = THREE.MathUtils.clamp( x, this.min, this.max );
+		else
+			throw `Error: body part '${this.name}' cannot rotate`;
+	}
+	
+}
+
+
+// a simple motor that rotates around X axis
+// it looks like a horizontal cylinder
+
+class MotorX extends Motor
+{
+	constructor ( min, max, def, width=0.1, height=0.05 )
+	{
+		super( 'x', min, max, def );
+		
 		this.addSlot( 0, 0, 0 );
 		
 		var image = new THREE.Mesh(	GEOMETRY_16, MATERIAL );
@@ -51,13 +85,12 @@ class MotorX extends Part
 
 
 
-class MotorY extends Part
+class MotorY extends Motor
 {
 	constructor ( min, max, def, width=0.3, height=0.05 )
 	{
-		super( );
+		super( 'y', min, max, def );
 		
-		this.setMotor( 'y', min, max, def );
 		this.addSlot( 0, height, 0 );
 		
 		var image = new THREE.Mesh(	GEOMETRY_48, MATERIAL );
@@ -73,13 +106,12 @@ class MotorY extends Part
 
 
 
-class MotorZ extends Part
+class MotorZ extends Motor
 {
 	constructor ( min, max, def, width=0.1, height=0.05 )
 	{
-		super( );
+		super( 'z', min, max, def );
 		
-		this.setMotor( 'z', min, max, def );
 		this.addSlot( 0, 0, 0 );
 		
 		var image = new THREE.Mesh(	GEOMETRY_16, MATERIAL );
@@ -95,4 +127,4 @@ class MotorZ extends Part
 
 
 
-export { MotorX, MotorY, MotorZ };
+export { Motor, MotorX, MotorY, MotorZ };

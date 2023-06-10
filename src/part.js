@@ -1,17 +1,19 @@
 
+//	Part API
+//	Virtual Prosthetics 1.0
 //
-//	Part for Virtual prosthetics
 //
 //	class Part extends THREE.Group
-//		constructor( )
+//
+//	constructor( )
+//
 //		setMotor( axis, min=-Infinity, max=Infinity, def=0 )
 //		addSlot( x, y, z )
 //		attachToSlot( parentPart, slot=0 )
 //		getAngle( )
 //		setAngle( x )
-//		setAngleRelative( x )
-//		setPosition( x, y=0, z=0 )
-//		setRotation( x, y=0, z=0, order='XYZ' )
+//		setPosition( x, y, z )
+//		setRotation( x, y, z, order='XYZ' )
 //	.	beginContact( otherObject )
 //	.	endContact( otherObject )
 //
@@ -34,13 +36,14 @@ class Part extends THREE.Group
 		this.castShadow = true;
 		
 		this.slots = [];
-		
+
+/*		
 		// rotation
 		this.axis = null;
 		this.min = null;
 		this.max = null;
 		this.def = null;
-		
+*/		
 		// physics
 		this.physics = null;
 		this.collisions = [];
@@ -48,6 +51,7 @@ class Part extends THREE.Group
 		getScene().add( this );
 	}
 
+/*
 	setMotor( axis, min=-Infinity, max=Infinity, def=0 )
 	{
 		this.axis = axis;
@@ -57,7 +61,7 @@ class Part extends THREE.Group
 		
 		this.setAngle( def );
 	}
-	
+*/	
 	addSlot( x, y, z )
 	{
 		var slot = new Slot( x, y, z );
@@ -89,7 +93,7 @@ class Part extends THREE.Group
 		parentPart.add( this );
 		return this;
 	}
-
+/*
 	getAngle( )
 	{
 		if( this.axis )
@@ -108,24 +112,14 @@ class Part extends THREE.Group
 		else
 			throw `Error: body part '${this.name}' cannot rotate`;
 	}
-	
-	setAngleRelative( x )
-	{
-		if( x === null )
-			return;
-		
-		if( this.axis )
-			this.rotation[this.axis] = THREE.MathUtils.clamp( this.rotation[this.axis]+x, this.min, this.max );
-		else
-			throw `Error: body part '${this.name}' cannot rotate`;
-	}
+*/	
 
-	setPosition( x, y=0, z=0 )
+	setPosition( x, y, z )
 	{
 		this.position.set( x, y, z );
 	}
 
-	setRotation( x, y=0, z=0, order='XYZ' )
+	setRotation( x, y, z, order='XYZ' )
 	{
 		this.rotation.set( x, y, z, order );
 	}

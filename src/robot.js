@@ -1,5 +1,4 @@
 
-//
 //	Robot API
 //	Virtual Prosthetics 1.0
 //

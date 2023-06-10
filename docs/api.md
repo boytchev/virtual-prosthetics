@@ -12,10 +12,9 @@ meters, all angles are in radians and all indices start from 0.
 * **[Robot API](#robot-api)**
 	* <small>Structure: [Robot](#robot), [addChain](#addchain), [showSlots](#showslots), [getParts](#getparts), [getMotors](#getmotors), [getSensors](#getsensors)</small>
 	* <small>Position: [getPosition](#getposition), [setPosition](#setposition), [setRotation](#setrotation), [getAngle](#getangle), [setAngle](#setangle), [getAngles](#getangles), [setAngles](#setangles)</small>
-* **[Parts](#parts)**
+* **[Part API](#part-api)**
 	* <small>Structure: [Part](#part), [setMotor](#setmotor),  [addSlot](#addslot), [attachToSlot](#attachtoslot), [beginContact](#begincontact), [endContact](#endcontact) </small>
-	* <small>Position: [setPosition](#setposition-1), [setRotation](#setrotation-1)</small>
-	* <small>Angles: [getAngle](#getangle-1), [setAngle](#setangle-1), [setAngleRelative](#setanglerelative-1)</small>
+	* <small>Position: [setPosition](#setposition-1), [setRotation](#setrotation-1), [getAngle](#getangle-1), [setAngle](#setangle-1)</small>
 * **[Slots](#slots)**
 	* <small>Structure: [Slot](#slot), [show](#show)</small>
 	* <small>Position: [setPosition](#setposition-2), [setRotation](#setrotation-2)</small>
@@ -34,7 +33,7 @@ mobile platforms. The library is base on the following main concepts:
 
 * [**Scene**](#scene-api) – a virtual environment where robots are placed and controlled;
 * [**Robot**](#robot-api) – a virtual mechanism constructed programmatically of sevral parts;
-* **Part** – an element of a robot, that can be a shape, a motor or a slot;
+* [**Part**](#part-api) – a building element of a robot &ndash; a shape, a motor or a sensor;
 * **Motor** – a robot part that can be rotated around a predefined axis;
 * **Sensor** – a robot part that can sense its environment and generate feedback;
 * **Slot** – a place on a robot part to which another elements can be attached.
@@ -159,6 +158,8 @@ Prosthetic.setCameraTarget( 0, 2, 0 );
 
 A robot is a mechanism made of various robot parts. Some parts are just 3D shapes,
 others are motors or sensors.
+
+Source code: [src/robot.js](https://github.com/boytchev/virtual-prosthetics/blob/main/src/robot.js)
 
 
 > ### Robot
