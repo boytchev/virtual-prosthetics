@@ -1,25 +1,31 @@
 
 //
+//	Robot API
 //	Virtual Prosthetics 1.0
-//	Robot
+//
 //
 //	class Robot extends THREE.Group
-//		constructor( )
-//		addChain( ...parts )
-//		showSlots( )
-//		getPosition( )
-//		setPosition( x, y=0, z=0 )
-//		setRotation( x, y=0, z=0, order='XYZ' )
-//		getParts( )
-//		getMotors( )
-//		getDOF( )
-//		setAngles( ...angles )
-//		setAnglesRelative( ...angles )
-//		getAngles( )
-//		setAngle( index, angle )
-//		setAngleRelative( index, angle )
-//		getAngle( index )
 //
+//	constructor( )
+//
+//	addChain( ...parts )
+//
+//	showSlots( )
+//
+//	getParts( )
+//	getMotors( )
+//
+//	getPosition( )
+//	setPosition( x, y=0, z=0 )
+//	setRotation( x, y=0, z=0, order='XYZ' )
+//
+//	setAngles( ...angles )
+//	setAnglesRelative( ...angles )
+//	getAngles( )
+//	setAngle( index, angle )
+//	setAngleRelative( index, angle )
+//	getAngle( index )
+
 
 
 import * as THREE from "../libs/three.module.min.js";
@@ -46,10 +52,12 @@ class Robot extends THREE.Group
 		getScene().add( this );
 	}
 
+
 	getPosition( )
 	{
 		return [this.position.x, this.position.y, this.position.z ];
 	}
+
 
 	setPosition( x, y=0, z=0 )
 	{
@@ -66,16 +74,19 @@ class Robot extends THREE.Group
 		}
 	}
 
+
 	setRotation( x, y=0, z=0, order='XYZ' )
 	{
 		this.rotation.set( x, y, z, order );
 	}
+
 
 	addChain( ...parts )
 	{
 		for( var i=1; i<parts.length; i++ )
 			parts[i].attachToSlot( parts[i-1] );
 	}
+	
 	
 	#prepare( )
 	{
@@ -102,13 +113,16 @@ class Robot extends THREE.Group
 		}
 	}
 	
+	
 	showSlots( )
 	{
 		this.#prepare( );
+		
 		for( var part of this.parts )
 			for( var slot of part.slots )
 				slot.show( );
 	}
+	
 	
 	getParts( )
 	{
@@ -117,12 +131,14 @@ class Robot extends THREE.Group
 		return this.parts;
 	}
 	
+	
 	getMotors( )
 	{
 		this.#prepare( );
 		
 		return this.motors;
 	}
+	
 	
 	getSensors( )
 	{
@@ -131,12 +147,6 @@ class Robot extends THREE.Group
 		return this.sensors;
 	}
 	
-	getDOF( )
-	{
-		this.#prepare( );
-
-		return this.motors.length;
-	}
 	
 	setAngles( ...angles )
 	{
@@ -148,6 +158,7 @@ class Robot extends THREE.Group
 			this.motors[i].setAngle( angles[i] );
 	}
 	
+	
 	setAnglesRelative( ...angles )
 	{
 		this.#prepare( );
@@ -157,6 +168,7 @@ class Robot extends THREE.Group
 		for( var i=0; i<n; i++ )
 			this.motors[i].setAngleRelative( angles[i] );
 	}
+	
 	
 	getAngles( )
 	{
@@ -170,6 +182,7 @@ class Robot extends THREE.Group
 		return angles;
 	}
 	
+	
 	setAngle( index, angle )
 	{
 		this.#prepare( );
@@ -181,6 +194,7 @@ class Robot extends THREE.Group
 			return;
 		this.motors[index].setAngle( angle );
 	}
+
 
 	setAngleRelative( index, angle )
 	{
@@ -194,6 +208,7 @@ class Robot extends THREE.Group
 		this.motors[index].setAngleRelative( angle );
 	}
 
+
 	getAngle( index )
 	{
 		this.#prepare( );
@@ -203,7 +218,8 @@ class Robot extends THREE.Group
 		
 		return this.motors[index].getAngle( );
 	}
-}
+	
+} // class Robot
 
 
 export { Robot };

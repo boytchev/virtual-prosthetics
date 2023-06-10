@@ -8,8 +8,8 @@ meters, all angles are in radians and all indices start from 0.
 * **[Scene API](#scene-api)**
 	* <small>Animation: [setAnimation](#setanimation), [getTime](#gettime) [getScene](#getscene)</small>
 	* <small>Camera: [setCameraPosition](#setcameraposition), [setCameraTarget](#setcameratarget)</small>
-* **[Robots](#robots)**
-	* <small>Structure: [Robot](#robot), [addChain](#addchain), [showSlots](#showslots), [getParts](#getparts), [getMotors](#getmotors), [getSensors](#getsensors), [getDOF](#getdof)</small>
+* **[Robot API](#robot-api)**
+	* <small>Structure: [Robot](#robot), [addChain](#addchain), [showSlots](#showslots), [getParts](#getparts), [getMotors](#getmotors), [getSensors](#getsensors)</small>
 	* <small>Position: [getPosition](#getposition), [setPosition](#setposition), [setRotation](#setrotation)</small>
 	* <small>Angles: [getAngle](#getangle), [setAngle](#setangle), [setAngleRelative](#setanglerelative), [getAngles](#getangles), [setAngles](#setangles), [setAnglesRelatve](#setanglesrelative)</small>
 * **[Parts](#parts)**
@@ -33,7 +33,7 @@ JavaScript program. The robots can be viewed and manipulated on desktop and
 mobile platforms. The library is base on the following main concepts:
 
 * [**Scene**](#scene-api) – a virtual environment where robots are placed and controlled;
-* [**Robot**](#robots) – a virtual device constructed programmatically of robot parts;
+* [**Robot**](#robot-api) – a virtual mechanism constructed programmatically of sevral parts;
 * **Part** – an element of a robot, that can be a shape, a motor or a slot;
 * **Motor** – a robot part that can be rotated around a predefined axis;
 * **Sensor** – a robot part that can sense its environment and generate feedback;
@@ -146,16 +146,16 @@ Prosthetic.setCameraTarget( 0, 2, 0 );
 
 
 
-# Robots 
+# Robot API
 
-A robot is a device made of various robot parts. Some parts are just 3D shapes,
+A robot is a mechanism made of various robot parts. Some parts are just 3D shapes,
 others are motors or sensors.
 
 
-### Robot
+> ### Robot
 
-Base class. Defines the overall functionality of a robot. A custom robot is a
-class that extends this base class.
+Base class. Defines the overall functionality of a robot. User-defined robots
+are classes that extends this base class.
 
 Example:
 
@@ -166,14 +166,13 @@ class MyRobot extends Prosthetic.Robot
 	{
 		super( );
 
-		// defining robot parts
-		// joining robot parts
+		// definitions of robot parts
 	}
 }
 ```
 
 
-### addChain
+> ### addChain
 
 ```js
 addChain( part1, part2, ... )
@@ -184,7 +183,7 @@ Method. Used in the constructor of a custom robot to automatically connect parts
 for a sequence of [`attachToSlot`](#attachtoslot). The variable `this` can be
 used to mark the robot itself. If `this` is used in `addChain` it must be the
 first parameter. At least one of the chains in a robot must start with `this`,
-otherwise the robot parts will stay invisible.
+otherwise the robot parts will be unattached to the robot.
 
 Example:
 
@@ -207,14 +206,15 @@ Adding a chain always attaches parts to slot 0. If another slot or a custom
 slot position is needed, use [`attachToSlot`](#attachtoslot). 
 
 
-### showSlots
+> ### showSlots
 
 ```js
 showSlots( )
 ```
 
-Method. Shows the positions and orientations of all slots in a robot. A slot is visualized as a circle with unnamed axes. This is used during the robot
-construction. By default slots are not shown.
+Method. Shows the positions and orientations of all slots in a robot. A slot is visualized as a circle with unnamed axes. Showing slots does not change their
+functionality. It is used as temporary visual aid when constructing robots. By
+default slots are not shown.
 
 <img src="images/slot.png">
 
@@ -223,6 +223,56 @@ Example:
 ```js
 robot.showSlots();
 ```
+
+
+> ### getParts
+
+```js
+getParts( )
+```
+
+Method. Gets a list of all robot parts, including motors.
+
+Example:
+
+```js
+parts = robot.getParts( );
+```
+
+
+
+> ### getMotors
+
+```js
+getMotors( )
+```
+
+Method. Gets a list of all robot motors. The number of motors defines the
+robot's DOF ([Degree of freedom](https://en.wikipedia.org/wiki/Degrees_of_freedom_(mechanics))) as each motor
+can be manipulated independently on other motors.
+
+Example:
+
+```js
+motors = robot.getMotors( );
+```
+
+
+
+> ### getSensors
+
+```js
+getSensors( )
+```
+
+Method. Gets a list of all robot sensors. 
+
+Example:
+
+```js
+sensors = robot.getSensors( );
+```
+
 
 
 ### getPosition
@@ -379,71 +429,6 @@ Example:
 robot.setAnglesRelative( Math.PI, 0, -Math.PI/2 );
 ```
 
-
-
-### getParts
-
-```js
-getParts( )
-```
-
-Method. Gets an array of all robot parts, including motors.
-
-Example:
-
-```js
-parts = robot.getParts( );
-```
-
-
-
-### getMotors
-
-```js
-getMotors( )
-```
-
-Method. Gets an array of all robot motors. 
-
-Example:
-
-```js
-motors = robot.getMotors( );
-```
-
-
-
-### getSensors
-
-```js
-getSensors( )
-```
-
-Method. Gets an array of all robot sensors. 
-
-Example:
-
-```js
-sensors = robot.getSensors( );
-```
-
-
-
-### getDOF
-
-```js
-getDOF( )
-```
-
-Method. Gets the overall degree of freedom (DOF) of a robot. The DOF is
-effectively equal to the number of motors, as each motor can be manipulated
-independently on other motors.
-
-Example:
-
-```js
-dof = robot.getDOF( );
-```
 
 
 
