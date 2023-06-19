@@ -1,7 +1,15 @@
 
-//
+//	Native Engine
 //	Virtual Prosthetics 1.0
 //
+//
+//	init( scene, ground )
+//	update( fps, time, dTime )
+//
+//	convex( vertices, faces )
+//	ball( radius )
+//	box( sizex, sizey, sizez )
+
 
 import * as THREE from "../libs/three.module.min.js";
 

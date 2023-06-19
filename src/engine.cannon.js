@@ -1,11 +1,14 @@
 
-//
+//	Cannon-es Engine
 //	Virtual Prosthetics 1.0
-//	Scene
 //
-//	Public:
-//		cannonInit(  )
 //
+//	init( scene, ground )
+//	update( fps, time, dTime )
+//
+//	convex( vertices, faces )
+//	ball( radius )
+//	box( sizex, sizey, sizez )
 
 
 

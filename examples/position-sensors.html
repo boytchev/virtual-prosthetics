@@ -49,7 +49,7 @@
 				lastPart,
 			);
 			
-			this.sensor = new Prosthetic.Sensor().attachToSlot( lastPart ).addLaser( 'blue' );
+			this.sensor = new Prosthetic.Sensor( ).attachToSlot( lastPart );
 		}
 	}
 
@@ -62,7 +62,7 @@
 	{
 		var trace = new Prosthetic.Mesh(
 			new Prosthetic.BoxGeometry( 0.02, 0.02, 0.02 ),
-			new Prosthetic.MeshLambertMaterial( {color: 'crimson'} )
+			new Prosthetic.MeshLambertMaterial( {color: 'blue'} )
 		);
 		trace.castShadow = true;
 		traces.push( trace );

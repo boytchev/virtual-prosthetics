@@ -47,43 +47,43 @@
 				lastPart,
 			);
 			
-			this.sensor = new Prosthetic.Sensor().attachToSlot( lastPart ).addLaser( 'blue' );
+			this.sensor = new Prosthetic.Sensor( true, 'blue' ).attachToSlot( lastPart );
 
 			var slot;
 
 			slot = new Prosthetic.Slot( 0.15, 0.40, 0 );
 			slot.setRotation( 0, 0, -Math.PI/2 );
-			this.sensorA = new Prosthetic.Sensor().attachToSlot( firstPart, slot ).addLaser( );
+			this.sensorA = new Prosthetic.Sensor( true, true ).attachToSlot( firstPart, slot );
 
 			slot = new Prosthetic.Slot( -0.15, 0.40, 0 );
 			slot.setRotation( 0, 0, Math.PI/2 );
-			this.sensorB = new Prosthetic.Sensor().attachToSlot( firstPart, slot ).addLaser( );
+			this.sensorB = new Prosthetic.Sensor( true, true ).attachToSlot( firstPart, slot );
 
 			slot = new Prosthetic.Slot( 0, 0.40, 0.15 );
-			slot.setRotation( Math.PI/2 );
-			this.sensorC = new Prosthetic.Sensor().attachToSlot( firstPart, slot ).addLaser( );
+			slot.setRotation( Math.PI/2, 0, 0 );
+			this.sensorC = new Prosthetic.Sensor( true, true ).attachToSlot( firstPart, slot );
 
 			slot = new Prosthetic.Slot( 0, 0.40, -0.15 );
-			slot.setRotation( -Math.PI/2 );
-			this.sensorD = new Prosthetic.Sensor().attachToSlot( firstPart, slot ).addLaser( );
+			slot.setRotation( -Math.PI/2, 0, 0 );
+			this.sensorD = new Prosthetic.Sensor( true, true ).attachToSlot( firstPart, slot );
 
 
 
 			slot = new Prosthetic.Slot( 0.15, 0.45-0.15, 0 );
 			slot.setRotation( 0, 0, -Math.PI/2 );
-			this.sensorE = new Prosthetic.Sensor().attachToSlot( lastPart, slot ).addLaser( );
+			this.sensorE = new Prosthetic.Sensor( true, true ).attachToSlot( lastPart, slot );
 
 			slot = new Prosthetic.Slot( -0.15, 0.45-0.15, 0 );
 			slot.setRotation( 0, 0, Math.PI/2 );
-			this.sensorF = new Prosthetic.Sensor().attachToSlot( lastPart, slot ).addLaser( );
+			this.sensorF = new Prosthetic.Sensor( true, true ).attachToSlot( lastPart, slot );
 
 			slot = new Prosthetic.Slot( 0, 0.45-0.15, 0.15 );
-			slot.setRotation( Math.PI/2 );
-			this.sensorG = new Prosthetic.Sensor().attachToSlot( lastPart, slot ).addLaser( );
+			slot.setRotation( Math.PI/2, 0, 0 );
+			this.sensorG = new Prosthetic.Sensor( true, true ).attachToSlot( lastPart, slot );
 
 			slot = new Prosthetic.Slot( 0, 0.45-0.15, -0.15 );
-			slot.setRotation( -Math.PI/2 );
-			this.sensorH = new Prosthetic.Sensor().attachToSlot( lastPart, slot ).addLaser( );
+			slot.setRotation( -Math.PI/2, 0, 0 );
+			this.sensorH = new Prosthetic.Sensor( true, true ).attachToSlot( lastPart, slot );
 		}
 	}
 

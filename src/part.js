@@ -7,22 +7,18 @@
 //
 //	constructor( )
 //
-//		setMotor( axis, min=-Infinity, max=Infinity, def=0 )
-//		addSlot( x, y, z )
-//		attachToSlot( parentPart, slot=0 )
-//		getAngle( )
-//		setAngle( x )
-//		setPosition( x, y, z )
-//		setRotation( x, y, z, order='XYZ' )
-//	.	beginContact( otherObject )
-//	.	endContact( otherObject )
-//
+//	getAngle( )
+//	setAngle( x )
+
+
+
 
 import * as THREE from "../libs/three.module.min.js";
 import { ConvexGeometry } from "../libs/geometries/ConvexGeometry.js";
 import { Slot } from "./slot.js";
 import { getScene } from "./scene.js";
 import { OPTION_DEBUG_PHYSICS } from "./engine.js";
+
 
 // base class for robot parts
 
@@ -37,13 +33,6 @@ class Part extends THREE.Group
 		
 		this.slots = [];
 
-/*		
-		// rotation
-		this.axis = null;
-		this.min = null;
-		this.max = null;
-		this.def = null;
-*/		
 		// physics
 		this.physics = null;
 		this.collisions = [];
@@ -51,72 +40,50 @@ class Part extends THREE.Group
 		getScene().add( this );
 	}
 
-/*
-	setMotor( axis, min=-Infinity, max=Infinity, def=0 )
-	{
-		this.axis = axis;
-		this.min = Math.min( min, max );
-		this.max = Math.max( min, max );
-		this.def = THREE.MathUtils.clamp( def, this.min, this.max );
-		
-		this.setAngle( def );
-	}
-*/	
 	addSlot( x, y, z )
 	{
 		var slot = new Slot( x, y, z );
+		
 		this.slots.push( slot );
 		this.add( slot );
+		
 		return slot;
 	}
 	
-	attachToSlot( parentPart, slot=0 )
+	attachToSlot( parent, slot=0 )
 	{
 		// attachToSlot( Part, Slot )
 		if( slot instanceof Slot )
 		{
-			parentPart.add( slot );
+			parent.add( slot );
 			slot.add( this );
 			return this;
 		}
 		
 		// attachToSlot( Part, index )
-		if( parentPart.slots )
-		if( parentPart.slots[slot] )
+		if( parent.slots )
+		if( parent.slots[slot] )
 		{
-			parentPart.slots[slot].add( this );
+			parent.slots[slot].add( this );
 			return this;
 		}
 		
 		// attachToSlot( Part )
 		// attachToSlot( Scene )
-		parentPart.add( this );
+		parent.add( this );
 		return this;
 	}
-/*
-	getAngle( )
-	{
-		if( this.axis )
-			return this.rotation[this.axis];
-		else
-			return 0;
-	}
-	
-	setAngle( x )
-	{
-		if( x === null )
-			return;
-		
-		if( this.axis )
-			this.rotation[this.axis] = THREE.MathUtils.clamp( x, this.min, this.max );
-		else
-			throw `Error: body part '${this.name}' cannot rotate`;
-	}
-*/	
 
 	setPosition( x, y, z )
 	{
-		this.position.set( x, y, z );
+		if( x instanceof Array )
+		{
+			this.setPosition( ...x );
+		}
+		else
+		{
+			this.position.set( x, y, z );
+		}
 	}
 
 	setRotation( x, y, z, order='XYZ' )

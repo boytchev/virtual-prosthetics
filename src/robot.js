@@ -9,8 +9,6 @@
 //
 //	addChain( ...parts )
 //
-//	showSlots( )
-//
 //	getParts( )
 //	getMotors( )
 //
@@ -116,16 +114,6 @@ class Robot extends THREE.Group
 				}
 			} );
 		}
-	}
-	
-	
-	showSlots( )
-	{
-		this.#prepare( );
-		
-		for( var part of this.parts )
-			for( var slot of part.slots )
-				slot.show( );
 	}
 	
 	

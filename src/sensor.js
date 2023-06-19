@@ -1,19 +1,18 @@
 
-//
+//	Sensor API
 //	Virtual Prosthetics 1.0
-//	Sensor
 //
 //	class Sensor extends Part
-//		constructor( visible=true )
-//		addLaser( color='crimson' )
-//		getLaser( )
-//		senseDistance( )
-//		senseTouch( )
-//		sensePosition( )
-//		senseCollision( )
-//		senseObjects( )
-//		senseObject( otherObject )
+//	constructor( visible=true, laser )
 //
+//	senseDistance( )
+//	senseTouch( )
+//	sensePosition( )
+//	senseCollision( )
+//	senseObjects( )
+//	senseObject( otherObject )
+
+
 
 import * as THREE from "../libs/three.module.min.js";
 import { getScene, getTime } from "./scene.js";
@@ -49,7 +48,7 @@ var v = new THREE.Vector3(),
 
 class Sensor extends Part
 {
-	constructor( visible=true )
+	constructor( visible=true, laserColor )
 	{
 		super( );
 
@@ -60,7 +59,15 @@ class Sensor extends Part
 			
 			this.add( pad );
 		}
-		this.laser = undefined;
+		
+		if( laserColor === true )
+			laserColor = 'crimson';
+
+		if( laserColor )
+		{
+			this.laser = new Laser( laserColor );
+			getScene().add( this.laser );
+		}
 	}
 
 	getWorldDirectionY( target )
@@ -68,20 +75,6 @@ class Sensor extends Part
 		this.updateWorldMatrix( true, false );
 		var e = this.matrixWorld.elements;
 		return target.set( e[4], e[5], e[6] ).normalize();
-	}
-
-	addLaser( color='crimson' )
-	{
-		if( this.laser ) return;
-		this.laser = new Laser( color );
-		getScene().add( this.laser );
-		
-		return this;
-	}
-	
-	getLaser( )
-	{
-		return this.laser;
 	}
 	
 	senseDistance( )

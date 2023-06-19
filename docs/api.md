@@ -6,21 +6,25 @@ meters, all angles are in radians and all indices start from 0.
 
 
 * **[Introduction](#introduction)**
-* **[Scene API](#scene-api)**
-	* <small>Animation: [setAnimation](#setanimation), [getTime](#gettime) [getScene](#getscene)</small>
-	* <small>Camera: [setCameraPosition](#setcameraposition), [setCameraTarget](#setcameratarget)</small>
-* **[Robot API](#robot-api)**
-	* <small>Structure: [Robot](#robot), [addChain](#addchain), [showSlots](#showslots), [getParts](#getparts), [getMotors](#getmotors), [getSensors](#getsensors)</small>
-	* <small>Position: [getPosition](#getposition), [setPosition](#setposition), [setRotation](#setrotation), [getAngle](#getangle), [setAngle](#setangle), [getAngles](#getangles), [setAngles](#setangles)</small>
-* **[Part API](#part-api)**
-	* <small>Structure: [Part](#part), [setMotor](#setmotor),  [addSlot](#addslot), [attachToSlot](#attachtoslot), [beginContact](#begincontact), [endContact](#endcontact) </small>
-	* <small>Position: [setPosition](#setposition-1), [setRotation](#setrotation-1), [getAngle](#getangle-1), [setAngle](#setangle-1)</small>
-* **[Slots](#slots)**
-	* <small>Structure: [Slot](#slot), [show](#show)</small>
-	* <small>Position: [setPosition](#setposition-2), [setRotation](#setrotation-2)</small>
-* **[Sensors](#sensors)**
-	* <small>Structure: [Sensor](#sensor), [addLaser](#addlaser), [getLaser](#getlaser)</small>
-	* <small>Feedback: [senseDistance](#sensedistance), [senseTouch](#sensetouch), [sensePosition](#senseposition), [senseCollision](#sensecollision), [senseObjects](#senseobjects), [senseObject](#senseobject)</small>
+* **[Scene API](#scene-api)**<small><br>
+ &ndash; [setAnimation](#setanimation), [getTime](#gettime), [getScene](#getscene), [setCameraPosition](#setcameraposition), [setCameraTarget](#setcameratarget)</small>
+ 
+* **[Robot API](#robot-api)**:<small> [Robot](#robot)<br>
+ &ndash; [addChain](#addchain), [getParts](#getparts), [getMotors](#getmotors), [getSensors](#getsensors)<br>
+ &ndash; [getPosition](#getposition), [setPosition](#setposition), [setRotation](#setrotation), [getAngle](#getangle), [setAngle](#setangle), [getAngles](#getangles), [setAngles](#setangles)</small>
+ 
+* **[Part API](#part-api)**:<small> [Part](#part)<br>
+ &ndash; [addSlot](#addslot), [attachToSlot](#attachtoslot), [beginContact](#begincontact), [endContact](#endcontact)<br>
+ &ndash; [setPosition](#setposition-1), [setRotation](#setrotation-1)</small>
+
+* **[Motor API](#motor-api)**:<small> [Motor](#motor)<br>
+ &ndash; [getAngle](#getangle-1), [setAngle](#setangle-1)</small>
+ 
+* **[Slot API](#slot-api)**:<small> [Slot](#slot)<br>
+ &ndash; [setPosition](#setposition-2), [setRotation](#setrotation-2)</small>
+ 
+* **[Sensor API](#sensor-api)**:<small> [Sensor](#sensor)<br>
+ &ndash; [senseDistance](#sensedistance), [senseTouch](#sensetouch), [sensePosition](#senseposition), [senseCollision](#sensecollision), [senseObjects](#senseobjects), [senseObject](#senseobject)</small>
 
 
 
@@ -34,9 +38,9 @@ mobile platforms. The library is base on the following main concepts:
 * [**Scene**](#scene-api) – a virtual environment where robots are placed and controlled;
 * [**Robot**](#robot-api) – a virtual mechanism constructed programmatically of sevral parts;
 * [**Part**](#part-api) – a building element of a robot &ndash; a shape, a motor or a sensor;
-* **Motor** – a robot part that can be rotated around a predefined axis;
-* **Sensor** – a robot part that can sense its environment and generate feedback;
-* **Slot** – a place on a robot part to which another elements can be attached.
+* [**Motor**](#motor-api) – a robot part that can be rotated around a predefined axis;
+* [**Slot**](#slot-api) – a place on a robot part to which another elements can be attached;
+* [**Sensor**](#sensor-api) – a robot part that can sense its environment and generate feedback.
 
 <center><img src="images/architecture.png"></center>
 
@@ -216,25 +220,6 @@ Adding a chain always attaches parts to slot 0. If another slot or a custom
 slot position is needed, use [`attachToSlot`](#attachtoslot). 
 
 
-> ### showSlots
-
-```js
-showSlots( )
-```
-
-Method. Shows the positions and orientations of all slots in a robot. A slot is visualized as a circle with unnamed axes. Showing slots does not change their
-functionality. It is used as temporary visual aid when constructing robots. By
-default slots are not shown.
-
-<img src="images/slot.png">
-
-Example:
-
-```js
-robot.showSlots();
-```
-
-
 > ### getParts
 
 ```js
@@ -412,56 +397,26 @@ robot.setAngles( Math.PI, 0, -Math.PI/2 );
 
 
 
-# Parts
+# Part API
 
-### Part
+> ### Part
 
 Base class. Defines the core functionality of a robot part. Parts used in robots
 are extensions of this base class. Each part may have slots where other parts
-can be attached. Motors and [sensors](#sensors) are parts too.
-
-Example:
-```js
-class MyPart extends Part
-{
-	constructor ( ... )
-	{
-		super( );
-		
-		// defining part shape
-		// adding part slots
-	}
-}
-```
-
-
-### setMotor
-
-```js
-setMotor( axis, min=-Infinity, max=Infinity, def=0 )
-```
-
-Method. Sets a robot part as a motor. A motor implements rotation around
-an `axis` defined by the character `'x'`, `'y'` or `'z'`. The rotation is
-restricted to interval [`min`, `max`] and the initial angle is `def`. 
-
-Example:
-
-```js
-part.setMotor( 'x', 0, Math.PI, Math.PI/2 );
-```
+can be attached. [Motors](#motor-api) and [sensors](#sensor-api) are parts too.
+The base class part is invisible and has no 3D shape. 
 
 
 
-### addSlot
+> ### addSlot
 
 ```js
 addSlot( x, y, z )
 ```
 
-Method. Adds a new [slot](#slots) to a robot part. The slot is at coordinates
+Method. Adds a new [slot](#slot-api) to a robot part. The slot is at coordinates
 (`x,y,z`) relative to the part. To rotate a slot use its method
-[`setRotation`](#setrotation).
+[`setRotation`](#setrotation-1).
 
 Example:
 
@@ -471,27 +426,23 @@ part.addSlot( 2, 0, 1 );
 
 
 
-### attachToSlot
+> ### attachToSlot
 
 ```js
-attachToSlot( parentPart, slot=0 )
+attachToSlot( parent )
+attachToSlot( parent, slot=0 )
 ```
 
-Method. Attaches the part to a `parentPart` at its `slot`.
-* If `slot` is not provided, the first slot of the parent is used. If the parent
-has no slots, the part is directly attached to the parent. 
-* If `slot` is a number, it is the slot index within all parent's slots.
-* If `slot` is a [`Slot`](#slot), then the part is attached to this temporary slot.
-* If `slot` is the [scene](#getscene) the part is a sdandalone part in the scene.
-All parts are initially created as attached to the scene.
+Method. Attaches the part to a `slot` of the `parent` part. The `slot` can be
+a number for the slot index or a [`Slot`](#slot) object. If no slot is given,
+the part is attached to the first slot of the parent. If the parent has no  slots, the the part is attached to the parent itself.
 
 Example:
 
 ```js
 partB.attachToSlot( partA );
 partB.attachToSlot( partA, 2 );
-partB.attachToSlot( partA, new Slot(0,3,0) );
-partB.attachToSlot( getScene() );
+partB.attachToSlot( partA, new Prosthetic.Slot(0,3,0) );
 ```
 
 
@@ -499,19 +450,20 @@ partB.attachToSlot( getScene() );
 ### beginContact
 
 ```js
-beginContact( otherObject )
+beginContact( otherPart )
 ```
 
 Method. This method is automatically called when the physics engine detects a
-contact of this part with another part. The other part is passed as `otherObject` parameter. The main purpose of `beginContect` is to define the behaviour when
-the part collides with another part.
+contact of this part with another part. The other part is passed as
+`otherObject` parameter. The `beginContect` method is used to define a reaction
+on collision of parts.
 
 Example:
 
 ```js
 class MyPart extends Part
 {
-	beginContact( otherObject )
+	beginContact( otherPart )
 	{
 		// reaction of contact
 	}
@@ -523,18 +475,20 @@ class MyPart extends Part
 ### endContact
 
 ```js
-endContact( otherObject )
+endContact( otherPart )
 ```
 
 Method. This method is automatically called when the physics engine detects a
-lost of contact of this part with another part. The other part is passed as `otherObject` parameter. The main purpose of `endContect` is to define the behaviour when the part parts away from another part.
+lost of contact of this part with another part. The other part is passed as
+`otherObject` parameter. The `endContect` method is to define a reaction when
+a part parts away from another part.
 
 Example:
 
 ```js
 class MyPart extends Part
 {
-	endContact( otherObject )
+	endContact( otherPart )
 	{
 		// reaction of lost contact
 	}
@@ -543,30 +497,41 @@ class MyPart extends Part
 
 
 
-### setPosition
+> ### setPosition
 
 ```js
-setPosition( x, y=0, z=0 )
+setPosition( position )
+setPosition( x, y, z )
 ```
 
-Method. Sets the position of a part to (`x,y,z`). The position is relative to
-the part's parent.
+Method. Sets the position of a part to `position` which is a list of 
+coordinates (`x,y,z`). The position can also be provided as three individual
+values. The position is relative to the part's parent. The method `setPosition`
+is used to manually set the position of a part. When a part is attached to a
+slot, it assumes its position. If a part is not attached, then its position is
+in the 3D scene.
 
 Example:
 
 ```js
+position = [0, 10, 5];
+part.setPosition( position );
+
 part.setPosition( 0, 10, 5 );
 ```
 
 
-### setRotation
+> ### setRotation
 
 ```js
-setRotation( x, y=0, z=0, order='XYZ' )
+setRotation( x, y, z, order='XYZ' )
 ```
 
 Method. Sets the orientation of a part to [Euler angles](https://threejs.org/docs/#api/en/math/Euler)
 (`x,y,z`) and `order` of rotations. The rotation is relative to the part's parent.
+The method `setRotation` is used to manually set the orientation
+of a part. When a part is attached to a slot, it assumes its orientation. If a part
+is not attached, then its orientation is in the 3D scene.
 
 Example:
 
@@ -575,100 +540,119 @@ part.setRotation( 0, Math.PI/2, 0 );
 ```
 
 
-### getAngle
+# Motor API
+
+Motors are [parts](#part-api) that can rotate around a predefined axis and have
+DOF=1. Several motors can be attached in a row in order to achieve complex
+rotation and higher DOF. As motors are parts, all methods of parts are available
+for motors too. 
+
+Source code: [src/motor.js](https://github.com/boytchev/virtual-prosthetics/blob/main/src/motor.js)
+
+
+> ### Motor
+
+```js
+new Motor( axis, min=-Infinity, max=Infinity, def=0 )
+```
+
+Base class. Defines the overall functionality of a motor. User-defined motors
+are classes that extends this base class. Each motor has one `axis` of rotation,
+one of the strings `'x'`, `'y'` or `'z'`. The range of rotation is bound by
+`min` and `max`, and the default angle is `def`. The base motor has no image.
+
+
+
+> ### getAngle
 
 ```js
 getAngle( )
 ```
 
-Method. Gets the angle of the part if it has a motor set, otherwise returns 0.
+Method. Gets the angle of a motor.
 
 Example:
 
 ```js
-a = part.getAngle( );
+a = motor.getAngle( );
 ```
 
 
 
-### setAngle
+> ### setAngle
 
 ```js
 setAngle( angle )
 ```
 
-Method. Sets the motor's `angle` if the part has a motor. If `angle` is `null`,
-the operation is ignored.
+Method. Sets the motor's `angle`. If `angle` is `null`, the operation is ignored.
 
 Example:
 
 ```js
-part.setAngle( Math.PI );
+motor.setAngle( Math.PI );
 ```
 
 
 
-### setAngleRelative
+# Slot API 
 
-```js
-setAngleRelative( angle )
-```
-
-Method. Adds `angle` the motor's current angle if the part has a motor. If
-`angle` is `null`, the operation is ignored.
-
-Example:
-
-```js
-part.setAngleRelative( Math.PI );
-```
-
-
-
-
-# Slots 
-
-A slot is a position on a robot part where another part can be attach. The
+A slot is a place on a robot part where another part can be attach. The
 orientation of the slot affects the orientation of the attached part. Several
 parts can be attached to one slot.
 
+Source code: [src/slot.js](https://github.com/boytchev/virtual-prosthetics/blob/main/src/slot.js)
 
-### Slot
+
+> ### Slot
 
 ```js
-Slot( x=0, y=0, z=0 )
+Slot( )
+Slot( position )
+Slot( x, y, z )
 ```
 
-Class. Defines a slot at coordinates (`x,y,z`). These coordinates are relative
-to the robot part of the slot when it is added with [`addSlot`](#addslot).
+Class. Defines a slot at a given `position` which is a list of coordinates
+(`x,y,z`). The position can also be provided as three individual values. These
+coordinates are relative to the robot part to which the slot is added with
+[`addSlot`](#addslot). If no position is provided, the slot is created at (0,0,0).
 
 Example:
 
 ```js
-slot = new Slot( 0, 4, 1 );
+slot = new Prosthetic.Slot( );
+
+position = [0, 4, 1];
+slot = new Prosthetic.Slot( position );
+
+slot = new Prosthetic.Slot( 0, 4, 1 );
 ```
 
 
-### setPosition
+> ### setPosition
 
 ```js
-setPosition( x, y=0, z=0 )
+setPosition( position )
+setPosition( x, y, z )
 ```
 
-Method. Sets the position of a slot to (`x,y,z`). The position is relative to
-the slot's part.
+Method. Sets the slot's `position` which is a list of coordinates (`x,y,z`). The
+position can also be provided as three individual values. 
 
 Example:
 
 ```js
+position = [0, 10, 5];
+slot.setPosition( position );
+
 slot.setPosition( 0, 10, 5 );
 ```
 
 
-### setRotation
+> ### setRotation
 
 ```js
-setRotation( x, y=0, z=0, order='XYZ' );
+setRotation( x, y, z, order='XYZ' );
 ```
 
 Method. Sets the orientation of a slot to [Euler angles](https://threejs.org/docs/#api/en/math/Euler)
@@ -683,26 +667,8 @@ slot.setRotation( 0, Math.PI/2, 0 );
 ```
 
 
-### show
 
-```js
-show( )
-```
-
-Method. Shows the slot. This is used during the robot construction. Shown and
-hidden slots are functionally equivalent. Method `show` is automatically called
-by robot's [`showSlots`](#showslots).
-
-Example:
-
-```js
-slot.show();
-```
-
-
-
-
-# Sensors 
+# Sensor API
 
 A sensor is a robot part that measures some property and returns its value as a
 feedback. Sensors are attached to slots (with [`attachToSlot`](#attachtoslot))
@@ -710,56 +676,35 @@ and use their position and orientation. Sensors are also robot parts so they
 have their methods like [`setPosition`](#setposition) and [`setRotation`](#setrotation).
 
 
-### Sensor
+Source code: [src/sensor.js](https://github.com/boytchev/virtual-prosthetics/blob/main/src/sensor.js),
+[src/laser.js](https://github.com/boytchev/virtual-prosthetics/blob/main/src/laser.js)
+and [src/textures.js](https://github.com/boytchev/virtual-prosthetics/blob/main/src/textures.js)
+
+
+> ### Sensor
 
 ```js
-Sensor( visible=true )
+Sensor( visible=true, laserColor )
 ```
 
-Class. Defines a sensor. If `visible` is true, the sensor pad is drawn, otherwise
-the sensor is invisible, but functional.
+Class. Defines a sensor. If `visible` is true, the sensor pad is drawn,
+otherwise the sensor is invisible, but still functional. If present, `laserColor`
+defines the color of a laser beam, emitted by the sesonsor. The value of
+`laserColor` is [color name](https://www.w3schools.com/tags/ref_colornames.asp), 
+[Three.js Color](https://threejs.org/docs/#api/en/math/Color) or just `true`
+for a default crimson color.
+ 
+
+<img src="images/sensor.png">
 
 Example:
 
 ```js
-sensor = new Sensor( );
+sensor = new Prosthetic.Sensor( );
 ```
 
 
-### addLaser
-
-```js
-addLaser( color='crimson' )
-```
-
-Method of `Sensor`. Creates a laser beam with optional `color` emitted by the
-sensor. This beam is for visual representation only. Its exitance or non-existance
-do not affect the functionality of the sensor. A sensor may have only one laser
-attached.
-
-Example:
-
-```js
-sensor.addLaser( );
-```
-
-
-### getLaser
-
-```js
-getLaser( )
-```
-
-Method. Gets the laser object of a sensor.
-
-Example:
-
-```js
-laser = sensor.getLaser( );
-```
-
-
-### senseDistance
+> ### senseDistance
 
 ```js
 senseDistance( )
@@ -767,7 +712,10 @@ senseDistance( )
 
 Method. Gets the distance from the sensor position to the nearest object
 (including the ground) along the direction of the sensor. If there is no object,
-the result is `Infinity`.
+the result is `Infinity`. The minimal sensed distance is 0.05, which is the sizes
+of the sensor pad.
+
+<img src="images/senseDistance.png">
 
 Example:
 
@@ -777,19 +725,20 @@ dist = sensor.senseDistance( );
 
 
 
-### senseTouch
+> ### senseTouch
 
 ```js
 senseTouch( )
 ```
 
 Method. Gets the close-up distance from the sensor position to the nearest
-object (including the ground) along the direction of the sensor. Touch is senseDistance
-only for distances from 0 to 0.05. The returned value is a number from 0 to 1
-indicating the level of touching, i.e. 0 means no touching, 1 means complete touching.
-If there is no object that close, the result is 0.
+object (including the ground) along the direction of the sensor. Touching is
+similar to sensing distance, but it only senses distances from 0 to 0.05, i.e.
+inside the sensor pad. The returned value is a number from 0 to 1 indicating the
+level of touching, i.e. 0 means no touching, 1 means complete touching. If there
+is no object that close, the result is 0.
 
-<img src="images/touch.png">
+<img src="images/senseTouch.png">
 
 Example:
 
@@ -799,13 +748,15 @@ touch = sensor.senseTouch( );
 
 
 
-### sensePosition
+> ### sensePosition
 
 ```js
 sensePosition( )
 ```
 
 Method. Gets the 3D position of the sensor as an array of [`x,y,z`] coordinates.
+
+<img src="images/sensePosition.png">
 
 Example:
 
@@ -815,14 +766,18 @@ pos = sensor.sensePosition( );
 
 
 
-### senseCollision
+> ### senseCollision
 
 ```js
 senseCollision( )
 ```
 
-Method. Returns `true` when the part containing the sensor collides
-(or intersects) another part or the ground, otherwise returns `false`.
+Method. Returns `true` when the part containing the sensor collides (or
+intersects) another part or the ground, otherwise returns `false`. Collision
+sensing relies on the physics engine and is aware of only those parts, that are
+defined as physical parts.
+
+<img src="images/senseCollision.png">
 
 Example:
 
@@ -835,14 +790,15 @@ if( sensor.senseCollision( ) )
 
 
 
-### senseObjects
+> ### senseObjects
 
 ```js
 senseObjects( )
 ```
 
-Method. Returns a list of all bodies that collide (or intersects) with the part,
-containing the sensor. 
+Method. Returns a list of all parts that collide (or intersects) with the part,
+containing the sensor. Sensing objects relies on the physics engine and is aware
+of only those parts, that are defined as physical parts.
 
 Example:
 
@@ -851,14 +807,16 @@ objects = sensor.senseObjects( );
 ```
 
 
-### senseObject
+> ### senseObject
 
 ```js
 senseObject( otherObject )
 ```
 
-Method. Returns `true` when the part containing the sensor collides
-(or intersects) the `otherObject`, otherwise returns `false`.
+Method. Returns `true` when the part containing the sensor collides (or
+intersects) the `otherObject`, otherwise returns `false`. Sensing objects relies
+on the physics engine and is aware of only those parts, that are defined as
+physical parts.
 
 Example:
 
@@ -868,8 +826,3 @@ if( sensor.senseObject( ball ) )
    ...
 }
 ```
-
-
-
-
-

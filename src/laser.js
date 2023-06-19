@@ -1,11 +1,11 @@
 
+//	Laser API
+//	Virtual Prosthetics 1.0
 //
-//	Laser for Virtual prosthetics
+//	class Laser( color ) extends THREE.Group
 //
-//	class Laser extends THREE.Group
-//		constructor( color='crimson' )
-//		set( start, end )
-//
+//	set( start, end )
+
 
 import * as THREE from "../libs/three.module.min.js";
 import { laserDotTexture } from "./textures.js";
@@ -13,7 +13,7 @@ import { laserDotTexture } from "./textures.js";
 
 class Laser extends THREE.Group
 {
-	constructor( color='crimson' )
+	constructor( color )
 	{
 		super( );
 		

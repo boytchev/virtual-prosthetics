@@ -1,16 +1,16 @@
 
-//
+//	Slot API
 //	Virtual Prosthetics 1.0
-//	Slot
 //
-//	class Slot extends THREE.Group
-//		constructor( x=0, y=0, z=0 )
+//	class Slot( x, y, z ) extends THREE.Group
+//	class Slot( position ) extends THREE.Group
 //		setPosition( x, y=0, z=0 )
 //		setRotation( x, y=0, z=0, order='XYZ' )
 //		show( )
 //
 
 import * as THREE from "../libs/three.module.min.js";
+import { OPTION_SHOW_SLOTS } from "./engine.js";
 
 
 
@@ -35,19 +35,26 @@ var PLANE_GEOMETRY = new THREE.CircleGeometry( 0.1 ).rotateX( Math.PI/2 ),
 
 class Slot extends THREE.Group
 {
-	constructor( x=0, y=0, z=0 )
+	constructor( x, y, z )
 	{
 		super( );
 
-		this.position.set( x, y, z );
+		this.setPosition( x, y, z );
+		
+		if( OPTION_SHOW_SLOTS )
+			this.show();
 	}
 
-	setPosition( x, y=0, z=0 )
+	setPosition( x, y, z )
 	{
-		this.position.set( x, y, z );
+		if( x instanceof Array )
+			this.position.set( ...x );
+		else
+		if( !Number.isNaN(x) )
+			this.position.set( x, y, z );
 	}
 	
-	setRotation( x, y=0, z=0, order='XYZ' )
+	setRotation( x, y, z, order='XYZ' )
 	{
 		this.rotation.set( x, y, z, order );
 	}

@@ -1,6 +1,6 @@
 
-//
-//	Textures for Virtual prosthetics
+//	Textures
+//	Virtual Prosthetics 1.0
 //
 //	sensorTexture
 //	laserDotTexture

@@ -24,7 +24,8 @@ import { physics } from "./engine.js";
 
 var FPS = 30;
 
-var renderer, scene, camera, light, controls, ground;
+var renderer, scene, camera, light, controls, ground,
+	logo = new THREE.Group( );
 
 var animate,
 	oldTime = 0,
@@ -60,10 +61,11 @@ function createScene( )
 	light.shadow.bias = -0.00001;
 	light.castShadow = true;
 	
-	light.shadow.camera.left = -10;
-	light.shadow.camera.right = 10;
-	light.shadow.camera.top = 10;
-	light.shadow.camera.bottom = -10;
+	// temporary narrow camera (only for the logo)
+	light.shadow.camera.left = -1;
+	light.shadow.camera.right = 1;
+	light.shadow.camera.top = 1;
+	light.shadow.camera.bottom = -1;
 	
 	scene.add(light, new THREE.HemisphereLight('white', 'cornsilk', 0.6));
 
@@ -98,8 +100,100 @@ function createScene( )
 } // createScene
 
 createScene( );
+createLogo( );
 
 
+function createLogo( )
+{
+	var s = Math.sin( 30 * Math.PI/180 ),
+		c = Math.cos( 30 * Math.PI/180 );
+
+	var	n = 1,
+		d = 0.15*n, // thickness
+		r = 0.16*n,
+		r2 = 0.136*n; // hole
+		
+	var shapeV = new THREE.Shape();
+		shapeV.moveTo( 0, 0 );
+		shapeV.absarc( 0, 0, r, 330 * Math.PI/180, 210 * Math.PI/180, true );
+		shapeV.absarc( -n*s, n*c, r, 210 * Math.PI/180, 30 * Math.PI/180, true );
+		shapeV.lineTo( 0, 2*r );
+		shapeV.absarc( n*s, n*c, r, 150 * Math.PI/180, -30 * Math.PI/180, true );
+
+	var hole1 = new THREE.Shape();
+		hole1.absarc( 0, 0, r2, 0, 2*Math.PI );
+
+	var hole2 = new THREE.Shape();
+		hole2.absarc( n*s, n*c, r2, 0, 2*Math.PI );
+
+	var hole3 = new THREE.Shape();
+		hole3.absarc( -n*s, n*c, r2, 0, 2*Math.PI );
+
+		shapeV.holes = [hole1, hole2, hole3];
+
+	var extrudeSettings = {
+		steps: 1,
+		curveSegments: 40,
+		depth: d,
+		bevelEnabled: true,
+		bevelThickness: 0.02,
+		bevelSize: 0.02,
+		bevelOffset: 0,
+		bevelSegments: 10
+	};
+	
+	var geometry = new THREE.ExtrudeGeometry( shapeV, extrudeSettings ).translate(0,0,-d/2),
+		material = new THREE.MeshPhysicalMaterial({
+							color: 'white',
+							roughness: 0.5,
+							metalness: 1,
+						});
+		
+
+	var	object = new THREE.Mesh( geometry, material );
+		object.position.y = 2*r;
+		object.castShadow = true;
+		object.receiveShadow = true;
+		
+	// second top shape
+	
+	var px = 0.12*n,
+		py = n*c-r;
+
+	var wx = 0.305*n,
+		wy = n*c+r+n/50;
+
+	var qx = 0.34*n,
+		qy = n*c+r+n/50;
+	
+	var k = 0.8,
+		ux = px*(1-k)+k*wx,
+		uy = py*(1-k)+k*wy;
+	
+	k = 0.95;
+	var vx = px*(1-k)+k*wx,
+		vy = py*(1-k)+k*wy;
+	
+	var shapeT = new THREE.Shape( );
+		shapeT.moveTo( px, py );
+		shapeT.lineTo( ux, uy );
+		shapeT.quadraticCurveTo( vx, vy, qx, qy ); 
+		shapeT.lineTo( -qx, qy );
+		shapeT.quadraticCurveTo( -vx, vy, -ux, uy ); 
+		shapeT.lineTo( -px, py );
+						
+	var geometryT = new THREE.ExtrudeGeometry( shapeT, extrudeSettings ).translate(0,0,-d/2),
+		objectT = new THREE.Mesh( geometryT, material );
+		objectT.position.y = 2*r;
+		objectT.castShadow = true;
+		objectT.receiveShadow = true;
+		
+		
+	logo.add( object, objectT );
+	
+	scene.add( logo );
+
+}
 
 function setCameraPosition( x, y, z )
 {
@@ -139,13 +233,31 @@ function drawFrame( time )
 	
 	var dTime = time-oldTime;
 	
-	
 	if( dTime > 1/FPS )
 	{
 		
 		if( animate ) animate( time, dTime );
 		
 		physics.update( FPS, time, dTime );
+	
+		if( logo?.visible )
+		{
+			// if there is another element added after the logo
+			// then hide the logo immediately
+			if( scene.children[scene.children.length-1] != logo )
+			{
+				logo.visible = false;
+					light.shadow.camera.left = -10;
+					light.shadow.camera.right = 10;
+					light.shadow.camera.top = 10;
+					light.shadow.camera.bottom = -10;
+			}
+			else
+			{
+				logo.rotation.y = ((time/2) % (2*Math.PI));
+				logo.children[1].rotation.y = Math.PI*Math.sin( (time/2) % (Math.PI/2) )**60;
+			}
+		}
 		
 		oldTime = time;
 		

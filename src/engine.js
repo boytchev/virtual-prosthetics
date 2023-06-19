@@ -1,11 +1,14 @@
 
-//
+//	Engine API
 //	Virtual Prosthetics 1.0
-//	Scene
 //
-//	Public:
-//		cannonInit(  )
 //
+//	physics.init( scene, ground )
+//	physics.update( fps, time, dTime )
+//
+//	physics.convex( vertices, faces )
+//	physics.ball( radius )
+//	physics.box( sizex, sizey, sizez )
 
 
 import * as CANNON from "./engine.cannon.js";
@@ -19,6 +22,7 @@ var options = new URL( window.location.href ),
 const OPTION_ENGINE = options.searchParams.get( 'engine' ) || 'cannon';
 const OPTION_TOUCH_COLOR = options.searchParams.get( 'touch-color' ) || 'black';
 const OPTION_DEBUG_PHYSICS = options.searchParams.has( 'debug-physics' ) || false;
+const OPTION_SHOW_SLOTS = options.searchParams.has( 'show-slots' ) || false;
 
 
 switch( OPTION_ENGINE )
@@ -47,4 +51,4 @@ switch( OPTION_ENGINE )
 }
 
 
-export { physics, OPTION_ENGINE, OPTION_TOUCH_COLOR, OPTION_DEBUG_PHYSICS };
+export { physics, OPTION_ENGINE, OPTION_TOUCH_COLOR, OPTION_DEBUG_PHYSICS, OPTION_SHOW_SLOTS };
