@@ -6,7 +6,7 @@
   &ndash; [Common shapes](#common-shapes): [Ball](#ball), [Box](#box)<br>
   &ndash; [Motors](#motors): [MotorX](#motorx), [MotorY](#motory), [MotorZ](#motorz)</small>
 * **[Hand parts](#hand-parts)**<small><br>
-  &ndash; [Edged hand](#edged-hand): [Phalange](#phalange), [EndPhalange](#endphalange), [LeftPalm](#leftpalm), [RightPalm](#rightpalm)<br>
+  &ndash; [Edged hand](#edged-hand): [EdgedFinger](#edgedfinger), [EdgedTip](#edgedtip), [EdgedPalmLeft](#edgedpalmleft), [EdgedPalmRight](#edgedpalmright)<br>
   &ndash; [Round hand](#round-hand): ...[Phalange](#phalange), [EndPhalange](#endphalange), [LeftPalm](#leftpalm), [RightPalm](#rightpalm)</small>
 
 
@@ -230,7 +230,7 @@ motor = new Prosthetic.MotorZ( 0, Math.PI, Math.PI/2 );
 # Hand parts
 
 Hands parts are predefined robot parts that are used to build antropomorphic
-robots resembling a human hand. Hands parts are: a phalange, a phalange end, and
+robots resembling a human hand. Hands parts are: a finger, a finger tip, and
 a palm:
 
 <img src="images/hand.png">
@@ -251,46 +251,49 @@ Source code: [src/part-hand-edged.js](https://github.com/boytchev/virtual-prosth
 
 
 
-> ### Phalange
+> ### EdgedFinger
 
 ```js
-Phalange( )
-Phalange( length )
-Phalange( length, width, thickness )
+EdgedFinger( )
+EdgedFinger( length )
+EdgedFinger( length, width, thickness )
 ```
 
-Class. Defines an edged phalange-like shape intended for attachment to Z-motor.
-The optional parameters `length` (by default 1), `width` (by default 0.3)
-and `thickness` (by default 0.3) define the size of the part. There is one slot
+Class. Defines an edged finger shape intended for attachment to Z-motor. The
+optional parameters `length` (by default 1), `width` (by default 0.3) and
+`thickness` (by default 0.3) define the size of the part. There is one slot
 at the top at position (0,`length`,0).
 
-<img src="images/phalange.png">
+<img src="images/edgedfinger.png">
 
 Example:
 
 ```js
-part = new Prosthetic.Phalange( 1, 0.2, 0.2 );
+part = new Prosthetic.EdgedFinger( 1, 0.2, 0.2 );
 ```
 
 
 
-### EndPhalange
+> ### EdgedTip
 
 ```js
-EndPhalange( length=1.0, width=0.3, thickness=0.3 )
+EdgedTip( )
+EdgedTip( length )
+EdgedTip( length, width, thickness )
 ```
 
-Class. Defines a phalange-like shape for attachment to Z-motor. The parameters
-`length`, `width` and `thickness` define the size of the part. There are no
-slots. The `EndPhalange` looks almost like `Phalange`, but is intended to be the
-last part of a chain of phalanges. It has no slots.
+Class. Defines a tip of an edged finger shape for attachment to Z-motor. The
+optional parameters `length` (by default 1), `width` (by default 0.3) and
+`thickness` (by default 0.3) define the size of the part. There are no slots.
+The `EdgedTip` looks almost like `EdgedFinger`, but is intended to be the
+last part of a chain of fingers. 
 
-<img src="images/endphalange.png">
+<img src="images/edgedtip.png">
 
 Example:
 
 ```js
-part = new EndPhalange( 1, 0.2, 0.2 );
+part = new Prosthetic.EdgedTip( 1, 0.2, 0.2 );
 ```
 
 

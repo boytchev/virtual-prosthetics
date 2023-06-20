@@ -34,13 +34,13 @@
 		{
 			super( );
 			
-			var part = new Prosthetic.EndPhalange( 0.75 );
+			var part = new Prosthetic.EdgedTip( 0.75 );
 			
 			this.addChain(
 				this,
 				new Prosthetic.MotorZ( PI/2, -PI/2, 0, 0.2, 0.3 ),
 				new Prosthetic.MotorY( -1, 1, 0, 0.2, 0.1 ),
-				new Prosthetic.Phalange( 0.75 ),
+				new Prosthetic.EdgedFinger( 0.75 ),
 				new Prosthetic.MotorZ( 0.0, -PI/2, 0, 0.25, 0.08 ),
 				part,
 			);

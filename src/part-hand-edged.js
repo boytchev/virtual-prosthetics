@@ -1,12 +1,12 @@
 
 //
 //	Virtual Prosthetics 1.0
-//	Hand parts
+//	Edged Hand parts
 //
-//	class Phalange( length=1.0, width=0.3, thickness=0.3 )
-//	class EndPhalange( length=1.0, width=0.3, thickness=0.3 )
-//	class LeftPalm( length=1.4, width=1.4, thickness=0.3 )
-//	class RightPalm( length=1.4, width=1.4, thickness=0.3 )
+//	class EdgedFinger( length=1.0, width=0.3, thickness=0.3 )
+//	class EdgedTip( length=1.0, width=0.3, thickness=0.3 )
+//	class EdgedPalmLeft( length=1.4, width=1.4, thickness=0.3 )
+//	class EdgedPalmRight( length=1.4, width=1.4, thickness=0.3 )
 //
 
 
@@ -72,7 +72,7 @@ function extrudeShape( shape, width )
 
 
 
-class Phalange extends Part
+class EdgedFinger extends Part
 {
 	constructor ( length=1.0, width=0.3, thickness=0.3 )
 	{
@@ -146,14 +146,14 @@ class Phalange extends Part
 		
 		physics.bodies.push( this );
 
-	} // Phalange.constructor
+	} // EdgedFinger.constructor
 
 	
-} // Phalange
+} // EdgedFinger
 
 
 
-class EndPhalange extends Part
+class EdgedTip extends Part
 {
 	constructor ( length=1.0, width=0.3, thickness=0.3 )
 	{
@@ -227,13 +227,13 @@ class EndPhalange extends Part
 		
 		physics.bodies.push( this );
 
-	} // EndPhalange.constructor
+	} // EdgedTip.constructor
 	
-} // EndPhalange
+} // EdgedTip
 
 
 
-class LeftPalm extends Part
+class EdgedPalmLeft extends Part
 {
 	constructor ( length=1.4, width=1.4, thickness=0.3 )
 	{
@@ -310,13 +310,13 @@ class LeftPalm extends Part
 		
 		physics.bodies.push( this );
 
-	} // LeftPalm.constructor
+	} // EdgedPalmLeft.constructor
 	
-} // LeftPalm
+} // EdgedPalmLeft
 
 
 
-class RightPalm extends Part
+class EdgedPalmRight extends Part
 {
 	constructor ( length=1.4, width=1.4, thickness=0.3 )
 	{
@@ -393,9 +393,9 @@ class RightPalm extends Part
 		
 		physics.bodies.push( this );
 		
-	} // RightPalm.constructor
+	} // EdgedPalmRight.constructor
 	
-} // RightPalm
+} // EdgedPalmRight
 
 
-export { Phalange, EndPhalange, LeftPalm, RightPalm };
+export { EdgedFinger, EdgedTip, EdgedPalmLeft, EdgedPalmRight };

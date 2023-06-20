@@ -36,52 +36,52 @@
 		{
 			super( );
 			
-			var palm = new Prosthetic.LeftPalm( );
+			var palm = new Prosthetic.EdgedPalmLeft( );
 				palm.attachToSlot( this );
 			
 			this.addChain(
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 0 ),
-					new Prosthetic.Phalange(),
+					new Prosthetic.EdgedFinger(),
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-					new Prosthetic.Phalange( 0.5 ),
+					new Prosthetic.EdgedFinger( 0.5 ),
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-					new Prosthetic.EndPhalange( 0.5 )
+					new Prosthetic.EdgedTip( 0.5 )
 				);
 			
 			this.addChain( 
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 1 ),
-					new Prosthetic.Phalange(),
+					new Prosthetic.EdgedFinger(),
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-					new Prosthetic.Phalange( 0.5 ),
+					new Prosthetic.EdgedFinger( 0.5 ),
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-					new Prosthetic.EndPhalange( 0.5 )
+					new Prosthetic.EdgedTip( 0.5 )
 				);
 			
 			this.addChain( 
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 2 ),
-					new Prosthetic.Phalange( 1.1 ),
+					new Prosthetic.EdgedFinger( 1.1 ),
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-					new Prosthetic.Phalange( 0.5 ),
+					new Prosthetic.EdgedFinger( 0.5 ),
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-					new Prosthetic.EndPhalange( 0.5 )
+					new Prosthetic.EdgedTip( 0.5 )
 				);
 			
 			this.addChain( 
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 3 ),
-					new Prosthetic.Phalange( ),
+					new Prosthetic.EdgedFinger( ),
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-					new Prosthetic.Phalange( 0.5 ),
+					new Prosthetic.EdgedFinger( 0.5 ),
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-					new Prosthetic.EndPhalange( 0.5 )
+					new Prosthetic.EdgedTip( 0.5 )
 				);
 			
 			this.addChain( 
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 4 ),
-					new Prosthetic.Phalange( 0.8 ),
+					new Prosthetic.EdgedFinger( 0.8 ),
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-					new Prosthetic.Phalange( 0.5 ),
+					new Prosthetic.EdgedFinger( 0.5 ),
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-					new Prosthetic.EndPhalange( 0.5 )
+					new Prosthetic.EdgedTip( 0.5 )
 				);
 		}
 		
@@ -95,52 +95,52 @@
 		{
 			super( );
 			
-			var palm = new Prosthetic.RightPalm( );
+			var palm = new Prosthetic.EdgedPalmRight( );
 				palm.attachToSlot( this );
 			
 			this.addChain(
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 0 ),
-					new Prosthetic.Phalange(),
+					new Prosthetic.EdgedFinger(),
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-					new Prosthetic.Phalange( 0.5 ),
+					new Prosthetic.EdgedFinger( 0.5 ),
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-					new Prosthetic.EndPhalange( 0.5 )
+					new Prosthetic.EdgedTip( 0.5 )
 				);
 			
 			this.addChain( 
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 1 ),
-					new Prosthetic.Phalange(),
+					new Prosthetic.EdgedFinger(),
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-					new Prosthetic.Phalange( 0.5 ),
+					new Prosthetic.EdgedFinger( 0.5 ),
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-					new Prosthetic.EndPhalange( 0.5 )
+					new Prosthetic.EdgedTip( 0.5 )
 				);
 
 			this.addChain( 
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 2 ),
-					new Prosthetic.Phalange( 1.1 ),
+					new Prosthetic.EdgedFinger( 1.1 ),
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-					new Prosthetic.Phalange( 0.5 ),
+					new Prosthetic.EdgedFinger( 0.5 ),
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-					new Prosthetic.EndPhalange( 0.5 )
+					new Prosthetic.EdgedTip( 0.5 )
 				);
 			
 			this.addChain( 
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 3 ),
-					new Prosthetic.Phalange( ),
+					new Prosthetic.EdgedFinger( ),
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-					new Prosthetic.Phalange( 0.5 ),
+					new Prosthetic.EdgedFinger( 0.5 ),
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-					new Prosthetic.EndPhalange( 0.5 )
+					new Prosthetic.EdgedTip( 0.5 )
 				);
 			
 			this.addChain(
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ).attachToSlot( palm, 4 ),
-					new Prosthetic.Phalange( 0.8 ),
+					new Prosthetic.EdgedFinger( 0.8 ),
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-					new Prosthetic.Phalange( 0.5 ),
+					new Prosthetic.EdgedFinger( 0.5 ),
 					new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.3, 0.1 ),
-					new Prosthetic.EndPhalange( 0.5 )
+					new Prosthetic.EdgedTip( 0.5 )
 				);
 		}
 		

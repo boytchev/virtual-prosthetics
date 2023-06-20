@@ -40,13 +40,13 @@
 			this.addChain(
 				this,
 				new Prosthetic.MotorY( -Infinity, Infinity, 0, 1 ),
-				new Prosthetic.Phalange( 1, 0.3, 0.3 ),
+				new Prosthetic.EdgedFinger( 1, 0.3, 0.3 ),
 				new Prosthetic.MotorZ( 0, -PI/2, 0, 0.15, 0.03 ),
-				new Prosthetic.Phalange( 1.3, 0.2, 0.1 ),
+				new Prosthetic.EdgedFinger( 1.3, 0.2, 0.1 ),
 				new Prosthetic.MotorZ( 0, -PI/2, 0, 0.1, 0.03 ),
-				new Prosthetic.Phalange( 0.3, 0.1, 0.1 ),
+				new Prosthetic.EdgedFinger( 0.3, 0.1, 0.1 ),
 				new Prosthetic.MotorZ( 0, -PI/2, 0, 0.1, 0.03 ),
-				new Prosthetic.EndPhalange( 0.3, 0.1, 0.1 )
+				new Prosthetic.EdgedTip( 0.3, 0.1, 0.1 )
 			);
 		}
 		
@@ -73,11 +73,11 @@
 			
 			this.addChain(
 				this,
-				new Prosthetic.Phalange( 1, 0.3, 0.3 ),
+				new Prosthetic.EdgedFinger( 1, 0.3, 0.3 ),
 				new Prosthetic.MotorZ( 0, -PI/2, 0, 0.2, 0.04 ),
-				new Prosthetic.Phalange( 1, 0.3, 0.3 ),
+				new Prosthetic.EdgedFinger( 1, 0.3, 0.3 ),
 				new Prosthetic.MotorZ( 0, -PI/2, -PI/4, 0.2, 0.04 ),
-				new Prosthetic.EndPhalange( 0.3, 1, 0.1 )
+				new Prosthetic.EdgedTip( 0.3, 1, 0.1 )
 			)
 		}
 		
@@ -93,7 +93,7 @@
 		{
 			super( );
 
-			var root = new Prosthetic.Phalange( 1, 1, 0.3);
+			var root = new Prosthetic.EdgedFinger( 1, 1, 0.3);
 			
 			this.addChain(
 				this,
@@ -105,9 +105,9 @@
 		
 			this.addChain(
 				left,
-				new Prosthetic.Phalange( 0.5, 0.3, 0.3 ),
+				new Prosthetic.EdgedFinger( 0.5, 0.3, 0.3 ),
 				new Prosthetic.MotorZ( 0, -PI/2, 0, 0.2, 0.04 ),
-				new Prosthetic.EndPhalange( 0.5, 0.3, 0.3 )
+				new Prosthetic.EdgedTip( 0.5, 0.3, 0.3 )
 			);
 			
 			var right = new Prosthetic.MotorZ( 0, -PI/2, 0, 0.2, 0.04 );
@@ -115,9 +115,9 @@
 		
 			this.addChain(
 				right,
-				new Prosthetic.Phalange( 0.5, 0.3, 0.3 ),
+				new Prosthetic.EdgedFinger( 0.5, 0.3, 0.3 ),
 				new Prosthetic.MotorZ( 0, -PI/2, 0, 0.2, 0.04 ),
-				new Prosthetic.EndPhalange( 0.5, 0.3, 0.3 )
+				new Prosthetic.EdgedTip( 0.5, 0.3, 0.3 )
 			);
 		}
 	}
