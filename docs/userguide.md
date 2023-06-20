@@ -6,8 +6,8 @@
   &ndash; [Common shapes](#common-shapes): [Ball](#ball), [Box](#box)<br>
   &ndash; [Motors](#motors): [MotorX](#motorx), [MotorY](#motory), [MotorZ](#motorz)</small>
 * **[Hand parts](#hand-parts)**<small><br>
-  &ndash; [Edged hand](#edged-hand): [EdgedFinger](#edgedfinger), [EdgedTip](#edgedtip), [EdgedPalmLeft](#edgedpalmleft), [EdgedPalmRight](#edgedpalmright)<br>
-  &ndash; [Round hand](#round-hand): ...[Phalange](#phalange), [EndPhalange](#endphalange), [LeftPalm](#leftpalm), [RightPalm](#rightpalm)</small>
+  &ndash; [Edged hand](#edged-hand): [EdgedFinger](#edgedfinger), [EdgedTip](#edgedtip), [EdgedPalm](#edgedpalm)<br>
+  &ndash; [Round hand](#round-hand): </small>
 
 
 # Virtual Prosthetics
@@ -299,42 +299,37 @@ part = new Prosthetic.EdgedTip( 1, 0.2, 0.2 );
 
 
 
-### LeftPalm
+> ### EdgedPalm
 
 ```js
-LeftPalm( length=1.4, width=1.4, thickness=0.3 )
+EdgedPalm( left )
+EdgedPalm( left, length )
+EdgedPalm( left, length, width, thickness )
 ```
 
-Class. Defines a shape for palm of left hand. The parameters `length`, `width`
-and `thickness` define the size of the palm. There are five slots for attaching
-each finger.
+Class. Defines a shape for an edged palm. The palm exists in two symmetrical
+shapes. If `left` is true, the palm is a left-hand palm, otherwise it is a
+right-hand palm. The parameters `length` (by default 1.4), `width` (by default 1.4)
+and `thickness` (by default 0.3) define the size of the palm. There are five
+slots for attaching fingers, the slot for the thumb is 0.
 
-<img src="images/leftpalm.png">
+<img src="images/edgedpalm.png">
 
 Example:
 
 ```js
-part = new LeftPalm( 1.5, 0.9, 0.3 );
+part = new Prosthetic.EdgedPalm( true, 1.5, 0.9, 0.3 );
 ```
 
 
 
+## Round hand
 
-### RightPalm
+The round hand parts are shaped like ellipsoids and have connectors for
+attaching other round parts. The main properties of round hand parts are:
 
-```js
-RightPalm( length=1.4, width=1.4, thickness=0.3 )
-```
+* smoother and more aesthetic appearance
+* shapes provided from external GLTF files
+* approximate precision of collision detection
 
-Class. Defines a shape for palm of right hand. The parameters `length`, `width`
-and `thickness` define the size of the palm. There are five slots for attaching
-each finger.
-
-<img src="images/rightpalm.png">
-
-Example:
-
-```js
-part = new RightPalm( 1.5, 0.9, 0.3 );
-```
-
+Source code: [src/part-hand-round.js](https://github.com/boytchev/virtual-prosthetics/blob/main/src/part-hand-round.js)

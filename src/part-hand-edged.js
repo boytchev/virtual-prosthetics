@@ -233,9 +233,9 @@ class EdgedTip extends Part
 
 
 
-class EdgedPalmLeft extends Part
+class EdgedPalm extends Part
 {
-	constructor ( length=1.4, width=1.4, thickness=0.3 )
+	constructor ( left, length=1.4, width=1.4, thickness=0.3 )
 	{
 		super( );
 		
@@ -243,15 +243,16 @@ class EdgedPalmLeft extends Part
 		var L = length,
 			W = width/2,
 			I = width/8,
-			T = thickness;
+			T = thickness,
+			S = left?1:-1;
 			
 		var shape = [
-				-W+I,   0,			// 0
-				 W-2*I, 0,			// 1
-				 W,     2*I,		// 2
-				 W,     L,			// 3
-				-W,     L,			// 4
-				-W  ,   L/2,		// 5
+				-S*W+S*I,   0,		// 0
+				 S*W-2*S*I, 0,		// 1
+				 S*W,     2*I,		// 2
+				 S*W,       L,		// 3
+				-S*W,       L,		// 4
+				-S*W,     L/2,		// 5
 			];
 		
 		// create main mesh
@@ -267,7 +268,7 @@ class EdgedPalmLeft extends Part
 				yB = shape[2*pointB+1];
 				
 			var slot = that.addSlot( xA*(1-k) + k*xB, yA*(1-k) + k*yB, 0 );
-				slot.setRotation( 0, Math.PI/2, Math.PI+Math.atan2( yB-yA, xB-xA ), 'ZXY' );
+				slot.setRotation( 0, Math.PI/2, (1+S)*Math.PI/2+Math.atan2( yB-yA, xB-xA ), 'ZXY' );
 		}
 		
 		addSlot( 2, 3, 1/4 ); // slot 0
@@ -278,124 +279,51 @@ class EdgedPalmLeft extends Part
 		
 		// 3D convex shape
 		var vertices = [
-							[ -W+I,   0,	 T/2 ],
-							[  W-2*I, 0,	 T/2 ],
-							[  W,     2*I,	 T/2 ],
-							[  W,     L,	 T/2 ],
-							[ -W,     L,	 T/2 ],
-							[ -W  ,   L/2,	 T/2 ],
+							[ -S*W+S*I,		0,	 T/2 ],
+							[  S*W-2*S*I,	0,	 T/2 ],
+							[  S*W,    	  2*I,	 T/2 ],
+							[  S*W,      	L,	 T/2 ],
+							[ -S*W,      	L,	 T/2 ],
+							[ -S*W,    	  L/2,	 T/2 ],
 
-							[ -W+I,   0,	-T/2 ],
-							[  W-2*I, 0,	-T/2 ],
-							[  W,     2*I,	-T/2 ],
-							[  W,     L,	-T/2 ],
-							[ -W,     L,	-T/2 ],
-							[ -W  ,   L/2,	-T/2 ],
+							[ -S*W+S*I,		0,	-T/2 ],
+							[  S*W-2*S*I,	0,	-T/2 ],
+							[  S*W,  	  2*I,	-T/2 ],
+							[  S*W,      	L,	-T/2 ],
+							[ -S*W,      	L,	-T/2 ],
+							[ -S*W,  	  L/2,	-T/2 ],
 						];
 
-		var faces = [
-						[0,1,2,3,4,5],
-						[11,10,9,8,7,6],
-						[0,6,7,1],
-						[1,7,8,2],
-						[2,8,9,3],
-						[3,9,10,4],
-						[4,10,11,5],
-						[5,11,6,0],
-					];
-		
-		// physics
-		this.physics = physics.convex( vertices, faces );
-		this.physics.threejs = this;
-		
-		physics.bodies.push( this );
-
-	} // EdgedPalmLeft.constructor
-	
-} // EdgedPalmLeft
-
-
-
-class EdgedPalmRight extends Part
-{
-	constructor ( length=1.4, width=1.4, thickness=0.3 )
-	{
-		super( );
-		
-		// profile shape (2D)
-		var L = length,
-			W = width/2,
-			I = width/8,
-			T = thickness;
-			
-		var shape = [
-				 W-I,   0,			// 0
-				-W+2*I, 0,			// 1
-				-W,     2*I,		// 2
-				-W,     L,			// 3
-				 W,     L,			// 4
-				 W  ,   L/2,		// 5
-			];
-		
-		// create main mesh
-		this.mainMesh = extrudeShape(shape,thickness);
-		this.add( this.mainMesh );
-		
-		var that = this;
-		function addSlot( pointA, pointB, k )
+		function face( ...vertices )
 		{
-			var xA = shape[2*pointA],
-				xB = shape[2*pointB],
-				yA = shape[2*pointA+1],
-				yB = shape[2*pointB+1];
-				
-			var slot = that.addSlot( xA*(1-k) + k*xB, yA*(1-k) + k*yB, 0 );
-				slot.setRotation( 0, Math.PI/2, Math.atan2( yB-yA, xB-xA ), 'ZXY' );
+			if( S > 0 )
+				return vertices;
+			else
+				return vertices.toReversed();
 		}
 		
-		addSlot( 2, 3, 1/4 ); // slot 0
-		addSlot( 3, 4, 1/8 ); // slot 1  
-		addSlot( 3, 4, 3/8 ); // slot 2
-		addSlot( 3, 4, 5/8 ); // slot 3
-		addSlot( 3, 4, 7/8 ); // slot 4
-
-		// 3D convex shape
-		var vertices = [
-							[  W-I,   0,	 T/2 ],
-							[ -W+2*I, 0,	 T/2 ],
-							[ -W,     2*I,	 T/2 ],
-							[ -W,     L,	 T/2 ],
-							[  W,     L,	 T/2 ],
-							[  W  ,   L/2,	 T/2 ],
-
-							[  W-I,   0,	-T/2 ],
-							[ -W+2*I, 0,	-T/2 ],
-							[ -W,     2*I,	-T/2 ],
-							[ -W,     L,	-T/2 ],
-							[  W,     L,	-T/2 ],
-							[  W  ,   L/2,	-T/2 ],
-						];
-
 		var faces = [
-						[5,4,3,2,1,0],
-						[6,7,8,9,10,11],
-						[0,1,7,6],
-						[1,2,8,7],
-						[2,3,9,8],
-						[3,4,10,9],
-						[4,5,11,10],
-						[5,0,6,11],
+						face(0,1,2,3,4,5),
+						face(11,10,9,8,7,6),
+						face(0,6,7,1),
+						face(1,7,8,2),
+						face(2,8,9,3),
+						face(3,9,10,4),
+						face(4,10,11,5),
+						face(5,11,6,0),
 					];
 		
 		// physics
 		this.physics = physics.convex( vertices, faces );
 		this.physics.threejs = this;
+		this.debugConvex( vertices, faces );
 		
 		physics.bodies.push( this );
-		
-	} // EdgedPalmRight.constructor
+
+	} // EdgedPalm.constructor
 	
-} // EdgedPalmRight
+} // EdgedPalm
 
 
-export { EdgedFinger, EdgedTip, EdgedPalmLeft, EdgedPalmRight };
+
+export { EdgedFinger, EdgedTip, EdgedPalm };

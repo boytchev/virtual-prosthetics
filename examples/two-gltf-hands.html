@@ -20,8 +20,8 @@
 	<script type="module">
 
 
-	//import * as Prosthetic from "../build/virtual-prosthetics.js";
-	import * as Prosthetic from "../src/virtual-prosthetics.js";
+	import * as Prosthetic from "../build/virtual-prosthetics.js";
+	//import * as Prosthetic from "../src/virtual-prosthetics.js";
 	import * as lil from "../libs/lil-gui.module.min.js";
 
 
@@ -52,9 +52,9 @@
 			this.isLeft = isLeft;
 
 			if( isLeft )
-				this.palm = new Prosthetic.LeftPalmAnthro( '../assets/gltf/palm-left.glb' );
+				this.palm = new Prosthetic.RoundPalmLeft( '../assets/gltf/palm-left.glb' );
 			else
-				this.palm = new Prosthetic.RightPalmAnthro( '../assets/gltf/palm-right.glb' );
+				this.palm = new Prosthetic.RoundPalmRight( '../assets/gltf/palm-right.glb' );
 			
 			this.palm.attachToSlot( this );
 
@@ -65,7 +65,7 @@
 		
 		addFinger( slot )
 		{
-			var Phalange = Prosthetic.PhalangeAnthro, // shortcut
+			var Finger = Prosthetic.RoundFinger, // shortcut
 				Joint = Prosthetic.MotorZ, // shortcut
 				spread;
 				
@@ -77,11 +77,11 @@
 			this.addChain( 
 					spread.attachToSlot( this.palm, slot ),
 					new Joint( 0, -PI/2, -PI/4, 0.2, 0.07 ),
-					new Phalange( '../assets/gltf/phalange-8.glb', 0.8 ),
+					new Finger( '../assets/gltf/phalange-8.glb', 0.8 ),
 					new Joint( 0, -PI/2, -PI/4, 0.2, 0.07 ),
-					new Phalange( '../assets/gltf/phalange-5.glb', 0.5 ),
+					new Finger( '../assets/gltf/phalange-5.glb', 0.5 ),
 					new Joint( 0, -PI/2, -PI/4, 0.2, 0.07 ),
-					new Phalange( '../assets/gltf/phalange-end.glb', 0.5 ),
+					new Finger( '../assets/gltf/phalange-end.glb', 0.5 ),
 				);
 				
 			return spread;

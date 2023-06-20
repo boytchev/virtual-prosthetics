@@ -3,7 +3,6 @@
 //	Virtual Prosthetics 1.0
 //	Antropomorphic Hand parts
 //
-//	class GLTFPart( filename );
 //	class PhalangeAnthro( filename, length=1.0, width=0.3, thickness=0.3 )
 //	class EndPhalangeAnthro( filename, length=1.0, width=0.3, thickness=0.3 )
 //	class LeftPalm( length=1.4, width=1.4, thickness=0.3 )
@@ -13,32 +12,10 @@
 
 import * as THREE from "../libs/three.module.min.js";
 import { ConvexGeometry } from "../libs/geometries/ConvexGeometry.js";
-import { GLTFLoader } from "../libs/loaders/GLTFLoader.js";
-import { Part} from "./part.js";
+import { GLTFPart} from "./part-gltf.js";
 import { getScene } from "./scene.js";
-import { physics, OPTION_TOUCH_COLOR } from "./engine.js";
+import { physics } from "./engine.js";
 
-
-// default materials 
-const GEOMETRY = new THREE.BoxGeometry( 1, 1, 1 );
-
-const MATERIAL = new THREE.MeshPhysicalMaterial({
-				color: 'white',
-				
-				clearcoat: 1.0,
-				clearcoatRoughness: 0.0,
-				
-				metalness: 0.0,
-				roughness: 0.0,
-	
-				specularIntensity: 1,
-				specularColor: 'crimson',
-				
-				emissive: OPTION_TOUCH_COLOR,
-				emissiveIntensity: 0,
-				
-				vertexColors: true,
-			});
 
 const VERTICES = {
 	'phalange5x3.glb': [[0.14,0.09,0.14],[0.14,0.09,-0.14],[0.15,0.03,0.15],[0.15,0.03,-0.15],[0.15,-0.03,0.15],[0.15,-0.03,-0.15],[0.14,-0.13,0.14],[0.14,-0.13,-0.14],[-0.14,0.21,-0.14],[-0.14,0.21,0.14],[-0.15,0.03,-0.15],[-0.15,0.03,0.15],[-0.15,-0.03,-0.15],[-0.15,-0.03,0.15],[-0.14,-0.25,-0.14],[-0.14,-0.25,0.14]],
@@ -58,63 +35,7 @@ const FACES = {
 
 
 
-var loader = new GLTFLoader();
-
-
-
-class GLTFPart extends Part
-{
-	constructor ( filename, length, callback )
-	{
-		super( );
-
-		this.mainMesh = new THREE.Mesh( GEOMETRY, MATERIAL.clone() );
-		this.mainMesh.castShadow = true;
-		this.mainMesh.receiveShadow = true;
-
-		loader.load( filename, gltf => {
-			this.mainMesh.geometry = gltf.scene.children[0].geometry;
-			this.mainMesh.scale.copy( gltf.scene.children[0].scale );
-			if( callback ) callback();
-		} );
-		
-		// create main mesh
-		this.mainMesh.position.y = length/2;
-		
-		var overMesh = new THREE.Group();
-		overMesh.add( this.mainMesh );
-		this.add( overMesh );
-	} // GLTFPart.constructor
-
-	recolor( fromColor, toColor, eps=0.01 )
-	{
-		var col = this.mainMesh.geometry.getAttribute( 'color' );
-
-		for( var i=0; i<col.count; i++ )
-		{
-			var r = col.getX( i ),
-				g = col.getY( i ),
-				b = col.getZ( i );
-			
-			if( Math.abs(r-fromColor[0]) < eps )
-			if( Math.abs(g-fromColor[1]) < eps )
-			if( Math.abs(b-fromColor[2]) < eps )
-			{
-				col.setXYZ( i, ...toColor );
-			}
-		}
-		
-		col.needsUpdate = true;
-	}
-	
-} // GLTFPart
-
-
-
-
-
-
-class PhalangeAnthro extends GLTFPart
+class RoundFinger extends GLTFPart
 {
 	constructor ( filename, length=1.0, width=0.3, thickness=0.3 )
 	{
@@ -143,21 +64,16 @@ class PhalangeAnthro extends GLTFPart
 		{
 			that.recolor( [0,0.21,1], [0.3,0.3,0.3] );
 		}
-	} // PhalangeAnthro.constructor
+	} // RoundFinger.constructor
 
 	
-} // PhalangeAnthro
-
-
-
-class EndPhalangeAnthro extends PhalangeAnthro
-{
-} // EndPhalangeAnthro
+} // RoundFinger
 
 
 
 
-class LeftPalmAnthro extends GLTFPart
+
+class RoundPalmLeft extends GLTFPart
 {
 	constructor ( filename, length=1.4, width=1.4, thickness=0.3 )
 	{
@@ -201,14 +117,14 @@ class LeftPalmAnthro extends GLTFPart
 		{
 			that.recolor( [0,0.21,1], [0.3,0.3,0.3] );
 		}
-	} // LeftPalmAnthro.constructor
+	} // RoundPalmLeft.constructor
 	
-} // LeftPalmAnthro
+} // RoundPalmLeft
 
 
 
 
-class RightPalmAnthro extends GLTFPart
+class RoundPalmRight extends GLTFPart
 {
 	constructor ( filename, length=1.4, width=1.4, thickness=0.3 )
 	{
@@ -252,9 +168,9 @@ class RightPalmAnthro extends GLTFPart
 		{
 			that.recolor( [0,0.21,1], [0.3,0.3,0.3] );
 		}
-	} // RightPalmAnthro.constructor
+	} // RoundPalmRight.constructor
 	
-} // RightPalmAnthro
+} // RoundPalmRight
 
 
-export { PhalangeAnthro, EndPhalangeAnthro, LeftPalmAnthro, RightPalmAnthro };
+export { RoundFinger, RoundPalmLeft, RoundPalmRight };

@@ -149,11 +149,11 @@
 
 
 	var A = new LeftHand( );
-		A.setPosition( -2, 0.2, 0);
+		A.setPosition( -2, 0.3, 0);
 		A.setRotation( -0.3, -0.5, 0.2 );
 
 	var B = new RightHand( );
-		B.setPosition( 2, 0.2, 0 );
+		B.setPosition( 2, 0.3, 0 );
 		B.setRotation( -0.3, 0.5, -0.2 );
 
 	Prosthetic.setCameraPosition( 4, 2, -10 );
@@ -166,17 +166,18 @@
 	{
 		for( var i=0; i<2; i++ )
 		{
-			var sin = -PI/4-PI/4*(1+Math.sin(2*t-i/3));
+			var sin = -PI/4*(1+Math.sin(2*t));
 			A.setAngle( i, sin );
 			B.setAngle( i, sin );
 		}
 
 		for( var i=3; i<motors; i++ )
 		{
-			var sin = -PI/4*(1+Math.sin(3*t-i/3));
+			var sin = -PI/4*(1+Math.sin(3*t));
 			A.setAngle( i, sin );
 			B.setAngle( i, sin );
 		}
+
 	}
 
 
