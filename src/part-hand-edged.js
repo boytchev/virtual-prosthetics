@@ -5,8 +5,7 @@
 //
 //	class EdgedFinger( length=1.0, width=0.3, thickness=0.3 )
 //	class EdgedTip( length=1.0, width=0.3, thickness=0.3 )
-//	class EdgedPalmLeft( length=1.4, width=1.4, thickness=0.3 )
-//	class EdgedPalmRight( length=1.4, width=1.4, thickness=0.3 )
+//	class EdgedPalm( left, length=1.4, width=1.4, thickness=0.3 )
 //
 
 

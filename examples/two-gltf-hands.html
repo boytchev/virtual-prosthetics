@@ -52,9 +52,9 @@
 			this.isLeft = isLeft;
 
 			if( isLeft )
-				this.palm = new Prosthetic.RoundPalmLeft( '../assets/gltf/round-palm-left.glb' );
+				this.palm = new Prosthetic.RoundPalm( true, '../assets/gltf/round-palm.glb' );
 			else
-				this.palm = new Prosthetic.RoundPalmRight( '../assets/gltf/round-palm-right.glb' );
+				this.palm = new Prosthetic.RoundPalm( false, '../assets/gltf/round-palm.glb' );
 			
 			this.palm.attachToSlot( this );
 

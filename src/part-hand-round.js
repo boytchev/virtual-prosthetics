@@ -3,9 +3,8 @@
 //	Virtual Prosthetics 1.0
 //	Round Hand parts
 //
-//	class RoundFinger( filename, length=1.0, width=0.3, thickness=0.3 )
-//	class RoundPalmLeft( length=1.4, width=1.4, thickness=0.3 )
-//	class RoundPalmRight( length=1.4, width=1.4, thickness=0.3 )
+//	class RoundFinger( filename, length=0.8 )
+//	class RoundPalm( left, filename, length=1.4 )
 //
 
 
@@ -68,28 +67,28 @@ class RoundFinger extends GLTFPart
 
 
 
-class RoundPalmLeft extends GLTFPart
+class RoundPalm extends GLTFPart
 {
-	constructor ( filename, length=1.4, width=1.4, thickness=0.3 )
+	constructor ( left, filename, length=1.4 )
 	{
 		super( filename, length, recolor );
 		
-		this.flip = 1;
+		this.flip = left ? 1 : -1;
 		
-		var slot = this.addSlot( 0.58*length, 0.55*length, 0 );
-		slot.setRotation( Math.PI, -Math.PI/2, Math.PI/2+0.12, 'ZXY' );
+		var slot = this.addSlot( 0.58*this.flip*length, 0.55*length, 0 );
+		slot.setRotation( Math.PI/2*(1+this.flip), -this.flip*Math.PI/2, Math.PI/2-this.flip*0.12, 'ZXY' );
 		
-		slot = this.addSlot( 0.36*length, 1.13*length, -0.0*length );
-		slot.setRotation( 0, Math.PI/2, -3*Math.PI/180, 'ZXY' );
+		slot = this.addSlot( 0.36*this.flip*length, 1.13*length, -0.0*length );
+		slot.setRotation( 0, Math.PI/2, -3*this.flip*Math.PI/180, 'ZXY' );
 		
-		slot = this.addSlot( 0.12*length, 1.17*length, -0.0*length );
-		slot.setRotation( 0, Math.PI/2, -1*Math.PI/180, 'ZXY' );
+		slot = this.addSlot( 0.12*this.flip*length, 1.17*length, -0.0*length );
+		slot.setRotation( 0, Math.PI/2, -this.flip*Math.PI/180, 'ZXY' );
 		
-		slot = this.addSlot( -0.12*length, 1.16*length, -0.0*length );
-		slot.setRotation( 0, Math.PI/2, 1*Math.PI/180, 'ZXY' );
+		slot = this.addSlot( -0.12*this.flip*length, 1.16*length, -0.0*length );
+		slot.setRotation( 0, Math.PI/2, 1*this.flip*Math.PI/180, 'ZXY' );
 
-		slot = this.addSlot( -0.36*length, 1.09*length, -0.0*length );
-		slot.setRotation( 0, Math.PI/2, 3*Math.PI/180, 'ZXY' );
+		slot = this.addSlot( -0.36*this.flip*length, 1.09*length, -0.0*length );
+		slot.setRotation( 0, Math.PI/2, 3*this.flip*Math.PI/180, 'ZXY' );
 		
 		filename = filename.split('/').pop();
 		if( VERTICES[filename] && FACES[filename] )
@@ -110,62 +109,18 @@ class RoundPalmLeft extends GLTFPart
 		var that = this;
 		function recolor( )
 		{
+			// flip left/right palm
+			that.mainMesh.scale.x *= that.flip;
+		
 			that.recolor( [0,0.21,1], [0.3,0.3,0.3] );
 		}
-	} // RoundPalmLeft.constructor
+	} // RoundPalm.constructor
 	
-} // RoundPalmLeft
+} // RoundPalm
 
 
 
 
-class RoundPalmRight extends GLTFPart
-{
-	constructor ( filename, length=1.4, width=1.4, thickness=0.3 )
-	{
-		super( filename, length, recolor );
-		
-		this.flip = -1;
-		
-		var slot = this.addSlot( -0.58*length, 0.55*length, 0 );
-		slot.setRotation( Math.PI*0, Math.PI/2, Math.PI/2-0.12, 'ZXY' );
-		
-		slot = this.addSlot( -0.36*length, 1.13*length, -0.0*length );
-		slot.setRotation( 0, Math.PI/2, 3*Math.PI/180, 'ZXY' );
-		
-		slot = this.addSlot( -0.12*length, 1.17*length, -0.0*length );
-		slot.setRotation( 0, Math.PI/2, 1*Math.PI/180, 'ZXY' );
-		
-		slot = this.addSlot( 0.12*length, 1.16*length, -0.0*length );
-		slot.setRotation( 0, Math.PI/2, -1*Math.PI/180, 'ZXY' );
-
-		slot = this.addSlot( 0.36*length, 1.09*length, -0.0*length );
-		slot.setRotation( 0, Math.PI/2, -3*Math.PI/180, 'ZXY' );
-		
-		filename = filename.split('/').pop();
-		if( VERTICES[filename] && FACES[filename] )
-		{
-			
-			// 3D convex shape
-			var vertices = [...VERTICES[filename]];
-			var faces = FACES[filename];
-			
-			// physics
-			this.physics = physics.convex( vertices, faces );
-			this.physics.threejs = this;
-			this.debugConvex( vertices, faces );
-		
-			physics.bodies.push( this );
-		}
-
-		var that = this;
-		function recolor( )
-		{
-			that.recolor( [0,0.21,1], [0.3,0.3,0.3] );
-		}
-	} // RoundPalmRight.constructor
-	
-} // RoundPalmRight
 
 
-export { RoundFinger, RoundPalmLeft, RoundPalmRight };
+export { RoundFinger, RoundPalm };

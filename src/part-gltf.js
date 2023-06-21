@@ -39,7 +39,6 @@ const MATERIAL = new THREE.MeshPhysicalMaterial({
 
 
 
-
 class GLTFPart extends Part
 {
 	constructor ( filename, length=0, callback=undefined )
