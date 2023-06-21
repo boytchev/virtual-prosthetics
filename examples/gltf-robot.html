@@ -40,19 +40,19 @@
 				this,
 				new Prosthetic.MotorY( -Infinity, Infinity, 0, 0.6, 0.1 ),
 				new Prosthetic.MotorZ( PI/2, -PI/2, 0, 0.34, 0.25 ),
-				new Prosthetic.RoundFinger( '../assets/gltf/phalange-8.glb', 0.8 ),
+				new Prosthetic.RoundFinger( '../assets/gltf/round-finger-8.glb', 0.8 ),
 				new Prosthetic.MotorZ( 0, -PI/2, 0, 0.2, 0.12 ),
-				new Prosthetic.RoundFinger( '../assets/gltf/phalange-5.glb', 0.5 ),
+				new Prosthetic.RoundFinger( '../assets/gltf/round-finger-5.glb', 0.5 ),
 				new Prosthetic.MotorZ( 0, -PI/2, 0, 0.2, 0.12 ),
-				new Prosthetic.RoundFinger( '../assets/gltf/phalange-5.glb', 0.5 ),
+				new Prosthetic.RoundFinger( '../assets/gltf/round-finger-5.glb', 0.5 ),
 				p = new Prosthetic.MotorZ( 0, -PI/2, 0, 1, 0.12 ),
-				new Prosthetic.RoundFinger( '../assets/gltf/phalange-end.glb', 0.5 ),
+				new Prosthetic.RoundFinger( '../assets/gltf/round-tip.glb', 0.5 ),
 			);
 
-			new Prosthetic.RoundFinger( '../assets/gltf/phalange-end.glb', 0.5 )
+			new Prosthetic.RoundFinger( '../assets/gltf/round-tip.glb', 0.5 )
 				.attachToSlot( p, new Prosthetic.Slot(0,0,0.4) );
 
-			new Prosthetic.RoundFinger( '../assets/gltf/phalange-end.glb', 0.5 )
+			new Prosthetic.RoundFinger( '../assets/gltf/round-tip.glb', 0.5 )
 				.attachToSlot( p, new Prosthetic.Slot(0,0,-0.4) );
 		}
 	}

@@ -3,7 +3,7 @@
 //	Virtual Prosthetics 1.0
 //	GLTF part
 //
-//	class GLTFPart( filename, length, callback )
+//	class GLTFPart( filename, length=0, callback=undefined )
 //
 //	recolor( fromColor, toColor, eps=0.01 )
 //
@@ -42,7 +42,7 @@ const MATERIAL = new THREE.MeshPhysicalMaterial({
 
 class GLTFPart extends Part
 {
-	constructor ( filename, length, callback )
+	constructor ( filename, length=0, callback=undefined )
 	{
 		super( );
 

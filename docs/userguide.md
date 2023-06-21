@@ -4,6 +4,7 @@
   &ndash; [Installation](#installation), [Options](#options)</small>
 * **[Robot parts](#robot-parts)**<small><br>
   &ndash; [Common shapes](#common-shapes): [Ball](#ball), [Box](#box)<br>
+  &ndash; [External shapes](#external-shapes): [GLTFPart](#gltfpart)<br>
   &ndash; [Motors](#motors): [MotorX](#motorx), [MotorY](#motory), [MotorZ](#motorz)</small>
 * **[Hand parts](#hand-parts)**<small><br>
   &ndash; [Edged hand](#edged-hand): [EdgedFinger](#edgedfinger), [EdgedTip](#edgedtip), [EdgedPalm](#edgedpalm)<br>
@@ -148,6 +149,46 @@ Example:
 ```js
 part = new Prosthetic.Box( 2, 1, 2 );
 ```
+
+
+
+## External shapes
+
+Complex shapes of robot parts can be designed with external tools like
+[Blender](https://www.blender.org/) and provided as
+[GLTF or GLB files](https://en.wikipedia.org/wiki/GlTF).
+
+
+Source code: [src/part-gltf.js](https://github.com/boytchev/virtual-prosthetics/blob/main/src/part-gltf.js)
+
+
+
+> ### GLTFPart
+
+```js
+GLTFPart( filename )
+GLTFPart( filename, length )
+GLTFPart( filename, length, callback )
+```
+
+Base class. Defines a robot part with shape loaded from GLTF or GLB file with
+URL in `filename`. The GLTF part has no slots. The `length` parameter (by
+default it is 0) sets the intended length of the shape, so center of rotation of
+the part is shifted down by `length/2` from the center of the shape.
+
+A GLTF model ia loaded asynchronously. The optional `callback` parameter is a
+function that is called when the model is loaded. The part has no physics
+envelope and no slots. A part that extends GLTFPart may add its own envelope
+and slots.
+
+<img src="images/gltfpart.png">
+
+Example:
+
+```js
+part = new Prosthetic.GLTFPart( 'myshape.glb', 2 );
+```
+
 
 
 
@@ -328,8 +369,11 @@ part = new Prosthetic.EdgedPalm( true, 1.5, 0.9, 0.3 );
 The round hand parts are shaped like ellipsoids and have connectors for
 attaching other round parts. The main properties of round hand parts are:
 
+* fixed size, could be scaled proportionally
 * smoother and more aesthetic appearance
 * shapes provided from external GLTF files
 * approximate precision of collision detection
 
 Source code: [src/part-hand-round.js](https://github.com/boytchev/virtual-prosthetics/blob/main/src/part-hand-round.js)
+
+<img src="images/round-hand-parts.png">

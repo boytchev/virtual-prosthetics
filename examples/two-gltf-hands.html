@@ -52,9 +52,9 @@
 			this.isLeft = isLeft;
 
 			if( isLeft )
-				this.palm = new Prosthetic.RoundPalmLeft( '../assets/gltf/palm-left.glb' );
+				this.palm = new Prosthetic.RoundPalmLeft( '../assets/gltf/round-palm-left.glb' );
 			else
-				this.palm = new Prosthetic.RoundPalmRight( '../assets/gltf/palm-right.glb' );
+				this.palm = new Prosthetic.RoundPalmRight( '../assets/gltf/round-palm-right.glb' );
 			
 			this.palm.attachToSlot( this );
 
@@ -77,11 +77,11 @@
 			this.addChain( 
 					spread.attachToSlot( this.palm, slot ),
 					new Joint( 0, -PI/2, -PI/4, 0.2, 0.07 ),
-					new Finger( '../assets/gltf/phalange-8.glb', 0.8 ),
+					new Finger( '../assets/gltf/round-finger-8.glb', 0.8 ),
 					new Joint( 0, -PI/2, -PI/4, 0.2, 0.07 ),
-					new Finger( '../assets/gltf/phalange-5.glb', 0.5 ),
+					new Finger( '../assets/gltf/round-finger-5.glb', 0.5 ),
 					new Joint( 0, -PI/2, -PI/4, 0.2, 0.07 ),
-					new Finger( '../assets/gltf/phalange-end.glb', 0.5 ),
+					new Finger( '../assets/gltf/round-tip.glb', 0.5 ),
 				);
 				
 			return spread;
