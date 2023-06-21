@@ -4,11 +4,11 @@
   &ndash; [Installation](#installation), [Options](#options)</small>
 * **[Robot parts](#robot-parts)**<small><br>
   &ndash; [Common shapes](#common-shapes): [Ball](#ball), [Box](#box)<br>
-  &ndash; [External shapes](#external-shapes): [GLTFPart](#gltfpart)<br>
+  &ndash; [External shapes](#external-shapes): [GLTFPart](#gltfpart), [recolor](#recolor)<br>
   &ndash; [Motors](#motors): [MotorX](#motorx), [MotorY](#motory), [MotorZ](#motorz)</small>
 * **[Hand parts](#hand-parts)**<small><br>
   &ndash; [Edged hand](#edged-hand): [EdgedFinger](#edgedfinger), [EdgedTip](#edgedtip), [EdgedPalm](#edgedpalm)<br>
-  &ndash; [Round hand](#round-hand): </small>
+  &ndash; [Round hand](#round-hand): [RoundFinger](#roundfinger), [RoundPalm](#roundpalm)</small>
 
 
 # Virtual Prosthetics
@@ -189,6 +189,16 @@ Example:
 part = new Prosthetic.GLTFPart( 'myshape.glb', 2 );
 ```
 
+> ### recolor
+
+```js
+gltf.recolor( fromColor, toColor, eps )
+```
+
+Method of GLTFPart. Changes the color of each vertex from `fromColor` to
+`toColor`. Optional parameter `eps` defines how precise to check `fromColor`.
+By default it is 0.01. Colors can be changed only after the 3D model is loaded
+and `recolor` can be used in a `callback` function.
 
 
 
@@ -374,6 +384,65 @@ attaching other round parts. The main properties of round hand parts are:
 * shapes provided from external GLTF files
 * approximate precision of collision detection
 
+Round hand parts as GLTF files use two colors &ndash; white (1,1,1) for the planar
+surfaces and blue (0,0.21,1) for the curved surfaces. When files are loaded for
+modeling a rounded hand, the blue color is changed to gray (0.3,0.3,0.3).
+
 Source code: [src/part-hand-round.js](https://github.com/boytchev/virtual-prosthetics/blob/main/src/part-hand-round.js)
 
 <img src="images/round-hand-parts.png">
+
+
+
+> ### RoundFinger
+
+```js
+RoundFinger( filename )
+RoundFinger( filename, length )
+```
+
+Class. Defines a round finger shape intended for attachment to Z-motor. The
+optional parameter `length` (by default 0.8) defines the intended length of the
+palm. There is one slot at the top at position (0,`length`,0).
+
+The round finger is used to model both a finger and a tip. The following example
+defines the intended `length` value for the available GLTF file for round fingers:
+
+| Part | GLTF file | Length |
+| --- | --- | --- |
+| Long finger | round-finger-8.glb | 0.8 |
+| Short finger | round-finger-5.glb | 0.5 |
+| Tip | round-tip.glb | 0.5 |
+
+Example:
+
+```js
+part = new Prosthetic.RoundFinger( '../assets/gltf/round-finger-8.glb', 0.8 );
+```
+
+
+
+> ### RoundPalm
+
+```js
+RoundPalm( left, filename )
+RoundPalm( left, filename, length )
+```
+
+Class. Defines a round palm. The palm exists in two symmetrical shapes. If
+`left` is true, the palm is a left-hand palm, otherwise it is a right-hand palm.
+Only the left palm exists as a GLTF model. The right palm is a mirror of the
+left palm. The parameter `length` (by default 1.4) defines the intended size of
+the palm. There are five slots for attaching round fingers, the slot for the
+thumb is 0.
+
+| Part | GLTF file | Length |
+| --- | --- | --- |
+| Palm | round-palm.glb | 1.4 |
+
+
+Example:
+
+```js
+part = new Prosthetic.RoundPalm( true, '../assets/gltf/round-palm.glb' );
+```
