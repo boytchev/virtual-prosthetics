@@ -134,8 +134,11 @@ class Part extends THREE.Group
 			new Float32Array(points),3 ) );
 		
 		var lines = new THREE.LineSegments( geometry, material );
+			lines.position.copy( this.mainMesh.position );
+			//lines.scale.set( 1/this.mainMesh.scale.x, 1/this.mainMesh.scale.y, 1/this.mainMesh.scale.z );
 
-		this.mainMesh.add( lines );
+		//this.mainMesh.add( lines );
+		this.add( lines );
 	}
 }
 
