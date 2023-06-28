@@ -7,6 +7,7 @@ Modeling tool for virtual prosthetic body parts
 
 ## Examples
 
+[<kbd><img src="examples/snapshots/emoty-scene.jpg" width="270"></kbd>](examples/empty-scene.html)
 [<kbd><img src="examples/snapshots/simple-robot.jpg" width="270"></kbd>](examples/simple-robot.html)
 [<kbd><img src="examples/snapshots/several-robots.jpg" width="270"></kbd>](examples/several-robots.html)
 [<kbd><img src="examples/snapshots/robot-dance.jpg" width="270"></kbd>](examples/robot-dance.html)
