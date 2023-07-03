@@ -1,33 +1,49 @@
+# Brainstorming Ideas
+
+#### Contents
+* **Brainstorming Ideas**<small><br>
+	&ndash; [Topology](#topology)<br>
+	&ndash; [Sensors and feedback](#sensors-and-feedback)<br>
+	&ndash; [Interface](#interface)<br>
+	&ndash; [Visual](#visual)<br>
+	&ndash; [Postures](#postures)<br>
+	&ndash; [Documents](#documents)<br>
+	&ndash; [Initially needed information](#initially-needed-information)</small>
+* **Brainstorming Ideas**<small><br>
+	&ndash; [Grip lock](#grip-lock)<br>
+	&ndash; [Grasp taxonomy](#grasp-taxonomy)</small>
+
+
 ## Brainstorming Ideas
 
 #### Topology
-* T1. [**<span style="color: green">DONE</span>**] Custom skeleton (e.g. model 1 individual finger, or a hand with 6 fingers)
-* T2. [**<span style="color: green">DONE</span>**] Custom shapes (e.g. different 3D shapes of body parts)
-* T3. [**<span style="color: green">DONE</span>**] Custom degrees of freedom in joints
-* T4. [**<span style="color: green">DONE</span>**] Custom ranges of joint rotations
+* <span style="background:palegreen">T1. [**DONE**] Custom skeleton (e.g. model 1 individual finger, or a hand with 6 fingers)</span>
+* <span style="background:palegreen">T2. [**DONE**] Custom shapes (e.g. different 3D shapes of body parts)</span>
+* <span style="background:palegreen">T3. [**DONE**] Custom degrees of freedom in joints</span>
+* <span style="background:palegreen">T4. [**DONE**] Custom ranges of joint rotations</span>
 * T5. Inverse kinematics
 * T6. Soft tissue and deformations
 
 #### Sensors and feedback
-* S1. [**<span style="color: green">DONE</span>**] Custom positions of sensors
-* S2. [**<span style="color: green">DONE</span>**] Feedback from joint positions
-* S3. [**<span style="color: green">DONE</span>**] Collision detection with external objects
-* S4. [**<span style="color: green">DONE</span>**] Self-collision detection
-* S5. [**<span style="color: green">DONE</span>**] Visual feedback with color heatmaps
-* S6. [**<span style="color: green">DONE</span>**] Visual feedback with vectors
+* <span style="background:palegreen">S1. [**DONE**] Custom positions of sensors</span>
+* <span style="background:palegreen">S2. [**DONE**] Feedback from joint positions</span>
+* <span style="background:palegreen">S3. [**DONE**] Collision detection with external objects</span>
+* <span style="background:palegreen">S4. [**DONE**] Self-collision detection</span>
+* <span style="background:palegreen">S5. [**DONE**] Visual feedback with color heatmaps</span>
+* <span style="background:palegreen">S6. [**DONE**] Visual feedback with vectors</span>
 * S7. Visual feedback with tables/graphs
 * S8. Gravity for gripped objects
 
 #### Interface
 * I1. Interface API for using from outside
-* I2. [**<span style="color: green">DONE</span>**] Programming control via API
-* I3. [**<span style="color: green">DONE</span>**] API for model definition
-* I4. [**<span style="color: green">DONE</span>**] API for model motion
+* <span style="background:palegreen">I2. [**DONE**] Programming control via API</span>
+* <span style="background:palegreen">I3. [**DONE**] API for model definition</span>
+* <span style="background:palegreen">I4. [**DONE**] API for model motion</span>
 
 #### Visual
-* V1. [**<span style="color: green">DONE</span>**] Interactive controls
+* <span style="background:palegreen">V1. [**DONE**] Interactive controls</span>
 * V2. Stock objects to grap and hold
-* V3. [**<span style="color: green">DONE</span>**] Importing GLTF body parts
+* <span style="background:palegreen">V3. [**DONE**] Importing GLTF body parts</span>
 * V4. Exporting GLTF models
 * V5. Customs warning (aka virtual pain)
 
@@ -35,18 +51,18 @@
 * P1. Mapping between input data and posture
 * P2. Predefined collection of postures
 * P3. Predefined animations
-* P4. [**<span style="color: green">DONE</span>**] Scenes with several models
+* <span style="background:palegreen">P4. [**DONE**] Scenes with several models</span>
 * P5. Self-balancing of pressure
-* P6. [**<span style="color: green">DONE</span>**] Predefined models (e.g. hands)
+* <span style="background:palegreen">P6. [**DONE**] Predefined models (e.g. hands)</span>
 * P7. Self-learning mode
 * P8. Macros mode (e.g. grip for rod, ball, cup; handshake, ...)
 
 #### Documents
-* D1. [**<span style="color: green">DONE</span>**] GitHub project
-* D2. [**<span style="color: green">DONE</span>**] User documentation
+* <span style="background:palegreen">D1. [**DONE**] GitHub project</span>
+* <span style="background:palegreen">D2. [**DONE**] User documentation</span>
 * D3. Educational content
 * D4. Academic papers
-* D5. [**<span style="color: green">DONE</span>**] Social network disseminations (e.g. videos)
+* <span style="background:palegreen">D5. [**DONE**] Social network disseminations (e.g. videos)</span>
 
 #### Initially needed information
 * Close-up images of hand prototype
