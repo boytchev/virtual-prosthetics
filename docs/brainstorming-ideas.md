@@ -108,9 +108,10 @@ lock/unlock signal generate by either the arm muscles, or by other means.
 
 #### Grasp taxonomy
 
-The current scope of recognizable gestures contains 9 gestures. Towever, there
-is a taxonomy of gestures where more gestures are being described. It would be
-nice if all these gestures are also supported.
+There is a taxonomy of gestures where more gestures are being described. It
+would be nice if all these gestures are also supported. Currently some of the
+gestures are impossible to the virtual hand, because the thumb need additional
+rotation axis at its base.
 
 A few pointers:
 
