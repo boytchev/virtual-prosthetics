@@ -1,7 +1,7 @@
 ## Brainstorming Ideas
 
 #### Topology
-* T1. [**<span color="darkgreen">DONE</span>**] Custom skeleton (e.g. model 1 individual finger, or a hand with 6 fingers)
+* T1. [**<span style="color: darkgreen">DONE</span>**] Custom skeleton (e.g. model 1 individual finger, or a hand with 6 fingers)
 * T2. [**DONE**] Custom shapes (e.g. different 3D shapes of body parts)
 * T3. [**DONE**] Custom degrees of freedom in joints
 * T4. [**DONE**] Custom ranges of joint rotations
@@ -57,7 +57,7 @@
 
 ## Other Ideas
 
-> ### Grip Lock
+#### Grip Lock
 
 A real hand holding an object can be controlled by two group of muscles. The 
 hand muscles control the gripping, and the arm muscles can move the whole arm.
@@ -90,7 +90,7 @@ To implement the **grip lock** functionality, it is required to have a special
 lock/unlock signal generate by either the arm muscles, or by other means.
 
 
-> ### Grasp taxonomy
+#### Grasp taxonomy
 
 The current scope of recognizable gestures contains 9 gestures. Towever, there
 is a taxonomy of gestures where more gestures are being described. It would be
