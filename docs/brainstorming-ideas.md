@@ -25,7 +25,7 @@
 * I4. [**DONE**] API for model motion
 
 #### Visual
-* V1. Interactive controls
+* V1. [**DONE**] Interactive controls
 * V2. Stock objects to grap and hold
 * V3. [**DONE**] Importing GLTF body parts
 * V4. Exporting GLTF models
@@ -57,7 +57,7 @@
 
 ## Other Ideas
 
-### Grip Lock
+> ### Grip Lock
 
 A real hand holding an object can be controlled by two group of muscles. The 
 hand muscles control the gripping, and the arm muscles can move the whole arm.
@@ -90,7 +90,7 @@ To implement the **grip lock** functionality, it is required to have a special
 lock/unlock signal generate by either the arm muscles, or by other means.
 
 
-### Grasp taxonomy
+> ### Grasp taxonomy
 
 The current scope of recognizable gestures contains 9 gestures. Towever, there
 is a taxonomy of gestures where more gestures are being described. It would be
