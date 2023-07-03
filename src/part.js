@@ -110,7 +110,7 @@ class Part extends THREE.Group
 
 //		console.log( 'no contact', this.constructor.name, 'with', otherObject.constructor.name );
 	}
-
+	
 	debugConvex( vertices, faces )
 	{
 		if( !OPTION_DEBUG_PHYSICS ) return;

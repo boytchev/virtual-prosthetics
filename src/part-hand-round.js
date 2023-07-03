@@ -86,8 +86,8 @@ class RoundPalm extends GLTFPart
 		
 		this.flip = left ? 1 : -1;
 		
-		var slot = this.addSlot( 0.58*this.flip*length, 0.55*length, 0 );
-		slot.setRotation( Math.PI/2*(1+this.flip), -this.flip*Math.PI/2, Math.PI/2-this.flip*0.12, 'ZXY' );
+		var slot = this.addSlot( 0.53*this.flip*length, 0.50*length, 0 );
+		slot.setRotation( Math.PI/2*(1+this.flip), -this.flip*Math.PI/2, Math.PI/2+this.flip*0.7, 'ZXY' );
 		
 		slot = this.addSlot( 0.36*this.flip*length, 1.13*length, -0.0*length );
 		slot.setRotation( 0, Math.PI/2, -3*this.flip*Math.PI/180, 'ZXY' );

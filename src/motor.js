@@ -64,6 +64,12 @@ class Motor extends Part
 			throw `Error: body part '${this.name}' cannot rotate`;
 	}
 	
+	setName( name )
+	{
+		this.name = name;
+		return this;
+	}
+
 }
 
 

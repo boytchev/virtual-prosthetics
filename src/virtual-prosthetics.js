@@ -13,8 +13,12 @@ export * from "./part-gltf.js";
 export * from "./part-hand-edged.js";
 export * from "./part-hand-round.js";
 export * from "./part-shapes.js";
+
+export * from "./robots/round-hand.js";
+
 //export * from "./engine.js";
 //export * from "./engine.cannon.js";
 //export * from "./engine.native.js";
 
 export * from "../libs/three.module.min.js";
+export * from "../libs/lil-gui.module.min.js";

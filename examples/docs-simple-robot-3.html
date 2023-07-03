@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+
+
+<body>
+	<script type="module">
+
+	import * as Prosthetic from "../build/virtual-prosthetics.js";
+
+	var robot = new Prosthetic.Robot;
+		robot.attachChain(
+				new Prosthetic.MotorZ( -0.7, 0.7, 0, 0.2, 0.6 ),
+				new Prosthetic.EdgedFinger( 1, 1, 0.1 ),
+				new Prosthetic.MotorZ( -1.6, 0, 0, 0.4, 0.3 ),
+				new Prosthetic.EdgedFinger( 2 ),
+				new Prosthetic.MotorZ( -1.6, 0, 0, 0.4, 0.2 ),
+				new Prosthetic.EdgedFinger( 0.7, 0.1 ),
+			);
+	
+	Prosthetic.setAnimation( loop );
+
+	function loop( t )
+	{
+		robot.setAngles( 
+			-0.7*Math.sin(2*t+3),
+			-1.6*(0.5 + 0.5*Math.sin(2*t+1)),
+			-1.6*(0.5 + 0.5*Math.sin(2*t))
+		);
+	}
+
+	</script>
+</body>

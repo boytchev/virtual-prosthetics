@@ -5,18 +5,28 @@ virtual robots. In this document all times are in seconds, all sizes are in
 meters, all angles are in radians and all indices start from 0.
 
 
-* **[INTRODUCTION](#introduction)**<small>: [installation](#installation), [options](#options)</small>
+* **[USER GUIDE](#user-guide)**<small>
+	* **[Building a robot](#building-a-robot)**<small><br>
+		&ndash; [installation](#installation)<br>
+		&ndash; [simple robot](#simple-robot)<br>
+		&ndash; [options](#options)</small>
+	* **[Robots](#robots)**<small><br> 
+	  &ndash; [round hand robot](#round-hand-robot): [`RoundHand`](#round-hand), [`flexFinger`](#flexfinger), [`flexFingers`](#flexfingers), [`spreadFinger`](#spreadfinger), [`spreadFingers`](#spreadfingers)<br>
 	* **[Robot parts](#robot-parts)**<small><br> 
 	  &ndash; [common shapes](#common-shapes): [`Ball`](#ball), [`Box`](#box)<br>
 	  &ndash; [external shapes](#external-shapes): [`GLTFPart`](#gltfpart), [`recolor`](#recolor)<br>
 	  &ndash; [motors](#motors): [`MotorX`](#motorx), [`MotorY`](#motory), [`MotorZ`](#motorz)</small>
 	* **[Hand parts](#hand-parts)**<small><br>
 	  &ndash; [edged hand](#edged-hand): [`EdgedFinger`](#edgedfinger), [`EdgedTip`](#edgedtip), [`EdgedPalm`](#edgedpalm)<br>
-	  &ndash; [round hand](#round-hand): [`RoundFinger`](#roundfinger), [`RoundPalm`](#roundpalm)</small>
-* **[API REFERENCE](#apireference)**
-	* **[Scene API](#scene-api)**<small>: [`setAnimation`](#setanimation), [`getTime`](#gettime), [`getScene`](#getscene), [`setCameraPosition`](#setcameraposition), [`setCameraTarget`](#setcameratarget)</small>
+	  &ndash; [round hand](#round-hand-2): [`RoundFinger`](#roundfinger), [`RoundPalm`](#roundpalm)</small>
+	  <br>
+	  <br>
+* **[API REFERENCE](#api-reference)**
+	* **[Scene API](#scene-api)**<small>: [`getScene`](#getscene)<br>
+	  &ndash; [`setAnimation`](#setanimation), [`getTime`](#gettime)<br>
+	  &ndash; [`setCameraPosition`](#setcameraposition), [`setCameraTarget`](#setcameratarget)</small>
 	* **[Robot API](#robot-api)**:<small> [`Robot`](#robot)<br>
-	  &ndash; [`addChain`](#addchain)<br>
+	  &ndash; [`attachChain`](#attachchain), [`addChain`](#addchain), [`addGUI`](#addgui)<br>
 	  &ndash; [`getParts`](#getparts), [`getMotors`](#getmotors), [`getSensors`](#getsensors)<br>
 	  &ndash; [`getPosition`](#getposition), [`setPosition`](#setposition), [`setRotation`](#setrotation)<br>
 	  &ndash; [`getAngle`](#getangle), [`setAngle`](#setangle), [`getAngles`](#getangles), [`setAngles`](#setangles)</small>
@@ -24,7 +34,7 @@ meters, all angles are in radians and all indices start from 0.
 	  &ndash; [`addSlot`](#addslot), [`attachToSlot`](#attachtoslot)<br>
 	  &ndash; [`beginContact`](#begincontact), [`endContact`](#endcontact)<br>
 	  &ndash; [`setPosition`](#setposition-1), [`setRotation`](#setrotation-1)</small>
-	* **[Motor API](#motor-api)**:<small> [`Motor`](#motor)<br>
+	* **[Motor API](#motor-api)**:<small> [`Motor`](#motor), [`setName`](#setname)<br>
 	  &ndash; [`getAngle`](#getangle-1), [`setAngle`](#setangle-1)</small>
 	* **[Slot API](#slot-api)**:<small> [`Slot`](#slot)<br>
 	  &ndash; [`setPosition`](#setposition-2), [`setRotation`](#setrotation-2)</small>
@@ -35,7 +45,7 @@ meters, all angles are in radians and all indices start from 0.
 
 
 
-# Introduction
+# User guide
 
 The Virtual Prosthetics library allows construction of virtual robots from a
 JavaScript program. The robots can be viewed and manipulated on desktop and
@@ -49,6 +59,11 @@ mobile platforms. The library is base on the following main concepts:
 * [**Sensor**](#sensor-api) – a robot part that can sense its environment and generate feedback.
 
 <center><img src="images/architecture.png"></center>
+
+
+
+
+## Building a robot
 
 
 > ### Installation
@@ -81,6 +96,209 @@ the console. Activation creates a virtual scene with the Virtual Prosthetics
 logo spinning in the center:
 
 [<kbd><img src="../examples/snapshots/empty-scene.jpg" width="400"></kbd>](../examples/empty-scene.html)
+
+
+
+> ### Simple robot
+
+This section describes the construction of a simple robot in several steps. The robot contains three parts and three motors, so that each part can be rotated.
+
+<img src="images/simple-robot.png">
+
+The robot will be constructed in several steps:
+* Step 1 &ndash; HTML page
+* Step 2 &ndash; Robot definition
+* Step 3 &ndash; Robot animation
+* Step 4 &ndash; Optional customization
+* Step 5 &ndash; Optional encapsulation
+
+
+#### Step 1 &ndash; HTML page
+
+The first step is to create the main HTML page. It should have `<!DOCTYPE html>`
+at the very top to indicate this is a HTML5 page. The JavaScript source code is
+in `<script>` tag inside the main `<body>` tag. The library is loaded with an
+`import` statement, so that all definitions are accessed through `Prosthetic.`
+prefix. The following code create an empty scene:
+
+```html
+<!DOCTYPE html>
+
+<body>
+	<script type="module">
+
+		import * as Prosthetic from "../build/virtual-prosthetics.js";
+
+		// robot definition
+		// robot animation
+		
+	</script>
+</body>
+```
+
+
+
+#### Step 2 &ndash; Robot definition
+
+Robots are defined as instances of [`Prosthetic.Robot`](#robot) class. The simple
+robot, that is being built, contains 6 elements &ndash; three motors and three
+robot parts. Motors are elements that implement rotation. For the simple robot
+rotation is around Z axis, so all three motors are [`Prosthetic.MotorZ`](#motorz)
+instances. The three robot parts are [`Prosthetic.EdgedFinger`](#edgedfinger).
+
+To join all elements in a robot they are attached into a chain with the robot's
+method `attachChain`. The following code build the robots as the chain 
+*(robot)&rarr;motor&rarr;finger&rarr;motor&rarr;finger&rarr;motor&rarr;finger*.
+
+```html
+var robot = new Prosthetic.Robot;
+	robot.attachChain(
+			new Prosthetic.MotorZ,
+			new Prosthetic.EdgedFinger,
+			new Prosthetic.MotorZ,
+			new Prosthetic.EdgedFinger,
+			new Prosthetic.MotorZ,
+			new Prosthetic.EdgedFinger,
+		);
+```
+
+The result is a static robot. The motors are shown as short black cylinders
+between robot parts:
+
+[<kbd><img src="../examples/snapshots/docs-simple-robot-1.jpg" width="400"></kbd>](../examples/docs-simple-robot-1.html)
+
+
+
+#### Step 3 &ndash; Robot animation
+
+The animation in Virtual Prosthetics is implemented by a loop function that
+is called each animation frame &ndash; this usually happens 60 times per second
+and is controlled by the browser. This function has a parameter with the
+current time, measured since the initialization of the library. What function is
+used as a loop function is defined with [`Prosthetic.setAnimation`](#setanimation).
+
+Robots are animated by changing the angles of rotation in their motors. The
+robot's method [`setAngles`](#setangles) sets the angles of all motors &ndash;
+the order of angles in the method corresponds to the order of motors in the
+robot construction.
+
+In the following example the first motor is rotated from -0.7 and 0.7 radians.
+The other two motors are rotated from -1.6 to 0 radians:
+
+```js
+Prosthetic.setAnimation( loop );
+
+function loop( t )
+{
+	robot.setAngles( 
+		-0.7*Math.sin(t),
+		-1.6*(0.5 + 0.5*Math.sin(t)),
+		-1.6*(0.5 + 0.5*Math.sin(t))
+	);
+}
+```
+
+[<kbd><img src="../examples/snapshots/docs-simple-robot-2.jpg" width="400"></kbd>](../examples/docs-simple-robot-2.html)
+
+
+
+#### Step 4 &ndash; Optional customization
+
+Most elements in Virtual Prosthetics can be customized with a set of optional
+parameters. For examples, motors may have allowed range of rotation as well as
+visual sizes. SImilarily, fingers's proportions can also be changed.
+
+The following example uses differen sizes of robot parts:
+
+```js
+new Prosthetic.MotorZ( -0.7, 0.7, 0, 0.2, 0.6 ),
+new Prosthetic.EdgedFinger( 1, 1, 0.1 ),
+new Prosthetic.MotorZ( -1.6, 0, 0, 0.4, 0.3 ),
+new Prosthetic.EdgedFinger( 2 ),
+new Prosthetic.MotorZ( -1.6, 0, 0, 0.4, 0.2 ),
+new Prosthetic.EdgedFinger( 0.7, 0.1 ),
+```
+
+and different animation that resembles digging motion:
+
+```js
+robot.setAngles( 
+	-0.7*Math.sin(2*t+3),
+	-1.6*(0.5 + 0.5*Math.sin(2*t+1)),
+	-1.6*(0.5 + 0.5*Math.sin(2*t))
+);
+```
+
+[<kbd><img src="../examples/snapshots/docs-simple-robot-3.jpg" width="400"></kbd>](../examples/docs-simple-robot-3.html)
+
+
+#### Step 5 &ndash; Optional encapsulation
+
+Robot encapsulation is the proces of packing robot structure and behaviour in
+a class. In this way it is easy to create many robots of this kind (i.e. 
+instances of this class).
+
+The following code creates class `Digger` which is a `Prosthetic.Robot`. Its
+constructor chains customized motors and robot parts and stores the `speed`
+parameter &ndash; it is how fast is the robot. The class has method `dig` which
+implements the digging motion for specific time and speed.
+
+```js
+class Digger extends Prosthetic.Robot
+{
+	constructor( speed )
+	{
+		super( );
+		
+		this.speed = speed;
+		this.attachChain(
+			new Prosthetic.MotorZ( -0.7, 0.7, 0, 0.2, 0.6 ),
+			new Prosthetic.EdgedFinger( 1, 1, 0.1 ),
+			new Prosthetic.MotorZ( -1.6, 0, 0, 0.4, 0.3 ),
+			new Prosthetic.EdgedFinger( 2 ),
+			new Prosthetic.MotorZ( -1.6, 0, 0, 0.4, 0.2 ),
+			new Prosthetic.EdgedFinger( 0.7, 0.1 ),
+		);
+	}
+	
+	dig( time )
+	{
+		time = time * this.speed;
+		
+		this.setAngles( 
+			-0.7*Math.sin(time+3),
+			-1.6*(0.5 + 0.5*Math.sin(time+1)),
+			-1.6*(0.5 + 0.5*Math.sin(time))
+		);
+	}
+}
+```
+
+Once the `Digger` class is defined, it can be used to create several robots,
+each with its own digging speed. The method `setPosition` is used to separate
+the robots, otherwise they all be created at position (0,0,0).
+
+```js
+var robotA = new Digger(2);
+var robotB = new Digger(3);
+var robotC = new Digger(4);
+
+robotA.setPosition( 0, 0, 1 );
+robotC.setPosition( 0, 0, -1 );
+
+Prosthetic.setAnimation( loop );
+
+function loop( t )
+{
+	robotA.dig( t );
+	robotB.dig( t );
+	robotC.dig( t );
+}
+```
+
+
+[<kbd><img src="../examples/snapshots/docs-simple-robot-4.jpg" width="400"></kbd>](../examples/docs-simple-robot-4.html)
+
 
 
 
@@ -126,7 +344,120 @@ Example:
 
 
 
-# Robot parts
+## Robots
+
+### Round hand robot
+
+This robot is an antropomorphic hand based on [round hand parts](#round-hand-2).
+It provides methods for flexing and spreading fingers.
+
+Source code: [src/robots/round-hand.js](https://github.com/boytchev/virtual-prosthetics/blob/main/src/robots/round-hand.js)
+
+
+> #### RoundHand
+
+```js
+RoundHand( isLeft )
+```
+
+Class. Defines a round hand robot. If `isLeft` is `true`, the a left hand is
+constructed, otherwise &ndash; a right hand.
+
+Example:
+
+```js
+hand = new Prosthetic.RoundHand( true );
+```
+
+
+> #### flexFinger
+
+```js
+flexFinger( index, angle )
+```
+
+Method. Flexes a selected finger &ndash; the thumb has `index` 0, the index finger
+is 1, etc. The `angle` is applied to all motors in the finger, that are used for
+flexing.
+
+<img src="images/flex-finger.png">
+
+Example:
+
+```js
+hand.flexFinger( 1, 0.5 );
+```
+
+
+> #### flexFingers
+
+```js
+flexFingers( angle )
+```
+
+Method. Flexes all fingers by given `angle`.
+
+Example:
+
+```js
+hand.flexFingers( 0.5 );
+```
+
+
+> #### spreadFinger
+
+```js
+spreadFinger( index, angle )
+```
+
+Method. Spreads a selected finger &ndash; the thumb has `index` 0, the index finger
+is 1, etc. The `angle` is applied only to the base motor of the finger.
+
+<img src="images/spread-angle.png">
+
+Example:
+
+```js
+hand.spreadFinger( 3, 0.1 );
+```
+
+
+> #### spreadFingers
+
+```js
+spreadFingers( angle, includeThumb )
+```
+
+Method. Spread all fingers by given maximal `angle`. The following table shows
+the anctual angles of spreading individual fingers:
+
+| Index | Finger | Spread angle |
+| --- | --- | --- |
+| 0 | thumb | 3 &times; `angle` |
+| 1 | index finger | 1.0 &times; `angle` |
+| 2 | middle finger | 0.3 &times; `angle` |
+| 3 | ring finger | -0.3 &times; `angle` |
+| 4 | little finger | -1.0 &times; `angle` |
+
+If `includeThumb` is `true`, the thumb is also spread, otherwise only the rest
+4 fingers are spread.
+
+Example:
+
+```js
+hand.spreadFingers( 0.5, false );
+```
+
+
+
+
+
+
+
+
+
+
+## Robot parts
 
 Robot parts are predefined [parts](api.md#parts-api) that have images. Some
 robot parts also have invisible physics envelopes that are used the the physics
@@ -134,7 +465,7 @@ engine for collision detection.
 
 
 
-## Common shapes
+### Common shapes
 
 Shapes are robot parts without motors. They can be positioned with
 [setPosition](api.md#setposition-1) and rotated with [setRotation](api.md#setrotation-1).
@@ -145,7 +476,7 @@ Source code: [src/part-shapes.js](https://github.com/boytchev/virtual-prosthetic
 
 
 
-> ### Ball
+> #### Ball
 
 ```js
 Ball( )
@@ -167,7 +498,7 @@ part = new Prosthetic.Ball( 2 );
 
 
 
-> ### Box
+> #### Box
 
 ```js
 Box( )
@@ -189,7 +520,7 @@ part = new Prosthetic.Box( 2, 1, 2 );
 
 
 
-## External shapes
+### External shapes
 
 Complex shapes of robot parts can be designed with external tools like
 [Blender](https://www.blender.org/) and provided as
@@ -200,7 +531,7 @@ Source code: [src/part-gltf.js](https://github.com/boytchev/virtual-prosthetics/
 
 
 
-> ### GLTFPart
+> #### GLTFPart
 
 ```js
 GLTFPart( filename )
@@ -226,7 +557,7 @@ Example:
 part = new Prosthetic.GLTFPart( 'myshape.glb', 2 );
 ```
 
-> ### recolor
+> #### recolor
 
 ```js
 gltf.recolor( fromColor, toColor, eps )
@@ -239,7 +570,7 @@ and `recolor` can be used in a `callback` function.
 
 
 
-## Motors
+### Motors
 
 Robot motors are extensions of [motor](api.md#motor) class with predefined axis
 of rotation and image. The motors have no physics envelopes and the engine
@@ -249,7 +580,7 @@ Source code: [src/part-motors.js](https://github.com/boytchev/virtual-prosthetic
 
 
 
-> ### MotorX
+> #### MotorX
 
 ```js
 MotorX( min, max, def )
@@ -271,7 +602,7 @@ motor = new Prosthetic.MotorX( 0, Math.PI, Math.PI/2 );
 
 
 
-### MotorY
+> #### MotorY
 
 ```js
 MotorY( min, max, def )
@@ -293,7 +624,7 @@ motor = new Prosthetic.MotorY( 0, Math.PI, Math.PI/2 );
 
 
 
-### MotorZ
+> #### MotorZ
 
 ```js
 MotorZ( min, max, def, width=0.1, height=0.05 )
@@ -315,7 +646,7 @@ motor = new Prosthetic.MotorZ( 0, Math.PI, Math.PI/2 );
 
 
 
-# Hand parts
+## Hand parts
 
 Hands parts are predefined robot parts that are used to build antropomorphic
 robots resembling a human hand. Hands parts are: a finger, a finger tip, and
@@ -325,7 +656,7 @@ a palm:
 
 
 
-## Edged hand
+### Edged hand
 
 The edged hand parts are convex polyhedra with straight edges. The main
 properties of edged hand parts are:
@@ -339,7 +670,7 @@ Source code: [src/part-hand-edged.js](https://github.com/boytchev/virtual-prosth
 
 
 
-> ### EdgedFinger
+> #### EdgedFinger
 
 ```js
 EdgedFinger( )
@@ -362,7 +693,7 @@ part = new Prosthetic.EdgedFinger( 1, 0.2, 0.2 );
 
 
 
-> ### EdgedTip
+> #### EdgedTip
 
 ```js
 EdgedTip( )
@@ -387,7 +718,7 @@ part = new Prosthetic.EdgedTip( 1, 0.2, 0.2 );
 
 
 
-> ### EdgedPalm
+> #### EdgedPalm
 
 ```js
 EdgedPalm( left )
@@ -411,7 +742,7 @@ part = new Prosthetic.EdgedPalm( true, 1.5, 0.9, 0.3 );
 
 
 
-## Round hand
+### Round hand
 
 The round hand parts are shaped like ellipsoids and have connectors for
 attaching other round parts. The main properties of round hand parts are:
@@ -431,7 +762,7 @@ Source code: [src/part-hand-round.js](https://github.com/boytchev/virtual-prosth
 
 
 
-> ### RoundFinger
+> #### RoundFinger
 
 ```js
 RoundFinger( filename )
@@ -459,7 +790,7 @@ part = new Prosthetic.RoundFinger( '../assets/gltf/round-finger-8.glb', 0.8 );
 
 
 
-> ### RoundPalm
+> #### RoundPalm
 
 ```js
 RoundPalm( left, filename )
@@ -629,6 +960,38 @@ class MyRobot extends Prosthetic.Robot
 ```
 
 
+> ### attachChain
+
+```js
+attachChain( part1, part2, ... )
+```
+
+Method. Used in the constructor of a custom robot to automatically connect parts
+`part1`, `part2` and so on in a chain and attach this chain to the robot. Method
+`attachChain(...)` is a shorthand for `addChain(this,...)`.
+
+Example:
+
+```js
+class MyRobot extends Prosthetic.Robot
+{
+	constructor( )
+	{
+		super( );
+
+		var partA = ...;
+		var partB = ...;
+		
+		this.attachChain( partA, partB );
+	}
+}
+```
+
+Attaching a chain always attaches parts to slot 0. If another slot or a custom
+slot position is needed, use [`attachToSlot`](#attachtoslot). 
+
+
+
 > ### addChain
 
 ```js
@@ -661,6 +1024,26 @@ class MyRobot extends Prosthetic.Robot
 
 Adding a chain always attaches parts to slot 0. If another slot or a custom
 slot position is needed, use [`attachToSlot`](#attachtoslot). 
+
+
+> ### addGUI
+
+```js
+addGUI( )
+```
+
+Method. Create interactive panel with all motors. The user can interactively
+modify angles and export the gesture as a JavaScript command. The panel is made
+with [lil-gui](https://lil-gui.georgealways.com/) library.
+
+Motors with names set by [`setName`](#setname) are listed with their name. All
+other motors are listed with their index.
+
+Example:
+
+```js
+robot.addGUI( );
+```
 
 
 > ### getParts
@@ -1003,6 +1386,24 @@ Base class. Defines the overall functionality of a motor. User-defined motors
 are classes that extends this base class. Each motor has one `axis` of rotation,
 one of the strings `'x'`, `'y'` or `'z'`. The range of rotation is bound by
 `min` and `max`, and the default angle is `def`. The base motor has no image.
+
+
+
+> ### setName
+
+```js
+setName( name )
+```
+
+Method. Sets a custom name for a motor. Originally all motors are unnamed. Names
+can be used for user interfaces to provide more meaningful reference to a motor.
+The method returns the motor itself, so the method can be chained.
+
+Example:
+
+```js
+motor.setName( 'Base rotor' );
+```
 
 
 

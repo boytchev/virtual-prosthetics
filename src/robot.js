@@ -8,6 +8,8 @@
 //	constructor( )
 //
 //	addChain( ...parts )
+//	attachChain( ...parts )
+//	addGUI( )
 //
 //	getParts( )
 //	getMotors( )
@@ -27,6 +29,7 @@
 
 
 import * as THREE from "../libs/three.module.min.js";
+import * as lil from "../libs/lil-gui.module.min.js";
 import {getScene} from "./scene.js";
 import {Part} from "./part.js";
 import {Sensor} from "./sensor.js";
@@ -46,6 +49,7 @@ class Robot extends THREE.Group
 		this.parts = null;
 		this.motors = null;
 		this.sensors = null;
+		this.gui = null;
 			
 		getScene().add( this );
 	}
@@ -88,6 +92,12 @@ class Robot extends THREE.Group
 	{
 		for( var i=1; i<parts.length; i++ )
 			parts[i].attachToSlot( parts[i-1] );
+	}
+
+
+	attachChain( ...parts )
+	{
+		this.addChain( this, ...parts );
 	}
 	
 	
@@ -187,6 +197,39 @@ class Robot extends THREE.Group
 		
 		return this.motors[index].getAngle( );
 	}
+	
+	
+	addGUI( )
+	{
+		if( this.gui ) return;
+		
+		this.#prepare( );
+		this.gui = new lil.GUI();
+		
+		var that = this,
+			data = { get: gesture };
+
+		for( let i in this.motors )
+		{
+			data[i] = Math.round( THREE.MathUtils.mapLinear( this.motors[i].getAngle(), this.motors[i].min, this.motors[i].max, 0, 100 ) );
+			
+			this.gui.add( data, i ).min(0).max(100).step(1).name( this.motors[i].name || `Motor ${i}` ).onChange( ()=>update(i) );
+		}
+
+		this.gui.add( data, 'get' ).name( 'Get gesture' );
+		
+		function update( i )
+		{
+			that.setAngle( i, THREE.MathUtils.mapLinear( data[i], 0, 100, that.motors[i].min, that.motors[i].max ) );
+		}
+		
+		function gesture( )
+		{
+			var gesture = 'robot.setAngles(' + that.getAngles( ).map( x => Math.round(100*x)/100 ).join( ',' ) + ');';
+			
+			prompt( 'Code to recreate this gesture:', gesture );
+		}
+	} // Robot.addGUI
 	
 } // class Robot
 
