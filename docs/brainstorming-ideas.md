@@ -74,7 +74,7 @@
 
 ## Other Ideas
 
-#### Grip Lock (29.06.2023)
+#### Grip Lock
 
 A real hand holding an object can be controlled by two group of muscles. The 
 hand muscles control the gripping, and the arm muscles can move the whole arm.
@@ -107,7 +107,7 @@ To implement the **grip lock** functionality, it is required to have a special
 lock/unlock signal generate by either the arm muscles, or by other means.
 
 
-#### Grasp taxonomy (29.06.2023)
+#### Grasp taxonomy
 
 There is a taxonomy of gestures where more gestures are being described. It
 would be nice if all these gestures are also supported. Currently some of the
@@ -130,7 +130,7 @@ HardwareX, Volume 7, April 2020, e00100
 Ingeniería y Desarrollo, vol.32, no.2, Barranquilla July/Dec. 2014
 
 
-#### Shoulder control (03.07.2023)
+#### Shoulder control
 
 Most smartphones have sufficiently precise local motion sensors via gyroscope.
 A smartphone attached to the shoulder can be used as motion sensor for transradial,
