@@ -24,6 +24,7 @@
 * <span style="background:palegreen">T4. [**DONE**] Custom ranges of joint rotations</span>
 * T5. Inverse kinematics
 * T6. Soft tissue and deformations
+* T7. Dependant motors (they retrieve orientation from another motor)
 
 #### Sensors and feedback
 * <span style="background:palegreen">S1. [**DONE**] Custom positions of sensors</span>
