@@ -9,10 +9,13 @@
 	&ndash; [Postures](#postures)<br>
 	&ndash; [Documents](#documents)<br>
 	&ndash; [Initially needed information](#initially-needed-information)</small>
-* **Brainstorming Ideas**<small><br>
+* **Other Ideas**<small><br>
 	&ndash; [Grip lock](#grip-lock)<br>
 	&ndash; [Grasp taxonomy](#grasp-taxonomy)<br>
 	&ndash; [Shoulder control](#shoulder-control)</small>
+* **References**<small><br>
+	&ndash; [Grasp reference](#grasp-reference)<br>
+	&ndash; [Detailed hand](#detailed-hand)</small>
 
 
 ## Brainstorming Ideas
@@ -155,3 +158,28 @@ a shoulder belt or just a poket on the top or front of the shoulder.
 
 Finally, the smartphone CPU can be used to process the shoulder motion and to
 control the prosthetic hand.
+
+
+
+
+## References
+
+#### Grasp reference
+
+A Sketchpad model of a human head making the sign language gestures for all
+letters and digits is available at [Male Hands Alphabet Numbers](https://sketchfab.com/3d-models/male-hands-alphabet-numbers-a2ef72dee3b34a238910cae60816dc71).
+It can be used as a reference so that to verify whether all these gestures can
+be made with the virtual hand.
+
+[<img src="images/male-hands-alphabet-numbers.jpg">](https://sketchfab.com/3d-models/male-hands-alphabet-numbers-a2ef72dee3b34a238910cae60816dc71)
+
+
+#### Detailed hand
+
+A Sketchpad model is a detailed 3D model of robotic/prosthetic hand. The license
+is CC-BY, so it is possible to download it and test whether Virtual Prosthetics
+can use this model. The model is [jointed hands BJD](https://sketchfab.com/3d-models/jointed-hands-bjd-25da42bebf7b4f70994e9f8f0e9fe1c5).
+
+[<img src="images/jointed-hands-bjd.jpg">](https://sketchfab.com/3d-models/jointed-hands-bjd-25da42bebf7b4f70994e9f8f0e9fe1c5)
+
+
