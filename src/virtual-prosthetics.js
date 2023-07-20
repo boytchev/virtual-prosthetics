@@ -12,9 +12,11 @@ export * from "./motor.js";
 export * from "./part-gltf.js";
 export * from "./part-hand-edged.js";
 export * from "./part-hand-round.js";
+export * from "./part-hand-anthro.js";
 export * from "./part-shapes.js";
 
 export * from "./robots/round-hand.js";
+export * from "./robots/anthro-hand.js";
 
 //export * from "./engine.js";
 //export * from "./engine.cannon.js";

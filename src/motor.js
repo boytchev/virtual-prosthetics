@@ -43,6 +43,8 @@ class Motor extends Part
 		this.min = Math.min( min, max );
 		this.max = Math.max( min, max );
 		this.def = THREE.MathUtils.clamp( def, this.min, this.max );
+		
+		this.setAngle( this.def );
 	}
 
 	getAngle( )

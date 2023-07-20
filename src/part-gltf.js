@@ -35,7 +35,18 @@ const MATERIAL = new THREE.MeshPhysicalMaterial({
 				emissiveIntensity: 0,
 				
 				vertexColors: true,
+
 			});
+			
+// const MATERIAL = new THREE.MeshBasicMaterial({
+				// color: 'green',
+				// emissive: OPTION_TOUCH_COLOR,
+				// emissiveIntensity: 0,
+				// wireframe: true,
+				// transparent: true,
+				// opacity: 0.1,
+				// depthTest: false,
+			// });
 
 
 

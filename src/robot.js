@@ -91,7 +91,9 @@ class Robot extends THREE.Group
 	addChain( ...parts )
 	{
 		for( var i=1; i<parts.length; i++ )
+		{
 			parts[i].attachToSlot( parts[i-1] );
+		}
 	}
 
 
