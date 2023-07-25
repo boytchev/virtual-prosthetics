@@ -59,7 +59,7 @@ class AnthroHand extends Robot
 			if( !this.isLeft ) root.flip( );
 			
 			var rootMotorZ = new MotorZ( -1.75, 0.25, 0, 0.2, 0.06 ).setName( '<small>&ndash; proximal</small>' );
-			rootMotor = new MotorX( -0.75, 2, 0, 0.14, 0.06 ).setName( 'Thumb1' ); // long vertical motor from thumb plate to thumb
+			rootMotor = new MotorX( -0.75, 2, 0, 0.14, 0.06 ).setName( 'Thumb' ); 
 			if( !this.isLeft ) rootMotor.flip( );
 			
 			var spread1 = new MotorY( -0.5, 1, 0, 0.07, 0.2 ).setName( '<small>&ndash; twist</small>' );
@@ -76,7 +76,7 @@ class AnthroHand extends Robot
 					spread1,
 					rootMotorZ,
 					);
-			root.name = ['Palm','Index finger','Middle finger','Ring finger','Little finger'][slot];
+			root.name = 'Palm';
 
 			this.addChain( 
 				rootMotorZ,
@@ -97,9 +97,9 @@ class AnthroHand extends Robot
 					rootMotor.attachToSlot( this.palm, slot ),
 					root,
 					);
-		rootMotor.name = ['Thumb','Index finger','Middle finger','Ring finger','Little finger'][slot];
+			rootMotor.name = ['Thumb','Index finger','Middle finger','Ring finger','Little finger'][slot];
 
-		this.addChain( 
+			this.addChain( 
 				root,
 				new RoundFinger( '../assets/gltf/round-finger-8.glb', 0.8 ),
 				new MotorZ( 0, -PI/2, -PI/8, 0.2, 0.07 ).setName( '<small>&ndash; middle</small>' ),
