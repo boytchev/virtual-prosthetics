@@ -12,7 +12,7 @@
 import * as THREE from "../libs/three.module.min.js";
 import { GLTFLoader } from "../libs/loaders/GLTFLoader.js";
 import { Part} from "./part.js";
-import { OPTION_TOUCH_COLOR } from "./engine.js";
+import { OPTION_TOUCH_COLOR } from "./engines/engine.js";
 
 
 var loader = new GLTFLoader();
@@ -78,7 +78,9 @@ class GLTFPart extends Part
 	recolor( fromColor, toColor, eps=0.01 )
 	{
 		var col = this.mainMesh.geometry.getAttribute( 'color' );
-
+	
+		if( !col ) return;
+		
 		for( var i=0; i<col.count; i++ )
 		{
 			var r = col.getX( i ),

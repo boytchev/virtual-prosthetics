@@ -18,7 +18,7 @@
 
 import * as THREE from "../libs/three.module.min.js";
 import { OrbitControls } from "../libs/controls/OrbitControls.js";
-import { physics } from "./engine.js";
+import { physics } from "./engines/engine.js";
 
 
 

@@ -173,6 +173,12 @@ be made with the virtual hand.
 
 [<img src="images/male-hands-alphabet-numbers.jpg">](https://sketchfab.com/3d-models/male-hands-alphabet-numbers-a2ef72dee3b34a238910cae60816dc71)
 
+Additionally, The Japanese Sigh Language has a larger set of fingerspelling
+gestures, shown in [Practice JSL Fingerspelling](https://www.kyoto-be.ne.jp/ed-center/gakko/jsl/zen_jsl04.htm)
+or in [Japanese manual syllabary](https://en.wikipedia.org/wiki/Japanese_manual_syllabary)
+
+<img src="images/JSL-fingerspelling.jpg">
+
 
 #### Detailed hand
 

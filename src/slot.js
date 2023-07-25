@@ -10,7 +10,7 @@
 //
 
 import * as THREE from "../libs/three.module.min.js";
-import { OPTION_SHOW_SLOTS } from "./engine.js";
+import { OPTION_SHOW_SLOTS } from "./engines/engine.js";
 
 
 

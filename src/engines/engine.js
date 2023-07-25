@@ -11,8 +11,8 @@
 //	physics.box( sizex, sizey, sizez )
 
 
-import * as CANNON from "./engine.cannon.js";
-import * as NATIVE from "./engine.native.js";
+import * as CANNON from "./cannon.js";
+import * as NATIVE from "./native.js";
 
 
 var options = new URL( window.location.href ),

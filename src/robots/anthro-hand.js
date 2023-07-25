@@ -15,12 +15,14 @@
 
 import {Robot} from "../robot.js";
 import {Box} from "../part-shapes.js";
+import {GLTFPart} from "../part-gltf.js";
 import {RoundFinger} from "../part-hand-round.js";
-import {AnthroPalm} from "../part-hand-anthro.js";
+import {AnthroThumb, AnthroPalm} from "../part-hand-anthro.js";
 import {MotorX, MotorY, MotorZ} from "../motor.js";
 
 
 const PI = Math.PI;
+
 
 
 class AnthroHand extends Robot
@@ -33,9 +35,9 @@ class AnthroHand extends Robot
 		this.isLeft = isLeft;
 
 		if( isLeft )
-			this.palm = new AnthroPalm( true, '../assets/gltf/round-palm.glb' );
+			this.palm = new AnthroPalm( true, '../assets/gltf/anthro-palm.glb' );
 		else
-			this.palm = new AnthroPalm( false, '../assets/gltf/round-palm.glb' );
+			this.palm = new AnthroPalm( false, '../assets/gltf/anthro-palm.glb' );
 		
 		this.palm.attachToSlot( this );
 
@@ -44,7 +46,7 @@ class AnthroHand extends Robot
 			this.spread[i] = this.addFinger( i );
 	} // RoundHand.constructor
 	
-	
+
 	addFinger( slot )
 	{
 		var root, rootMotor;
@@ -53,29 +55,28 @@ class AnthroHand extends Robot
 		{	// thumb
 
 			// thumb opposition
-			root = new MotorZ( -0.5, 2, 0, 2, 0.05 ).setName( 'Thumb1' );
+			root = new MotorZ( 0, 2, 0, 0.75, 0.07 );
 
-			var spread1 = new MotorX( -Math.PI/4, Math.PI/2, 0, 0.1, 0.1 ).setName( '<small>&ndash; spreading</small>' );
+			var rootMotorZ = new MotorZ( -1.75, 0.25, 0, 0.2, 0.06 ).setName( '<small>&ndash; proximal</small>' );
+			rootMotor = new MotorX( -0.75, 2, 0, 0.14, 0.06 ).setName( 'Thumb1' ); // long vertical motor from thumb plate to thumb
+			var spread1 = new MotorY( -0.5, 1, 0, 0.07, 0.2 ).setName( '<small>&ndash; twist</small>' );
 			
-			rootMotor = new MotorZ( -Math.PI/2, Math.PI/2, 0, 1, 0.03 ).setName( '<small>&ndash; flexing</small>' );
 			
-			var box = new Box(0.3,0.3,0.8);
+			var box = new AnthroThumb( this.isLeft, '../assets/gltf/anthro-thumb.glb' );
 
-			var newSlot = box.addSlot(0,-0.3,0);
-				newSlot.rotation.set(Math.PI/2,0,Math.PI/4,'YZX');
-				
 			this.addChain( 
 					this.palm, // slot 0 is for thumb
 					root,
 					box,
-					spread1,
 					rootMotor,
+					spread1,
+					rootMotorZ,
 					);
-		root.name = ['Thumb','Index finger','Middle finger','Ring finger','Little finger'][slot];
+		root.name = ['Palm','Index finger','Middle finger','Ring finger','Little finger'][slot];
 
 		this.addChain( 
-				rootMotor,
-				new RoundFinger( '../assets/gltf/round-finger-5.glb', 0.5 ),
+				rootMotorZ,
+				new RoundFinger( '../assets/gltf/round-finger-8.glb', 0.8 ),
 				new MotorZ( 0, -PI/2, -PI/8, 0.2, 0.07 ).setName( '<small>&ndash; middle</small>' ),
 				new RoundFinger( '../assets/gltf/round-finger-5.glb', 0.5 ),
 				new MotorZ( 0, -PI/2, -PI/8, 0.2, 0.07 ).setName( '<small>&ndash; distal</small>' ),
@@ -84,16 +85,16 @@ class AnthroHand extends Robot
 		}
 		else
 		{
-			root = new MotorX( -0.4, 0.4, 0, 0, 0 );
-			rootMotor = new MotorZ( PI/4, -PI/2, -PI/8, 0.2, 0.07 ).setName( '<small>&ndash; proximal</small>' );
+			rootMotor = new MotorX( -0.4, 0.4, 0, 0, 0 );
+			root = new MotorZ( PI/4, -PI/2, -PI/8, 0.2, 0.07 ).setName( '<small>&ndash; proximal</small>' );
 			this.addChain( 
-					root.attachToSlot( this.palm, slot ),
-					rootMotor,
+					rootMotor.attachToSlot( this.palm, slot ),
+					root,
 					);
-		root.name = ['Thumb','Index finger','Middle finger','Ring finger','Little finger'][slot];
+		rootMotor.name = ['Thumb','Index finger','Middle finger','Ring finger','Little finger'][slot];
 
 		this.addChain( 
-				rootMotor,
+				root,
 				new RoundFinger( '../assets/gltf/round-finger-8.glb', 0.8 ),
 				new MotorZ( 0, -PI/2, -PI/8, 0.2, 0.07 ).setName( '<small>&ndash; middle</small>' ),
 				new RoundFinger( '../assets/gltf/round-finger-5.glb', 0.5 ),

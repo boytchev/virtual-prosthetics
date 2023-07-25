@@ -17,7 +17,7 @@ import * as THREE from "../libs/three.module.min.js";
 import { ConvexGeometry } from "../libs/geometries/ConvexGeometry.js";
 import { Slot } from "./slot.js";
 import { getScene } from "./scene.js";
-import { OPTION_DEBUG_PHYSICS } from "./engine.js";
+import { OPTION_DEBUG_PHYSICS } from "./engines/engine.js";
 
 
 // base class for robot parts

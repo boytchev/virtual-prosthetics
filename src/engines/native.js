@@ -11,7 +11,7 @@
 //	box( sizex, sizey, sizez )
 
 
-import * as THREE from "../libs/three.module.min.js";
+import * as THREE from "../../libs/three.module.min.js";
 
 var scene, bodies;
 
