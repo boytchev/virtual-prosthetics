@@ -1060,8 +1060,8 @@ return;this.motors[index].setAngle(angle);}
 getAngle(index)
 {this.#prepare();if(typeof this.motors[index]==='undefined')
 return 0;return this.motors[index].getAngle();}
-addGUI()
-{if(this.gui)return;this.#prepare();this.gui=new g();var that=this,data={get:gesture};for(let i in this.motors)
+addGUI(title='Robot')
+{if(this.gui)return;this.#prepare();this.gui=new g({title:title});var that=this,data={get:gesture};for(let i in this.motors)
 {data[i]=Math.round(Ln.mapLinear(this.motors[i].getAngle(),this.motors[i].min,this.motors[i].max,0,100));this.gui.add(data,i).min(0).max(100).step(1).name(this.motors[i].name||`Motor ${i}`).onChange(()=>update(i));}
 this.gui.add(data,'get').name('Get gesture');function update(i)
 {that.setAngle(i,Ln.mapLinear(data[i],0,100,that.motors[i].min,that.motors[i].max));}
@@ -1069,16 +1069,18 @@ function gesture()
 {var gesture='robot.setAngles('+that.getAngles().map(x=>Math.round(100*x)/100).join(',')+');';prompt('Code to recreate this gesture:',gesture);}}}
 const MATERIAL$2=new mu({color:0x404040,shininess:100,});const GEOMETRY_16=new dh(1,1,1,16);const GEOMETRY_48=new dh(1,1,1,48);class Motor extends Part
 {constructor(axis,min=-Infinity,max=Infinity,def=0)
-{super();this.axis=axis;this.min=Math.min(min,max);this.max=Math.max(min,max);this.def=Ln.clamp(def,this.min,this.max);this.setAngle(this.def);}
+{super();this.axis=axis;this.min=Math.min(min,max);this.max=Math.max(min,max);this.def=Ln.clamp(def,this.min,this.max);this.flipAngle=1;this.setAngle(this.def);}
 getAngle()
 {if(this.axis)
-return this.rotation[this.axis];else
+return this.flipAngle*this.rotation[this.axis];else
 return 0;}
 setAngle(x)
 {if(x===null)
 return;if(this.axis)
-this.rotation[this.axis]=Ln.clamp(x,this.min,this.max);else
+this.rotation[this.axis]=this.flipAngle*Ln.clamp(x,this.min,this.max);else
 throw`Error: body part '${this.name}' cannot rotate`;}
+flip()
+{this.flipAngle=-1;return this;}
 setName(name)
 {this.name=name;return this;}}
 class MotorX extends Motor
@@ -1481,9 +1483,9 @@ this.palm=new AnthroPalm(false,'../assets/gltf/anthro-palm.glb');this.palm.attac
 this.spread[i]=this.addFinger(i);}
 addFinger(slot)
 {var root,rootMotor;if(slot==0)
-{root=new MotorZ(0,2,0,0.75,0.07);var rootMotorZ=new MotorZ(-1.75,0.25,0,0.2,0.06).setName('<small>&ndash; proximal</small>');rootMotor=new MotorX(-0.75,2,0,0.14,0.06).setName('Thumb1');var spread1=new MotorY(-0.5,1,0,0.07,0.2).setName('<small>&ndash; twist</small>');var box=new AnthroThumb(this.isLeft,'../assets/gltf/anthro-thumb.glb');this.addChain(this.palm,root,box,rootMotor,spread1,rootMotorZ,);root.name=['Palm','Index finger','Middle finger','Ring finger','Little finger'][slot];this.addChain(rootMotorZ,new RoundFinger('../assets/gltf/round-finger-8.glb',0.8),new MotorZ(0,-PI/2,-PI/8,0.2,0.07).setName('<small>&ndash; middle</small>'),new RoundFinger('../assets/gltf/round-finger-5.glb',0.5),new MotorZ(0,-PI/2,-PI/8,0.2,0.07).setName('<small>&ndash; distal</small>'),new RoundFinger('../assets/gltf/round-tip.glb',0.5),);}
+{root=new MotorZ(0,2,0,0.75,0.07);if(!this.isLeft)root.flip();var rootMotorZ=new MotorZ(-1.75,0.25,0,0.2,0.06).setName('<small>&ndash; proximal</small>');rootMotor=new MotorX(-0.75,2,0,0.14,0.06).setName('Thumb');if(!this.isLeft)rootMotor.flip();var spread1=new MotorY(-0.5,1,0,0.07,0.2).setName('<small>&ndash; twist</small>');if(!this.isLeft)spread1.flip();var box=new AnthroThumb(this.isLeft,'../assets/gltf/anthro-thumb.glb');this.addChain(this.palm,root,box,rootMotor,spread1,rootMotorZ,);root.name='Palm';this.addChain(rootMotorZ,new RoundFinger('../assets/gltf/round-finger-8.glb',0.8),new MotorZ(0,-PI/2,-PI/8,0.2,0.07).setName('<small>&ndash; middle</small>'),new RoundFinger('../assets/gltf/round-finger-5.glb',0.5),new MotorZ(0,-PI/2,-PI/8,0.2,0.07).setName('<small>&ndash; distal</small>'),new RoundFinger('../assets/gltf/round-tip.glb',0.5),);}
 else
-{rootMotor=new MotorX(-0.4,0.4,0,0,0);root=new MotorZ(PI/4,-PI/2,-PI/8,0.2,0.07).setName('<small>&ndash; proximal</small>');this.addChain(rootMotor.attachToSlot(this.palm,slot),root,);rootMotor.name=['Thumb','Index finger','Middle finger','Ring finger','Little finger'][slot];this.addChain(root,new RoundFinger('../assets/gltf/round-finger-8.glb',0.8),new MotorZ(0,-PI/2,-PI/8,0.2,0.07).setName('<small>&ndash; middle</small>'),new RoundFinger('../assets/gltf/round-finger-5.glb',0.5),new MotorZ(0,-PI/2,-PI/8,0.2,0.07).setName('<small>&ndash; distal</small>'),new RoundFinger('../assets/gltf/round-tip.glb',0.5),);}
+{rootMotor=new MotorX(-0.4,0.4,0,0,0);if(this.isLeft)rootMotor.flip();root=new MotorZ(PI/4,-PI/2,-PI/8,0.2,0.07).setName('<small>&ndash; proximal</small>');this.addChain(rootMotor.attachToSlot(this.palm,slot),root,);rootMotor.name=['Thumb','Index finger','Middle finger','Ring finger','Little finger'][slot];this.addChain(root,new RoundFinger('../assets/gltf/round-finger-8.glb',0.8),new MotorZ(0,-PI/2,-PI/8,0.2,0.07).setName('<small>&ndash; middle</small>'),new RoundFinger('../assets/gltf/round-finger-5.glb',0.5),new MotorZ(0,-PI/2,-PI/8,0.2,0.07).setName('<small>&ndash; distal</small>'),new RoundFinger('../assets/gltf/round-tip.glb',0.5),);}
 return root;}
 flexFinger(i,angle)
 {var motors=this.getMotors();motors[4*i+1].setAngle(-angle);motors[4*i+2].setAngle(-angle);motors[4*i+3].setAngle(-angle);}
