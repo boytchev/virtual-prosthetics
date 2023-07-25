@@ -44,13 +44,15 @@ class Motor extends Part
 		this.max = Math.max( min, max );
 		this.def = THREE.MathUtils.clamp( def, this.min, this.max );
 		
+		this.flipAngle = 1;
+		
 		this.setAngle( this.def );
 	}
 
 	getAngle( )
 	{
 		if( this.axis )
-			return this.rotation[this.axis];
+			return this.flipAngle * this.rotation[this.axis];
 		else
 			return 0;
 	}
@@ -61,9 +63,16 @@ class Motor extends Part
 			return;
 		
 		if( this.axis )
-			this.rotation[this.axis] = THREE.MathUtils.clamp( x, this.min, this.max );
+			this.rotation[this.axis] = this.flipAngle*THREE.MathUtils.clamp( x, this.min, this.max );
 		else
 			throw `Error: body part '${this.name}' cannot rotate`;
+	}
+
+	flip( )
+	{
+		this.flipAngle = -1;
+		
+		return this;
 	}
 	
 	setName( name )
@@ -71,7 +80,6 @@ class Motor extends Part
 		this.name = name;
 		return this;
 	}
-
 }
 
 

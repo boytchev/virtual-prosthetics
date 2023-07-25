@@ -35,7 +35,7 @@ meters, all angles are in radians and all indices start from 0.
 	  &ndash; [`beginContact`](#begincontact), [`endContact`](#endcontact)<br>
 	  &ndash; [`setPosition`](#setposition-1), [`setRotation`](#setrotation-1)</small>
 	* **[Motor API](#motor-api)**:<small> [`Motor`](#motor), [`setName`](#setname)<br>
-	  &ndash; [`getAngle`](#getangle-1), [`setAngle`](#setangle-1)</small>
+	  &ndash; [`getAngle`](#getangle-1), [`setAngle`](#setangle-1), [`flip`](#flip)</small>
 	* **[Slot API](#slot-api)**:<small> [`Slot`](#slot)<br>
 	  &ndash; [`setPosition`](#setposition-2), [`setRotation`](#setrotation-2)</small>
 	* **[Sensor API](#sensor-api)**:<small> [`Sensor`](#sensor)<br>
@@ -1443,6 +1443,23 @@ Example:
 
 ```js
 motor.setAngle( Math.PI );
+```
+
+
+> ### flip
+
+```js
+flip(  )
+```
+
+Method. Reverts the motor's motion in the opposite direction. This is used when
+modeling left-oriented and right-oriented symmetrical robots (e.g. left hand and
+right hand).
+
+Example:
+
+```js
+motor.flip( );
 ```
 
 
