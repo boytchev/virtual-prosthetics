@@ -20,4 +20,5 @@ Modeling tool for virtual prosthetic body parts
 [<kbd><img src="examples/snapshots/gltf-robot.jpg" width="270"></kbd>](examples/gltf-robot.html)
 [<kbd><img src="examples/snapshots/two-gltf-hands.jpg" width="270"></kbd>](examples/two-gltf-hands.html)
 [<kbd><img src="examples/snapshots/interactive-control.jpg" width="270"></kbd>](examples/interactive-control.html)
+[<kbd><img src="examples/snapshots/fingerspelling.jpg" width="270"></kbd>](examples/fingerspelling.html)
 
