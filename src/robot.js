@@ -201,12 +201,12 @@ class Robot extends THREE.Group
 	}
 	
 	
-	addGUI( )
+	addGUI( title = 'Robot' )
 	{
 		if( this.gui ) return;
 		
 		this.#prepare( );
-		this.gui = new lil.GUI();
+		this.gui = new lil.GUI( {title: title} );
 		
 		var that = this,
 			data = { get: gesture };

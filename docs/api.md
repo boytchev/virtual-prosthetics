@@ -1029,12 +1029,13 @@ slot position is needed, use [`attachToSlot`](#attachtoslot).
 > ### addGUI
 
 ```js
-addGUI( )
+addGUI( title )
 ```
 
 Method. Create interactive panel with all motors. The user can interactively
 modify angles and export the gesture as a JavaScript command. The panel is made
-with [lil-gui](https://lil-gui.georgealways.com/) library.
+with [lil-gui](https://lil-gui.georgealways.com/) library. The `title` is used
+as a title of the controls. The default title is 'Robot'.
 
 Motors with names set by [`setName`](#setname) are listed with their name. All
 other motors are listed with their index.
@@ -1043,6 +1044,13 @@ Example:
 
 ```js
 robot.addGUI( );
+```
+
+The GUI element of a robot is stored in property `gui`, which can be accessed to
+modify the panel, e.g. to change the position:
+
+```js
+robot.gui.domElement.style = 'left: 0em';
 ```
 
 
