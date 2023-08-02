@@ -22,3 +22,6 @@ Modeling tool for virtual prosthetic body parts
 [<kbd><img src="examples/snapshots/interactive-control.jpg" width="270"></kbd>](examples/interactive-control.html)
 [<kbd><img src="examples/snapshots/fingerspelling.jpg" width="270"></kbd>](examples/fingerspelling.html)
 
+---
+
+<small>August, 2023</small>
