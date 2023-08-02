@@ -9,12 +9,14 @@ export * from "./part.js";
 export * from "./slot.js";
 export * from "./sensor.js";
 export * from "./motor.js";
-export * from "./part-gltf.js";
-export * from "./part-hand-edged.js";
-export * from "./part-hand-round.js";
-export * from "./part-hand-anthro.js";
-export * from "./part-shapes.js";
 
+export * from "./parts/gltf.js";
+export * from "./parts/edged-hand.js";
+export * from "./parts/round-hand.js";
+export * from "./parts/anthro-hand.js";
+export * from "./parts/shapes.js";
+
+export * from "./robots/edged-hand.js";
 export * from "./robots/round-hand.js";
 export * from "./robots/anthro-hand.js";
 

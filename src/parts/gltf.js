@@ -9,10 +9,10 @@
 //
 
 
-import * as THREE from "../libs/three.module.min.js";
-import { GLTFLoader } from "../libs/loaders/GLTFLoader.js";
-import { Part} from "./part.js";
-import { OPTION_TOUCH_COLOR } from "./engines/engine.js";
+import * as THREE from "../../libs/three.module.min.js";
+import { GLTFLoader } from "../../libs/loaders/GLTFLoader.js";
+import { Part} from "../part.js";
+import { OPTION_TOUCH_COLOR } from "../engines/engine.js";
 
 
 var loader = new GLTFLoader();

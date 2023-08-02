@@ -14,7 +14,7 @@
 
 
 import {Robot} from "../robot.js";
-import {RoundPalm, RoundFinger} from "../part-hand-round.js";
+import {RoundPalm, RoundFinger} from "../parts/round-hand.js";
 import {MotorX, MotorY, MotorZ} from "../motor.js";
 
 
@@ -30,11 +30,7 @@ class RoundHand extends Robot
 
 		this.isLeft = isLeft;
 
-		if( isLeft )
-			this.palm = new RoundPalm( true, '../assets/gltf/round-palm.glb' );
-		else
-			this.palm = new RoundPalm( false, '../assets/gltf/round-palm.glb' );
-		
+		this.palm = new RoundPalm( isLeft, '../assets/gltf/round-palm.glb' );
 		this.palm.attachToSlot( this );
 
 		this.spread = [];
@@ -48,9 +44,9 @@ class RoundHand extends Robot
 		var spread;
 			
 		if( slot == 0 )
-			spread = new MotorY( 0, PI/2, 0, 0.25, 0.1 );
+			spread = new MotorY( 0, PI/2, 0, 0.25, 0.1 ).flip( !this.isLeft );
 		else
-			spread = new MotorX( -0.4, 0.4, 0, 0, 0 );
+			spread = new MotorX( -0.4, 0.4, 0, 0, 0 ).flip( this.isLeft );
 
 		spread.name = ['Thumb','Index finger','Middle finger','Ring finger','Little finger'][slot];
 				
@@ -89,7 +85,7 @@ class RoundHand extends Robot
 	{
 		var motors = this.getMotors();
 		
-		motors[4*i].setAngle( this.palm.flip * angle );
+		motors[4*i].setAngle( -angle );
 	}
 
 
@@ -97,7 +93,7 @@ class RoundHand extends Robot
 	{
 		if( includeThumb )
 		{
-			this.spreadFinger( 0, 3*angle );
+			this.spreadFinger( 0, -3*angle );
 		}
 		
 		this.spreadFinger( 1,  1.0*angle );

@@ -12,13 +12,15 @@ meters, all angles are in radians and all indices start from 0.
 		&ndash; [options](#options)</small>
 	* **[Robots](#robots)**<small><br> 
 	  &ndash; [round hand robot](#round-hand-robot): [`RoundHand`](#round-hand), [`flexFinger`](#flexfinger), [`flexFingers`](#flexfingers), [`spreadFinger`](#spreadfinger), [`spreadFingers`](#spreadfingers)<br>
+	  &ndash; [anthropomorphic hand robot](#anthropomorphic-hand-robot): [`AnthroHand`](#anthro-hand), [`flexFinger`](#flexfinger-1), [`flexFingers`](#flexfingers-1), [`spreadFinger`](#spreadfinger-1), [`spreadFingers`](#spreadfingers-1)</small>
 	* **[Robot parts](#robot-parts)**<small><br> 
 	  &ndash; [common shapes](#common-shapes): [`Ball`](#ball), [`Box`](#box)<br>
 	  &ndash; [external shapes](#external-shapes): [`GLTFPart`](#gltfpart), [`recolor`](#recolor)<br>
 	  &ndash; [motors](#motors): [`MotorX`](#motorx), [`MotorY`](#motory), [`MotorZ`](#motorz)</small>
 	* **[Hand parts](#hand-parts)**<small><br>
 	  &ndash; [edged hand](#edged-hand): [`EdgedFinger`](#edgedfinger), [`EdgedTip`](#edgedtip), [`EdgedPalm`](#edgedpalm)<br>
-	  &ndash; [round hand](#round-hand-2): [`RoundFinger`](#roundfinger), [`RoundPalm`](#roundpalm)</small>
+	  &ndash; [round hand](#round-hand-2): [`RoundFinger`](#roundfinger), [`RoundPalm`](#roundpalm)<br>
+	  &ndash; [anthropomorphic hand](#anthropomorphic-hand): [`AnthroThumb`](#anthrothumb), [`AnthroPalm`](#anthropalm)</small>
 	  <br>
 	  <br>
 * **[API REFERENCE](#api-reference)**
@@ -429,7 +431,7 @@ spreadFingers( angle, includeThumb )
 ```
 
 Method. Spread all fingers by given maximal `angle`. The following table shows
-the anctual angles of spreading individual fingers:
+the actual angles of spreading individual fingers:
 
 | Index | Finger | Spread angle |
 | --- | --- | --- |
@@ -472,7 +474,7 @@ Shapes are robot parts without motors. They can be positioned with
 Common shapes have exact physics envelopes and the engine uses them for precise
 collision detection. 
 
-Source code: [src/part-shapes.js](https://github.com/boytchev/virtual-prosthetics/blob/main/src/part-shapes.js)
+Source code: [src/parts/shapes.js](https://github.com/boytchev/virtual-prosthetics/blob/main/src/parts/shapes.js)
 
 
 
@@ -527,7 +529,7 @@ Complex shapes of robot parts can be designed with external tools like
 [GLTF or GLB files](https://en.wikipedia.org/wiki/GlTF).
 
 
-Source code: [src/part-gltf.js](https://github.com/boytchev/virtual-prosthetics/blob/main/src/part-gltf.js)
+Source code: [src/parts/gltf.js](https://github.com/boytchev/virtual-prosthetics/blob/main/src/parts/gltf.js)
 
 
 
@@ -576,7 +578,7 @@ Robot motors are extensions of [motor](api.md#motor) class with predefined axis
 of rotation and image. The motors have no physics envelopes and the engine
 ignores them during collision detection. 
 
-Source code: [src/part-motors.js](https://github.com/boytchev/virtual-prosthetics/blob/main/src/part-motors.js)
+Source code: [src/motor.js](https://github.com/boytchev/virtual-prosthetics/blob/main/src/motor.js)
 
 
 
@@ -650,9 +652,10 @@ motor = new Prosthetic.MotorZ( 0, Math.PI, Math.PI/2 );
 
 Hands parts are predefined robot parts that are used to build antropomorphic
 robots resembling a human hand. Hands parts are: a finger, a finger tip, and
-a palm:
+a palm. A more advanced version of the hand is the anthropomorphic hand that
+contains additional part: a thumb.
 
-<img src="images/hand.png">
+<img src="images/hand.png"> <img src="images/hand-a.png">
 
 
 
@@ -666,7 +669,7 @@ properties of edged hand parts are:
 * generated on-the-fly without external resources
 * relatively high precision of collision detection
 
-Source code: [src/part-hand-edged.js](https://github.com/boytchev/virtual-prosthetics/blob/main/src/part-hand-edged.js)
+Source code: [src/parts/edged-hand.js](https://github.com/boytchev/virtual-prosthetics/blob/main/src/parts/edged-hand.js)
 
 
 
@@ -756,7 +759,7 @@ Round hand parts as GLTF files use two colors &ndash; white (1,1,1) for the plan
 surfaces and blue (0,0.21,1) for the curved surfaces. When files are loaded for
 modeling a rounded hand, the blue color is changed to gray (0.3,0.3,0.3).
 
-Source code: [src/part-hand-round.js](https://github.com/boytchev/virtual-prosthetics/blob/main/src/part-hand-round.js)
+Source code: [src/parts/round-hand.js](https://github.com/boytchev/virtual-prosthetics/blob/main/src/parts/round-hand.js)
 
 <img src="images/round-hand-parts.png">
 
@@ -813,6 +816,66 @@ Example:
 
 ```js
 part = new Prosthetic.RoundPalm( true, '../assets/gltf/round-palm.glb' );
+```
+
+
+
+
+
+
+### Anthropomorphic hand
+
+The anthropomorphic hand parts are extension to the round hand parts. They
+provide more detailed shapes for thumbs. 
+
+Source code: [src/parts/anthro-hand.js](https://github.com/boytchev/virtual-prosthetics/blob/main/src/parts/anthro-hand.js)
+
+<img src="images/anthro-hand-parts.png">
+
+
+
+> #### AnthroThumb
+
+```js
+AnthroThumb( left, filename )
+AnthroThumb( left, filename, length )
+```
+
+Class. Defines a round anthropomorphic thumb. The thumb exists in two symmetrical
+shapes. If `left` is true, the thumb is a left-hand palthumb, otherwise it is a
+right-hand thumb. Only the left thumb exists as a GLTF model. The right thumb is
+a mirror of the left thumb. The optional parameter `length` (by default 1.4)
+defines the intended length of the thumb. There is one slot at the top at
+position (0,-0.2*`length`,0.06*`length`).
+
+
+Example:
+
+```js
+part = new Prosthetic.AnthroThumb( true, '../assets/gltf/anthro-thumb.glb' );
+```
+
+
+
+> #### AnthroPalm
+
+```js
+AnthroPalm( left, filename )
+AnthroPalm( left, filename, length )
+```
+
+Class. Defines a round anthropomorphic palm. The palm exists in two symmetrical
+shapes. If `left` is true, the palm is a left-hand palm, otherwise it is a
+right-hand palm. Only the left palm exists as a GLTF model. The right palm is a
+mirror of the left palm. The parameter `length` (by default 1.4) defines the
+intended size of the palm. There are five slots for attaching round fingers,
+the slot for the thumb is 0.
+
+
+Example:
+
+```js
+part = new Prosthetic.AnthroPalm( true, '../assets/gltf/anthro-palm.glb' );
 ```
 
 
@@ -970,6 +1033,8 @@ Method. Used in the constructor of a custom robot to automatically connect parts
 `part1`, `part2` and so on in a chain and attach this chain to the robot. Method
 `attachChain(...)` is a shorthand for `addChain(this,...)`.
 
+The result of the method is the last attached part.
+
 Example:
 
 ```js
@@ -1004,6 +1069,8 @@ for a sequence of [`attachToSlot`](#attachtoslot). The variable `this` can be
 used to mark the robot itself. If `this` is used in `addChain` it must be the
 first parameter. At least one of the chains in a robot must start with `this`,
 otherwise the robot parts will be unattached to the robot.
+
+The result of the method is the last added part.
 
 Example:
 
@@ -1449,17 +1516,17 @@ motor.setAngle( Math.PI );
 > ### flip
 
 ```js
-flip(  )
+flip(  bool )
 ```
 
-Method. Reverts the motor's motion in the opposite direction. This is used when
-modeling left-oriented and right-oriented symmetrical robots (e.g. left hand and
-right hand).
+Method. Reverts the motor's motion in the opposite direction if `bool` is true.
+This is used when modeling left-oriented and right-oriented symmetrical robots
+(e.g. left hand and right hand).
 
 Example:
 
 ```js
-motor.flip( );
+motor.flip( true );
 ```
 
 

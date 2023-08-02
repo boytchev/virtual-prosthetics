@@ -6,10 +6,10 @@
 //
 
 
-import * as THREE from "../libs/three.module.min.js";
-import { Part } from "./part.js";
-import { getScene } from "./scene.js";
-import { physics, OPTION_TOUCH_COLOR } from "./engines/engine.js";
+import * as THREE from "../../libs/three.module.min.js";
+import { Part } from "../part.js";
+import { getScene } from "../scene.js";
+import { physics, OPTION_TOUCH_COLOR } from "../engines/engine.js";
 
 
 

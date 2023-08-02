@@ -7,6 +7,7 @@
 //
 //	getAngle( )
 //	setAngle( x )
+//	flip( bool )
 //
 //	class MotorX( min, max, def, width=0.1, height=0.05 )
 //	class MotorY( min, max, def, width=0.3, height=0.05 )
@@ -68,9 +69,9 @@ class Motor extends Part
 			throw `Error: body part '${this.name}' cannot rotate`;
 	}
 
-	flip( )
+	flip( bool )
 	{
-		this.flipAngle = -1;
+		this.flipAngle = bool ? -1 : 1;
 		
 		return this;
 	}

@@ -79,12 +79,16 @@ class Robot extends THREE.Group
 			this.position.set( x, y, z );
 			if( this.parent !== scene ) scene.add( this );
 		}
+		
+		return this;
 	}
 
 
 	setRotation( x, y, z, order='XYZ' )
 	{
 		this.rotation.set( x, y, z, order );
+		
+		return this;
 	}
 
 
@@ -94,12 +98,14 @@ class Robot extends THREE.Group
 		{
 			parts[i].attachToSlot( parts[i-1] );
 		}
+		
+		return parts[parts.length-1];
 	}
 
 
 	attachChain( ...parts )
 	{
-		this.addChain( this, ...parts );
+		return this.addChain( this, ...parts );
 	}
 	
 	

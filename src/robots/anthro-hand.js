@@ -14,10 +14,8 @@
 
 
 import {Robot} from "../robot.js";
-import {Box} from "../part-shapes.js";
-import {GLTFPart} from "../part-gltf.js";
-import {RoundFinger} from "../part-hand-round.js";
-import {AnthroThumb, AnthroPalm} from "../part-hand-anthro.js";
+import {RoundFinger} from "../parts/round-hand.js";
+import {AnthroThumb, AnthroPalm} from "../parts/anthro-hand.js";
 import {MotorX, MotorY, MotorZ} from "../motor.js";
 
 
@@ -34,82 +32,59 @@ class AnthroHand extends Robot
 
 		this.isLeft = isLeft;
 
-		if( isLeft )
-			this.palm = new AnthroPalm( true, '../assets/gltf/anthro-palm.glb' );
-		else
-			this.palm = new AnthroPalm( false, '../assets/gltf/anthro-palm.glb' );
-		
+		this.palm = new AnthroPalm( isLeft, '../assets/gltf/anthro-palm.glb' );
 		this.palm.attachToSlot( this );
 
 		this.spread = [];
 		for( var i=0; i<5; i++ )
 			this.spread[i] = this.addFinger( i );
-	} // RoundHand.constructor
+	} // AnthroHand.constructor
 	
 
 	addFinger( slot )
 	{
-		var root, rootMotor;
-			
+		var root, mainMotor;
+		
+		var lastPart;
+		
 		if( slot == 0 )
 		{	// thumb
-
-			// thumb opposition
-			root = new MotorZ( 0, 2, 0, 0.75, 0.07 );
-			if( !this.isLeft ) root.flip( );
+			root = new MotorZ( 0, 2, 0, 0.75, 0.07 ).flip( !this.isLeft );
+			mainMotor = new MotorX( -0.75, 2, 0, 0.14, 0.06 ).flip( !this.isLeft ); 
 			
-			var rootMotorZ = new MotorZ( -1.75, 0.25, 0, 0.2, 0.06 ).setName( '<small>&ndash; proximal</small>' );
-			rootMotor = new MotorX( -0.75, 2, 0, 0.14, 0.06 ).setName( 'Thumb' ); 
-			if( !this.isLeft ) rootMotor.flip( );
-			
-			var spread1 = new MotorY( -0.5, 1, 0, 0.07, 0.2 ).setName( '<small>&ndash; twist</small>' );
-			if( !this.isLeft ) spread1.flip( );
-			
-			
-			var box = new AnthroThumb( this.isLeft, '../assets/gltf/anthro-thumb.glb' );
-
-			this.addChain( 
+			lastPart = this.addChain( 
 					this.palm, // slot 0 is for thumb
 					root,
-					box,
-					rootMotor,
-					spread1,
-					rootMotorZ,
+					new AnthroThumb( this.isLeft, '../assets/gltf/anthro-thumb.glb' ),
+					mainMotor,
+					new MotorY( -0.5, 1, 0, 0.07, 0.2 ).flip( !this.isLeft ).setName( '<small>&ndash; twist</small>' ),
+					new MotorZ( -1.75, 0.25, 0, 0.2, 0.06 ).setName( '<small>&ndash; proximal</small>' ),
 					);
 			root.name = 'Palm';
 
-			this.addChain( 
-				rootMotorZ,
-				new RoundFinger( '../assets/gltf/round-finger-8.glb', 0.8 ),
-				new MotorZ( 0, -PI/2, -PI/8, 0.2, 0.07 ).setName( '<small>&ndash; middle</small>' ),
-				new RoundFinger( '../assets/gltf/round-finger-5.glb', 0.5 ),
-				new MotorZ( 0, -PI/2, -PI/8, 0.2, 0.07 ).setName( '<small>&ndash; distal</small>' ),
-				new RoundFinger( '../assets/gltf/round-tip.glb', 0.5 ),
-			);
 		}
 		else
-		{
-			rootMotor = new MotorX( -0.4, 0.4, 0, 0, 0 );
-			if( this.isLeft ) rootMotor.flip( );
-			
+		{	// other fingers
 			root = new MotorZ( PI/4, -PI/2, -PI/8, 0.2, 0.07 ).setName( '<small>&ndash; proximal</small>' );
-			this.addChain( 
-					rootMotor.attachToSlot( this.palm, slot ),
+			mainMotor = new MotorX( -0.4, 0.4, 0, 0, 0 ).flip( this.isLeft );
+			
+			lastPart = this.addChain( 
+					mainMotor.attachToSlot( this.palm, slot ),
 					root,
 					);
-			rootMotor.name = ['Thumb','Index finger','Middle finger','Ring finger','Little finger'][slot];
-
-			this.addChain( 
-				root,
-				new RoundFinger( '../assets/gltf/round-finger-8.glb', 0.8 ),
-				new MotorZ( 0, -PI/2, -PI/8, 0.2, 0.07 ).setName( '<small>&ndash; middle</small>' ),
-				new RoundFinger( '../assets/gltf/round-finger-5.glb', 0.5 ),
-				new MotorZ( 0, -PI/2, -PI/8, 0.2, 0.07 ).setName( '<small>&ndash; distal</small>' ),
-				new RoundFinger( '../assets/gltf/round-tip.glb', 0.5 ),
-			);
 		}
 		
+		this.addChain( 
+			lastPart,
+			new RoundFinger( '../assets/gltf/round-finger-8.glb', 0.8 ),
+			new MotorZ( 0, -PI/2, -PI/8, 0.2, 0.07 ).setName( '<small>&ndash; middle</small>' ),
+			new RoundFinger( '../assets/gltf/round-finger-5.glb', 0.5 ),
+			new MotorZ( 0, -PI/2, -PI/8, 0.2, 0.07 ).setName( '<small>&ndash; distal</small>' ),
+			new RoundFinger( '../assets/gltf/round-tip.glb', 0.5 ),
+		);
 			
+		mainMotor.name = ['Thumb','Index finger','Middle finger','Ring finger','Little finger'][slot];
+		
 		return root;
 	}		
 	
@@ -118,9 +93,9 @@ class AnthroHand extends Robot
 	{
 		var motors = this.getMotors();
 		
-		motors[4*i+1].setAngle( -angle );
-		motors[4*i+2].setAngle( -angle );
 		motors[4*i+3].setAngle( -angle );
+		motors[4*i+4].setAngle( -angle );
+		motors[4*i+5].setAngle( -angle );
 	}
 
 
@@ -135,7 +110,7 @@ class AnthroHand extends Robot
 	{
 		var motors = this.getMotors();
 		
-		motors[4*i].setAngle( this.palm.flip * angle );
+		motors[4*i+(i?2:1)].setAngle( -angle );
 	}
 
 
@@ -143,7 +118,7 @@ class AnthroHand extends Robot
 	{
 		if( includeThumb )
 		{
-			this.spreadFinger( 0, 3*angle );
+			this.spreadFinger( 0, 0.5-2*angle );
 		}
 		
 		this.spreadFinger( 1,  1.0*angle );
