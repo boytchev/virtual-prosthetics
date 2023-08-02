@@ -59,6 +59,7 @@ function createScene( )
 	light.shadow.blurSamples = 10;
 	light.shadow.radius = 2;
 	light.shadow.bias = -0.00001;
+	light.shadow.bias = -0.0001;
 	light.castShadow = true;
 	
 	// temporary narrow camera (only for the logo)
