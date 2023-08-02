@@ -54,7 +54,7 @@
 
 #### Postures
 * P1. Mapping between input data and posture
-* P2. Predefined collection of postures
+* <span style="background:palegreen">P2. [**DONE**] Predefined collection of postures</span>
 * P3. Predefined animations
 * <span style="background:palegreen">P4. [**DONE**] Scenes with several models</span>
 * P5. Self-balancing of pressure

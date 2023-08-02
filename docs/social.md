@@ -5,6 +5,10 @@
 
 ---
 
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">The thumb motion of the virtual prosthetic hand is improved by adding more degrees of freedom. It is now possible to fingerspell all moras from the Japanese Sign Language.<br><br>Live demo (needs Asian font): <a href="https://t.co/Rv4yjIwoa6">https://t.co/Rv4yjIwoa6</a> <a href="https://twitter.com/hashtag/VirtualProsthetics?src=hash&amp;ref_src=twsrc%5Etfw">#VirtualProsthetics</a> <a href="https://twitter.com/hashtag/FMI?src=hash&amp;ref_src=twsrc%5Etfw">#FMI</a> <a href="https://twitter.com/hashtag/SU?src=hash&amp;ref_src=twsrc%5Etfw">#SU</a> <a href="https://twitter.com/hashtag/AIzuHand?src=hash&amp;ref_src=twsrc%5Etfw">#AIzuHand</a> <a href="https://twitter.com/hashtag/ThreeJS?src=hash&amp;ref_src=twsrc%5Etfw">#ThreeJS</a> <a href="https://t.co/eMbuRqHxRl">pic.twitter.com/eMbuRqHxRl</a></p>&mdash; Pavel Boytchev (@PavelBoytchev) <a href="https://twitter.com/PavelBoytchev/status/1683921066438303744?ref_src=twsrc%5Etfw">July 25, 2023</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
+
+---
+
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">Today I put is some code to show a 3D version of the Virtual Prosthetics logo whenever the library senses that there are no objects in the scene... It is nothing special, just a small deviation from my daily programming.
 
 <a href="https://twitter.com/hashtag/VirtualProsthetics?src=hash&amp;ref_src=twsrc%5Etfw">#VirtualProsthetics</a> <a href="https://twitter.com/hashtag/FMI?src=hash&amp;ref_src=twsrc%5Etfw">#FMI</a> <a href="https://twitter.com/hashtag/SU?src=hash&amp;ref_src=twsrc%5Etfw">#SU</a> <a href="https://twitter.com/hashtag/ThreeJS?src=hash&amp;ref_src=twsrc%5Etfw">#ThreeJS</a> <a href="https://t.co/07yq0gsJ5M">pic.twitter.com/07yq0gsJ5M</a></p>&mdash; Pavel Boytchev (@PavelBoytchev) <a href="https://twitter.com/PavelBoytchev/status/1669430120845570048?ref_src=twsrc%5Etfw">June 15, 2023</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
