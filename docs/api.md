@@ -7,13 +7,15 @@ meters, all angles are in radians and all indices start from 0.
 
 * **[USER GUIDE](#user-guide)**<small>
 	* **[Building a robot](#building-a-robot)**<small><br>
-		&ndash; [installation](#installation)<br>
-		&ndash; [simple robot](#simple-robot)<br>
-		&ndash; [options](#options)</small>
-	* **[Robots](#robots)**<small><br> 
-	  &ndash; [round hand robot](#round-hand-robot): [`RoundHand`](#round-hand), [`flexFinger`](#flexfinger), [`flexFingers`](#flexfingers), [`spreadFinger`](#spreadfinger), [`spreadFingers`](#spreadfingers)<br>
-	  &ndash; [anthropomorphic hand robot](#anthropomorphic-hand-robot): [`AnthroHand`](#anthro-hand), [`flexFinger`](#flexfinger-1), [`flexFingers`](#flexfingers-1), [`spreadFinger`](#spreadfinger-1), [`spreadFingers`](#spreadfingers-1)</small>
-	* **[Robot parts](#robot-parts)**<small><br> 
+	  &ndash; [installation](#installation)<br>
+	  &ndash; [simple robot](#simple-robot)<br>
+	  &ndash; [options](#options)</small>
+	  <br>
+	  <br>
+* **[INVENTORY](#inventory)**
+	* **[Robotic hands](#robotic-hands)**<small>:[`EdgedHand`](#edgedhand), [`RoundHand`](#roundhand), [`AnthroHand`](#anthrohand)<br>
+	  &ndash; [hands control](#hands-control): [`flexFinger`](#flexfinger), [`flexFingers`](#flexfingers), [`spreadFinger`](#spreadfinger), [`spreadFingers`](#spreadfingers)</small>
+	* **[General parts](#general-parts)**<small><br> 
 	  &ndash; [common shapes](#common-shapes): [`Ball`](#ball), [`Box`](#box)<br>
 	  &ndash; [external shapes](#external-shapes): [`GLTFPart`](#gltfpart), [`recolor`](#recolor)<br>
 	  &ndash; [motors](#motors): [`MotorX`](#motorx), [`MotorY`](#motory), [`MotorZ`](#motorz)</small>
@@ -346,24 +348,46 @@ Example:
 
 
 
-## Robots
 
-### Round hand robot
-
-This robot is an antropomorphic hand based on [round hand parts](#round-hand-2).
-It provides methods for flexing and spreading fingers.
-
-Source code: [src/robots/round-hand.js](https://github.com/boytchev/virtual-prosthetics/blob/main/src/robots/round-hand.js)
+# INVENTORY
 
 
-> #### RoundHand
+
+## Robotic hands
+
+The Virtual Prosthetics defines three variants of robotic hands &ndash; edged,
+round and anthropomorphic.
+
+
+> ### EdgedHand
+
+```js
+EdgedHand( isLeft )
+```
+
+Class. Defines an edged hand robot made of [edged hand parts](#edged-hand). If
+`isLeft` is `true`, the a left hand is constructed, otherwise &ndash; a right hand.
+
+Example:
+
+```js
+hand = new Prosthetic.EdgedHand( true );
+```
+
+[<kbd><img src="../examples/snapshots/docs-edged-hands.jpg" width="400"></kbd>](../examples/docs-edged-hands.html)
+
+Source code: [src/robots/edged-hand.js](https://github.com/boytchev/virtual-prosthetics/blob/main/src/robots/edged-hand.js)
+
+
+
+> ### RoundHand
 
 ```js
 RoundHand( isLeft )
 ```
 
-Class. Defines a round hand robot. If `isLeft` is `true`, the a left hand is
-constructed, otherwise &ndash; a right hand.
+Class. Defines a round hand robot made of [round hand parts](#round-hand). If
+`isLeft` is `true`, the a left hand is constructed, otherwise &ndash; a right hand.
 
 Example:
 
@@ -371,8 +395,43 @@ Example:
 hand = new Prosthetic.RoundHand( true );
 ```
 
+[<kbd><img src="../examples/snapshots/docs-round-hands.jpg" width="400"></kbd>](../examples/docs-round-hands.html)
 
-> #### flexFinger
+Source code: [src/robots/round-hand.js](https://github.com/boytchev/virtual-prosthetics/blob/main/src/robots/round-hand.js)
+
+
+
+> ### AnthroHand
+
+```js
+AnthroHand( isLeft )
+```
+
+Class. Defines an anthropomorphic hand robot made of [round hand parts](#round-hand)
+and  [anthropomorphic hand parts](#anthropomorphic-hand). It extnds the [RoundHand](#roundhand),
+with additional parts for finer thumb motion. If `isLeft` is `true`, the a left
+hand is constructed, otherwise &ndash; a right hand.
+
+Example:
+
+```js
+hand = new Prosthetic.AnthroHand( true );
+```
+
+[<kbd><img src="../examples/snapshots/docs-anthro-hands.jpg" width="400"></kbd>](../examples/docs-anthro-hands.html)
+
+Source code: [src/robots/anthro-hand.js](https://github.com/boytchev/virtual-prosthetics/blob/main/src/robots/anthro-hand.js)
+
+
+
+## Hands control
+
+The edged, round and anthropomorphic hands can be controlled like other robots
+&ndash; individual motors can be set. The hands control provide additional
+options for control by setting a group of motors.
+
+
+> ### flexFinger
 
 ```js
 flexFinger( index, angle )
@@ -391,7 +450,7 @@ hand.flexFinger( 1, 0.5 );
 ```
 
 
-> #### flexFingers
+> ### flexFingers
 
 ```js
 flexFingers( angle )
@@ -406,7 +465,7 @@ hand.flexFingers( 0.5 );
 ```
 
 
-> #### spreadFinger
+> ### spreadFinger
 
 ```js
 spreadFinger( index, angle )
@@ -424,25 +483,14 @@ hand.spreadFinger( 3, 0.1 );
 ```
 
 
-> #### spreadFingers
+> ### spreadFingers
 
 ```js
 spreadFingers( angle, includeThumb )
 ```
 
-Method. Spread all fingers by given maximal `angle`. The following table shows
-the actual angles of spreading individual fingers:
-
-| Index | Finger | Spread angle |
-| --- | --- | --- |
-| 0 | thumb | 3 &times; `angle` |
-| 1 | index finger | 1.0 &times; `angle` |
-| 2 | middle finger | 0.3 &times; `angle` |
-| 3 | ring finger | -0.3 &times; `angle` |
-| 4 | little finger | -1.0 &times; `angle` |
-
-If `includeThumb` is `true`, the thumb is also spread, otherwise only the rest
-4 fingers are spread.
+Method. Spread all fingers by given maximal `angle`. If `includeThumb` is `true`,
+the thumb is also spread, otherwise only the rest 4 fingers are spread.
 
 Example:
 
@@ -452,16 +500,9 @@ hand.spreadFingers( 0.5, false );
 
 
 
+## General parts
 
-
-
-
-
-
-
-## Robot parts
-
-Robot parts are predefined [parts](api.md#parts-api) that have images. Some
+The general parts are predefined [parts](api.md#parts-api) that have images. Some
 robot parts also have invisible physics envelopes that are used the the physics
 engine for collision detection.
 
