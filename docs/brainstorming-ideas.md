@@ -54,6 +54,7 @@
 * <span style="background:palegreen">V3. [**DONE**] Importing GLTF body parts</span>
 * V4. Exporting GLTF models
 * V5. Customs warning (aka virtual pain)
+* V6. VR mode (with VR headsets)
 
 #### Postures
 * P1. Mapping between input data and posture
