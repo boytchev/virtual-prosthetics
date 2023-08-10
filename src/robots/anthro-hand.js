@@ -35,43 +35,32 @@ class AnthroHand extends Robot
 		this.palm = new AnthroPalm( isLeft, '../assets/gltf/anthro-palm.glb' );
 		this.palm.attachToSlot( this );
 
-		this.spread = [];
 		for( var i=0; i<5; i++ )
-			this.spread[i] = this.addFinger( i );
+			this.addFinger( i );
 	} // AnthroHand.constructor
 	
 
 	addFinger( slot )
 	{
-		var root, mainMotor;
-		
 		var lastPart;
 		
 		if( slot == 0 )
 		{	// thumb
-			root = new MotorZ( 0, 2, 0, 0.75, 0.07 ).flip( !this.isLeft );
-			mainMotor = new MotorX( -0.75, 2, 0, 0.14, 0.06 ).flip( !this.isLeft ); 
-			
 			lastPart = this.addChain( 
 					this.palm, // slot 0 is for thumb
-					root,
+					new MotorZ( 0, 2, 0, 0.75, 0.07 ).flip( !this.isLeft ).setName( 'Palm' ),
 					new AnthroThumb( this.isLeft, '../assets/gltf/anthro-thumb.glb' ),
-					mainMotor,
+					new MotorX( -0.75, 2, 0, 0.14, 0.06 ).flip( !this.isLeft ).setName( 'Thumb' ),
 					new MotorY( -0.5, 1, 0, 0.07, 0.2 ).flip( !this.isLeft ).setName( '<small>&ndash; twist</small>' ),
 					new MotorZ( -1.75, 0.25, 0, 0.2, 0.06 ).setName( '<small>&ndash; proximal</small>' ),
-					);
-			root.name = 'Palm';
-
+				);
 		}
 		else
 		{	// other fingers
-			root = new MotorZ( PI/4, -PI/2, -PI/8, 0.2, 0.07 ).setName( '<small>&ndash; proximal</small>' );
-			mainMotor = new MotorX( -0.4, 0.4, 0, 0, 0 ).flip( this.isLeft );
-			
 			lastPart = this.addChain( 
-					mainMotor.attachToSlot( this.palm, slot ),
-					root,
-					);
+					new MotorX( -0.4, 0.4, 0, 0, 0 ).flip( this.isLeft ).attachToSlot( this.palm, slot ).setName( ['Index','Middle','Ring','Little'][slot-1]+' finger' ),
+					new MotorZ( PI/4, -PI/2, -PI/8, 0.2, 0.07 ).setName( '<small>&ndash; proximal</small>' ),
+				);
 		}
 		
 		this.addChain( 
@@ -82,10 +71,6 @@ class AnthroHand extends Robot
 			new MotorZ( 0, -PI/2, -PI/8, 0.2, 0.07 ).setName( '<small>&ndash; distal</small>' ),
 			new RoundFinger( '../assets/gltf/round-tip.glb', 0.5 ),
 		);
-			
-		mainMotor.name = ['Thumb','Index finger','Middle finger','Ring finger','Little finger'][slot];
-		
-		return root;
 	}		
 	
 

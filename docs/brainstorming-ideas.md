@@ -38,6 +38,9 @@
 * <span style="background:palegreen">S6. [**DONE**] Visual feedback with vectors</span>
 * S7. Visual feedback with tables/graphs
 * S8. Gravity for gripped objects
+* S9. Velocity sensor
+* S10. Accelleration sensor
+* S11. Temperature sensor
 
 #### Interface
 * I1. Interface API for using from outside

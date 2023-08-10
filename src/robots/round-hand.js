@@ -33,9 +33,8 @@ class RoundHand extends Robot
 		this.palm = new RoundPalm( isLeft, '../assets/gltf/round-palm.glb' );
 		this.palm.attachToSlot( this );
 
-		this.spread = [];
 		for( var i=0; i<5; i++ )
-			this.spread[i] = this.addFinger( i );
+			this.addFinger( i );
 	} // RoundHand.constructor
 	
 	
