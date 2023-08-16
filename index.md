@@ -1,5 +1,9 @@
+<img src="docs/images/closed-source.png" width="500">
+
 # Virtual prosthetics
+
 Modeling tool for virtual prosthetic body parts
+
 
 * [Virtual prosthetics](docs/api.md)
 * [Social activities](docs/social.md)

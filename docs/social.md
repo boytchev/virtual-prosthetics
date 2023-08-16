@@ -1,3 +1,5 @@
+<img src="images/closed-source.png" width="500">
+
 # Virtual prosthetics social activities
 
 

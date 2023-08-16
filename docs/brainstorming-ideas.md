@@ -1,4 +1,7 @@
+<img src="images/closed-source.png" width="500">
+
 # Brainstorming Ideas
+
 
 #### Contents
 * **Brainstorming Ideas**<small><br>

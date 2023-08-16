@@ -1,8 +1,11 @@
+<img src="images/closed-source.png" width="500">
+
 # Virtual prosthetics
 
 The Virtual Prosthetics library provides a set of APIs for constructing simple 
 virtual robots. In this document all times are in seconds, all sizes are in
 meters, all angles are in radians and all indices start from 0.
+
 
 
 * **[USER GUIDE](#user-guide)**<small>
